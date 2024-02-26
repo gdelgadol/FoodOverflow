@@ -5,4 +5,4 @@ Para correr de manera efectiva este proyecto debe ejecutarse el entorno virtual 
 
 ```source venv/bin/activate```
 
-Al activarlo deberá ver un ().
+Al activarlo deberá ver un (venv).
