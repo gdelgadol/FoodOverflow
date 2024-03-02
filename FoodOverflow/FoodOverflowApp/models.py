@@ -33,7 +33,7 @@ class Profile(AbstractBaseUser):
     email = models.EmailField(max_length=200, unique=True)
     active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    description = models.CharField(max_lenght = 240)
+    description = models.CharField(max_length = 240)
 
     objects = UserManager()
 
