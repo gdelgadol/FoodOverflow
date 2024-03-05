@@ -12,25 +12,26 @@ from django.shortcuts import redirect
 from django.db import IntegrityError
 from django.contrib import messages
 from ..models import Profile
+import json
+from django.http import JsonResponse
 
 def signup(request):
     try:
+        data = json.loads(request.body)
         try:
-            if request.POST['password'] == request.POST['check_password']:
-                userName = request.POST['username']
-                email = request.POST['email']
+            if data.get("password") == data.get("check_password"):
+                userName = data.get('username')
+                email = data.get('email')
                 user = Profile.objects.create_user(username=userName,
-                                                   password=request.POST["password"],
+                                                   password=data.get("password"),
                                                    email=email.lower())
+                return JsonResponse({"message":"¡Usuario creadon con éxito!"})
             else:
-                context = {"message":"Las contraseñas no coinciden."}
-                return render(request, 'login_signup/signup.html', context = context)
+                return JsonResponse({"message":"Las contraseñas no coinciden."})
         except IntegrityError:
-            context = {"message": "El usuario ya existe"}
-            return render(request, 'login_signup/signup.html', context)
+            return JsonResponse({"message": "Error en Base de Datos"})
     except MultiValueDictKeyError:
         userName = False
         userPassword = False
         checkUserPassword = False
         email = False
-    return render(request, 'login_signup/signup.html')
