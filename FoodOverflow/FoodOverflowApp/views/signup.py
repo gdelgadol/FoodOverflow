@@ -25,11 +25,11 @@ def signup(request):
                 user = Profile.objects.create_user(username=userName,
                                                    password=data.get("password"),
                                                    email=email.lower())
-                return JsonResponse({"message":"¡Usuario creadon con éxito!"})
+                return JsonResponse({"message":"¡Usuario creado con éxito!", "type":"SUCCESS"})
             else:
-                return JsonResponse({"message":"Las contraseñas no coinciden."})
+                return JsonResponse({"message":"Las contraseñas no coinciden.", "type": "ERROR"})
         except IntegrityError:
-            return JsonResponse({"message": "Error en Base de Datos"})
+            return JsonResponse({"message": "El usuario ya existe", "type": "ERROR"})
     except MultiValueDictKeyError:
         userName = False
         userPassword = False
