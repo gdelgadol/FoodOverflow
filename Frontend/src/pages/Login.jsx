@@ -88,7 +88,7 @@ const Login = () => {
         password: state.password,
       })
       .then((res) => {
-        if (res.data.message === "Login exitoso!") {
+        if (res.data.message === "¡Login exitoso!") {
           console.log("login success");
         } else {
           console.log("login failed");
