@@ -1,0 +1,103 @@
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 80px;
+  background-color: #ffffff;
+  z-index: 1000;
+  border-color: #d6d6d6;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.icon-header {
+  display: flex;
+  align-items: center
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333333;
+
+}
+
+.search {
+  flex: 0.5;
+  margin: 0 20px;
+}
+
+.search input {
+  width: 410px;
+  height: 25px;
+  border: 1px solid #cccccc;
+  border-radius: 15px;
+  padding: 5px 10px;
+  outline: none;
+  background-color: #f0f0f0;
+  background-image: url('../assets/lupa.png');
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: 20px;
+  background-origin: content-box;
+}
+
+.menu {
+  display: flex;
+}
+
+.menu-button {
+  height: 35px;
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin: 0 5px;
+  background-color: #ffffff;
+  color: #333333;
+  cursor: pointer;
+}
+
+.menu-button:hover {
+  background-color: #eeeeee;
+}
+
+.menu-button2 {
+  height: 35px;
+  border: 1px solid #ff5c00;
+  border-radius: 10px;
+  ;
+  padding: 5px 10px;
+  margin: 0 5px;
+  background-color: #ffffff;
+  color: #ff5c00;
+  cursor: pointer;
+}
+
+.menu-button2:hover {
+  background-color: #ffe9cd;
+}
+
+
+.menu-button3 {
+  height: 35px;
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin: 0 20px;
+  background-color: #ff5c00;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.menu-button3:hover {
+  background-color: #ffb656;
+}
+
+.separator {
+  height: 30px;
+  border-left: 1px solid #000000;
+  padding: 5px 5px;
+}
