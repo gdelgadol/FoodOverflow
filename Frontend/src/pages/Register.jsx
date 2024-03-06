@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import './Register.css';
 import iconoImg from "../assets/logo.png";
@@ -38,9 +38,9 @@ function Register() {
       })
       .then((res) => {
         if (res.data.message === "¡Usuario creado con éxito!") {
-          console.log("Registe success");
+          console.log(state.email,state.username,state.password);
         } else {
-          console.log(res.data.message);
+          console.log(state.email);
         }
       });
   };
@@ -55,19 +55,19 @@ function Register() {
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Ingresa tu email" required />
+            <input type="email" id="email" name="email" placeholder="Ingresa tu email" required onChange={handleInput}/>
           </div>
           <div className="input-group">
             <label htmlFor="username">Nombre de usuario</label>
-            <input type="text" id="username" name="username" placeholder="Crea tu nombre de usuario" required />
+            <input type="text" id="username" name="username" placeholder="Crea tu nombre de usuario" required onChange={handleInput}/>
           </div>
           <div className="input-group">
             <label htmlFor="password">Contraseña</label>
-            <input type="password" id="password" name="password" placeholder="Crea tu contraseña" required />
+            <input type="password" id="password" name="password" placeholder="Crea tu contraseña" required onChange={handleInput}/>
           </div>
           <div className="input-group">
             <label htmlFor="confirm">Confirmar contraseña</label>
-            <input type="password" id="confirm" name="confirm" placeholder="Confirma tu contraseña" required />
+            <input type="password" id="check_password" name="check_password" placeholder="Confirma tu contraseña" required onChange={handleInput}/>
           </div>
           <p className="note">Debe contener 8+ caracteres, incluyendo al menos 1 letra y 1 número.</p>
           <br></br>
