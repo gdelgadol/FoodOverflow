@@ -4,6 +4,8 @@ import imagen from "../assets/logo.png";
 import eyeOpenIcon from "../assets/ojo.png";
 import axios from "../api/axios.jsx";
 
+import { Link, useNavigate } from "react-router-dom";
+
 const Login = () => {
   const userRef = useRef();
   const errRef = useRef();
@@ -77,10 +79,10 @@ const Login = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     login();
   };
 
+  const navigate = useNavigate();
   const login = () => {
     axios
       .post("http://127.0.0.1:8000/login/", {
@@ -88,10 +90,11 @@ const Login = () => {
         password: state.password,
       })
       .then((res) => {
-        if (res.data.message === "Login exitoso!") {
-          console.log("login success");
+        if (res.data.message === "¡Login exitoso!") {
+          alert("Inicio exitoso!");
+          navigate("/Home");
         } else {
-          console.log("login failed");
+          setErrMsg(res.data.message);
         }
       });
   };
@@ -108,91 +111,92 @@ const Login = () => {
         </section>
       ) : (
         <div className="login">
-          <section className="li-section">
-            <p
-              ref={errRef}
-              className={errMsg ? "errmsg" : "offscreen"}
-              aria-live="assertive"
-            >
-              {errMsg}
-            </p>
+          <div className="li-form">
             <div className="li-div-centered">
               <img
                 className="li-logo"
                 alt="Logo de Food Overflow"
                 src={imagen}
               />
-              <h1 className="li-h1">¡Bienvenido de vuelta!</h1>
-              <form className="li-form" onSubmit={handleSubmit}>
-                <div style={{ position: "relative" }}>
-                  <label
-                    ref={labelUserRef}
-                    className={`li-label ${state.email ? "active" : ""}`}
-                    htmlFor="li-input"
-                  >
-                    Email
-                  </label>
-                  <input
-                    className="li-input"
-                    type="email"
-                    id="email"
-                    ref={userRef}
-                    autoComplete="off"
-                    onChange={handleInputChangeUser}
-                    value={state.email}
-                    required
-                  />
-                </div>
-                <div className="password-container">
-                  <label
-                    ref={labelPwdRef}
-                    className={`li-label ${state.password ? "active" : ""}`}
-                    htmlFor="li-input"
-                  >
-                    Contraseña
-                  </label>
-                  <input
-                    className="li-input"
-                    type={isPasswordVisible ? "text" : "password"}
-                    id="password"
-                    onChange={handleInputChangePwd}
-                    value={state.password}
-                  />
-                  <button
-                    type="button"
-                    className={`li-eyeButton ${
-                      isPasswordVisible ? "active" : ""
-                    }`}
-                    onClick={togglePasswordVisibility}
-                  >
-                    <img
-                      className="li-eye"
-                      src={eyeOpenIcon}
-                      style={{ opacity }}
-                      alt="Show or hide password"
-                      aria-label="Show or hide password"
-                      onClick={handleClick}
-                    />
-                  </button>
-                </div>
-                <div className="li-div-centered">
-                  <button className="li-button">Iniciar Sesión</button>
-                </div>
-              </form>
             </div>
-            <div className="li-div-justified">
+            <h1 className="li-h1">¡Bienvenido de vuelta!</h1>
+            <h1
+              ref={errRef}
+              className={errMsg ? "errmsg li-h1-error " : "offscreen"}
+              aria-live="assertive"
+            >
+              {errMsg}
+            </h1>
+            <form onSubmit={handleSubmit}>
+              <div style={{ position: "relative" }}>
+                <label
+                  ref={labelUserRef}
+                  className={`li-label ${state.email ? "active" : ""}`}
+                  htmlFor="li-input"
+                >
+                  Email
+                </label>
+                <input
+                  className="li-input"
+                  type="email"
+                  id="email"
+                  ref={userRef}
+                  autoComplete="off"
+                  onChange={handleInputChangeUser}
+                  value={state.email}
+                  required
+                />
+              </div>
+              <div className="password-container">
+                <label
+                  ref={labelPwdRef}
+                  className={`li-label ${state.password ? "active" : ""}`}
+                  htmlFor="li-input"
+                >
+                  Contraseña
+                </label>
+                <input
+                  className="li-input"
+                  type={isPasswordVisible ? "text" : "password"}
+                  id="password"
+                  onChange={handleInputChangePwd}
+                  value={state.password}
+                />
+                <button
+                  type="button"
+                  className={`li-eyeButton ${
+                    isPasswordVisible ? "active" : ""
+                  }`}
+                  onClick={togglePasswordVisibility}
+                >
+                  <img
+                    className="li-eye"
+                    src={eyeOpenIcon}
+                    style={{ opacity }}
+                    alt="Show or hide password"
+                    aria-label="Show or hide password"
+                    onClick={handleClick}
+                  />
+                </button>
+              </div>
+              <button className="li-button">Iniciar Sesión</button>
+            </form>
+            <div className="li-div-text">
               <p className="li-p">
                 <span>
-                  <a href="#">¿Has olvidado tu contraseña?</a>
+                  <Link to={"/recuperarcontraseña"}>
+                    ¿Has olvidado tu contraseña?
+                  </Link>
                 </span>
-                <br />
-                ¿Es tu primera vez en Food Overflow?
-                <span>
-                  <a href="#"> Registrate</a>
-                </span>
+                <p className="li-p">
+                  ¿Es tu primera vez en Food Overflow?
+                  <span>
+                    <Link to={"/register"}> Registrate</Link>
+                  </span>
+                </p>
               </p>
             </div>
-          </section>
+          </div>
         </div>
       )}
     </>

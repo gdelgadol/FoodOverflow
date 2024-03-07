@@ -5,13 +5,15 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
-  height: 80px;
+  height: 80px; /* Altura predeterminada */
+  min-height: 60px; /* Altura mínima */
   background-color: #ffffff;
   z-index: 1000;
   border-color: #d6d6d6;
   border-width: 1px;
   border-style: solid;
 }
+
 
 .icon-header {
   display: flex;
