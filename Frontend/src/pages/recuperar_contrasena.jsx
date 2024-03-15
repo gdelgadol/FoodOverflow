@@ -71,7 +71,7 @@ const Rec_contrasena = () => {
         email: state.email,
       })
       .then((res) => {
-        if (res.data.message === "¡Login exitoso!") {
+        if (res.data.message === "¡Login exitoso!") { //mensaje que va a llegar desde el backend
           alert("¡Se ha enviado el email exitosamente! Revisa tu bandeja de entrada, también tu bandeja de spam");
           navigate("/");
         } else {
@@ -101,7 +101,7 @@ const Rec_contrasena = () => {
               />
             </div>
             <h1 className="li-h1">Reestablece tu contraseña</h1>
-            <p>Introduce tu dirección de correo electrónico y te enviaremos un enlace de restablecimiento de tu contraseña.</p>
+            <p class="note">Introduce tu dirección de correo electrónico y te enviaremos un enlace de restablecimiento de tu contraseña.</p>
             <h1
               ref={errRef}
               className={errMsg ? "errmsg li-h1-error " : "offscreen"}
