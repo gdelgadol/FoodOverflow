@@ -26,7 +26,7 @@ def signup(request):
                                                    password=data.get("password"),
                                                    email=email.lower())
                 activateEmail(request, user, user.email)
-                return JsonResponse({"message":"¡Usuario creado con éxito!", "type":"SUCCESS"})
+                return JsonResponse({"message":"¡Usuario creado con éxito! Por favor no olvides activar tu cuenta para ingresar.", "type":"SUCCESS"})
             else:
                 return JsonResponse({"message":"Las contraseñas no coinciden.", "type": "ERROR"})
         except IntegrityError:
@@ -38,7 +38,7 @@ def signup(request):
         email = False
 
 def activateEmail(request, user, to_email):
-    mail_subject = "Activa tu cuenta de Calistopia"
+    mail_subject = "Activa tu cuenta de FoodOverflow"
     message = render_to_string(
         "email_templates/activation.html",
         {
