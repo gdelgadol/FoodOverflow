@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import axios from "axios";
 import "./Register.css";
+import "./restablecer_contrasena.css";
 import iconoImg from "../assets/logo.png";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -63,9 +64,9 @@ function Register() {
         check_password: state.check_password,
       })
       .then((res) => {
-        if (res.data.message === "¡Usuario creado con éxito!") {
-          alert("Registro exitoso. Por favor activa la cuenta");
-          navigate("/Home");
+        if (res.data.message === "¡Usuario creado con éxito!") { //desde el back se configura este mensaje
+          alert("¡Contraseña restablecida con exito! Puedes volver a iniciar sesión.");
+          navigate("/");
           console.log(state.email, state.username, state.password);
         } else {
           console.log(state.email);
@@ -83,7 +84,7 @@ function Register() {
             style={{ width: "45px", height: "50px" }}
           />
         </div>
-        <h1>Únete a Food Overflow hoy</h1>
+        <h1>Crea tu nueva contraseña</h1>
         <h1
           ref={errRef}
           className={errMsg ? "errmsg li-h1-error " : "offscreen"}
@@ -93,34 +94,12 @@ function Register() {
         </h1>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Ingresa tu email"
-              required
-              onChange={handleInput}
-            />
-          </div>
-          <div className="input-group">
-            <label htmlFor="username">Nombre de usuario</label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              placeholder="Crea tu nombre de usuario"
-              required
-              onChange={handleInput}
-            />
-          </div>
-          <div className="input-group">
-            <label htmlFor="password">Contraseña</label>
+            <label htmlFor="password">Nueva contraseña</label>
             <input
               type="password"
               id="password"
               name="password"
-              placeholder="Crea tu contraseña"
+              placeholder="Crea tu nueva contraseña"
               required
               onChange={handleInput}
             />
@@ -141,17 +120,14 @@ function Register() {
           </p>
           <br></br>
           <button type="submit" className="register-button center-button">
-            Registrarse
+            <strong>Cambiar contraseña</strong>
           </button>
         </form>
+        <center>
         <p className="loginRegister">
-          Al hacer clic en Registrarse, aceptas nuestro{" "}
-          <Link to={"/Acuerdo"}>Acuerdo del usuario</Link> y confirmas que has
-          entendido la Política de privacidad.
+          ¿Deseas volver al inicio de sesión? <Link to={"/"}>Inicia sesión</Link>
         </p>
-        <p className="loginRegister">
-          ¿Ya tienes una cuenta? <Link to={"/"}>Inicia sesión</Link>
-        </p>
+        </center>
       </div>
     </div>
   );
