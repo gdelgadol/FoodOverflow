@@ -1,0 +1,128 @@
+.register {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100v;
+  }
+  
+  .form {
+    width: 500px;
+    max-width: 90%;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    align-items: center;
+  }
+  
+  .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  
+  .icon img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  h1 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333333;
+    margin-bottom: 20px;
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  
+  label {
+    font-size: 16px;
+    font-weight: normal;
+    color: #333333;
+    margin-bottom: 5px;
+  }
+  
+  input {
+    height: 30px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    padding: 5px 10px;
+    outline: none;
+  }
+  
+  .note {
+    font-size: 14px;
+    font-style: italic;
+    color: #999999;
+    margin-bottom: 10px;
+  }
+  
+  .register-button {
+    height: 40px;
+    width: 80%;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    background-color: #ff5c00;
+    color: #ffffff;
+    cursor: pointer;
+    text-align: center; 
+  }
+  
+  .register-button:hover {
+    background-color: #ff5c00;
+  }
+  
+  .terms {
+    font-size: 14px;
+    font-weight: normal;
+    color: #333333;
+    margin-bottom: 10px;
+  }
+  
+  .terms a {
+    color: #ff5c00;
+    text-decoration: none;
+  }
+  
+  .terms a:hover {
+    text-decoration: underline;
+  }
+  
+  .loginRegister {
+    font-size: 14px;
+    color: #333333;
+  }
+  
+  .loginRegister a {
+    color: #ff5c00;
+    text-decoration: none;
+  }
+  
+  .loginRegister a:hover {
+    text-decoration: underline;
+  }
+
+  .center-button {
+    margin: 0 auto;
+    display: block;
+}
+
+.register-button:hover {
+    background-color: #ff7538; 
+}
+  
+  @media (max-width: 600px) {
+    .form {
+      width: 400px;
+    }
+  }
+  
+  

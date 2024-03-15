@@ -1,0 +1,9 @@
+body {
+  margin: 0;
+  background-image: url(assets/background.png);
+  background-size: cover;
+}
+
+* {
+  font-family: Arial, sans-serif; /* Cambia 'Arial, sans-serif' por la fuente que desees utilizar */
+}
