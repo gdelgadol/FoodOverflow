@@ -42,7 +42,7 @@ function Register() {
     }
 
     // Verificar que las contraseñas coincidan
-    if (state.password !== state.confirmPassword) {
+    if (state.password !== state.check_password) {
       setErrMsg("Las contraseñas no coinciden.");
       return;
     }

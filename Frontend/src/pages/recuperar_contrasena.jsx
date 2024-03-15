@@ -1,12 +1,12 @@
 import { useRef, useState, useEffect } from "react";
-import "./Login.css";
+import "./recuperar_contrasena.css";
 import imagen from "../assets/logo.png";
 import eyeOpenIcon from "../assets/ojo.png";
 import axios from "../api/axios.jsx";
 
 import { Link, useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Rec_contrasena = () => {
   const userRef = useRef();
   const errRef = useRef();
   const labelUserRef = useRef();
@@ -18,13 +18,6 @@ const Login = () => {
   });
   const [errMsg, setErrMsg] = useState("");
   const { success, setSuccess } = useState(false);
-
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [opacity, setOpacity] = useState(0.5);
-
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible(!isPasswordVisible);
-  };
 
   const handleClick = () => {
     setOpacity((prevOpacity) => (prevOpacity === 1 ? 0.5 : 1));
@@ -46,17 +39,6 @@ const Login = () => {
     }
   };
 
-  const handleInputChangePwd = (e) => {
-    setState({
-      ...state,
-      password: e.target.value,
-    });
-    if (e.target.value.trim() !== "") {
-      labelPwdRef.current.classList.add("active");
-    } else {
-      labelPwdRef.current.classList.remove("active");
-    }
-  };
 
   const validation = (values) => {
     let error = {};
@@ -87,12 +69,11 @@ const Login = () => {
     axios
       .post("http://127.0.0.1:8000/login/", {
         email: state.email,
-        password: state.password,
       })
       .then((res) => {
         if (res.data.message === "¡Login exitoso!") {
-          alert("Inicio exitoso!");
-          navigate("/Home");
+          alert("¡Se ha enviado el email exitosamente! Revisa tu bandeja de entrada, también tu bandeja de spam");
+          navigate("/");
         } else {
           setErrMsg(res.data.message);
         }
@@ -119,7 +100,8 @@ const Login = () => {
                 src={imagen}
               />
             </div>
-            <h1 className="li-h1">¡Bienvenido de vuelta!</h1>
+            <h1 className="li-h1">Reestablece tu contraseña</h1>
+            <p>Introduce tu dirección de correo electrónico y te enviaremos un enlace de restablecimiento de tu contraseña.</p>
             <h1
               ref={errRef}
               className={errMsg ? "errmsg li-h1-error " : "offscreen"}
@@ -147,54 +129,24 @@ const Login = () => {
                   required
                 />
               </div>
-              <div className="password-container">
-                <label
-                  ref={labelPwdRef}
-                  className={`li-label ${state.password ? "active" : ""}`}
-                  htmlFor="li-input"
-                >
-                  Contraseña
-                </label>
-                <input
-                  className="li-input"
-                  type={isPasswordVisible ? "text" : "password"}
-                  id="password"
-                  onChange={handleInputChangePwd}
-                  value={state.password}
-                />
-                <button
-                  type="button"
-                  className={`li-eyeButton ${
-                    isPasswordVisible ? "active" : ""
-                  }`}
-                  onClick={togglePasswordVisibility}
-                >
-                  <img
-                    className="li-eye"
-                    src={eyeOpenIcon}
-                    style={{ opacity }}
-                    alt="Show or hide password"
-                    aria-label="Show or hide password"
-                    onClick={handleClick}
-                  />
-                </button>
-              </div>
-              <button className="li-button">Iniciar Sesión</button>
+              <button className="li-button">Enviar correo para reestablecer contraseña</button>
             </form>
             <div className="li-div-text">
               <p className="li-p">
                 <center>
                 <span>
-                  <Link to={"/recuperar_contrasena"}>
-                    ¿Has olvidado tu contraseña?
+                  <Link to={"/"}>
+                    Volver al inicio de sesión
                   </Link>
                 </span>
                 </center>
                 <p className="li-p">
+                <center>
                   ¿Es tu primera vez en Food Overflow?
                   <span>
                     <Link to={"/register"}> Registrate</Link>
                   </span>
+                </center>
                 </p>
               </p>
             </div>
@@ -205,4 +157,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Rec_contrasena;
