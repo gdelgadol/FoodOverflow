@@ -2,7 +2,7 @@ import FbImg from "../assets/logofb.png";
 import IgImg from "../assets/logoig.png";
 import TwImg from "../assets/logotw.png";
 import React, { useState } from 'react';
-import "./Footer.css"; // Asegúrate de tener tus estilos CSS para el footer
+import "./Footer.css"; 
 
 function Footer() {
   return (
@@ -14,7 +14,7 @@ function Footer() {
         <a href="/terms">Términos y condiciones</a>
         <div>foodoverflow02@gmail.com</div>
         <div className="social-links">
-          {/* Agrega aquí tus iconos de redes sociales como enlaces */}
+          {/* Redes FoodOverflow */}
           <a href="https://www.facebook.com">
             <img
             src={FbImg}
