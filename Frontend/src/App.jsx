@@ -6,6 +6,7 @@ import Restablecer_contrasena from "./pages/restablecer_contrasena"
 import './App.css'
 import {Route, Routes} from "react-router-dom";
 import Encabezado from "./components/Encabezado.jsx"
+import Footer from "./components/Footer.jsx"
 
 function App() {
 
@@ -21,6 +22,9 @@ function App() {
           <Route path="/restablecer_contrasena" element={<Restablecer_contrasena />} />
         </Routes>
       </div>
+      <br></br>
+      <br></br>
+      <Footer />
     </>
   );
 }
