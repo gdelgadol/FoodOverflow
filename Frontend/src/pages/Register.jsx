@@ -63,12 +63,11 @@ function Register() {
         check_password: state.check_password,
       })
       .then((res) => {
-        if (res.data.message === "¡Usuario creado con éxito!") {
-          alert("Registro exitoso. Por favor activa la cuenta");
+        if (res.data.type === "SUCCESS") {
+          alert(res.data.message);
           navigate("/Home");
-          console.log(state.email, state.username, state.password);
         } else {
-          console.log(state.email);
+          alert(res.data.message);
         }
       });
   };
@@ -149,9 +148,11 @@ function Register() {
           <Link to={"/Acuerdo"}>Acuerdo del usuario</Link> y confirmas que has
           entendido la Política de privacidad.
         </p>
+        <center>
         <p className="loginRegister">
           ¿Ya tienes una cuenta? <Link to={"/"}>Inicia sesión</Link>
         </p>
+        </center>
       </div>
     </div>
   );
