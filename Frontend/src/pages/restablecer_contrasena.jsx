@@ -5,14 +5,13 @@ import "./restablecer_contrasena.css";
 import iconoImg from "../assets/logo.png";
 
 import { Link, useNavigate } from "react-router-dom";
+import { useParams } from 'react-router-dom';
 
 /* Toda esta función es generada por chat gpt, para ver como conectamos eso con el back*/
 function Restablecer_contrasena() {
   const [errMsg, setErrMsg] = useState("");
   const errRef = useRef();
-  const urlParams = new URLSearchParams(window.location.search);
-  const uidb64 = urlParams.get('uidb64');
-  const token = urlParams.get('token');
+  const { uid, token } = useParams();
 
   const [state, setState] = useState({
     password: "",
@@ -58,7 +57,7 @@ function Restablecer_contrasena() {
 
   const resetPass = () => {
     axios
-      .post('http://127.0.0.1:8000/password_reset/', {
+      .post(`http://127.0.0.1:8000/restablecer_contrasena/${uid}/${token}`, {
         password: state.password,
       })
       .then((res) => {
