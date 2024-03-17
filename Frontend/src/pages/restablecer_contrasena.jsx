@@ -7,7 +7,7 @@ import iconoImg from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 
 /* Toda esta función es generada por chat gpt, para ver como conectamos eso con el back*/
-function Register() {
+function Restablecer_contrasena() {
   const [errMsg, setErrMsg] = useState("");
   const errRef = useRef();
 
@@ -133,4 +133,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default Restablecer_contrasena;
