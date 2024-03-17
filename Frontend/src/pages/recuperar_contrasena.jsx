@@ -61,17 +61,17 @@ const Rec_contrasena = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    login();
+    reset();
   };
 
   const navigate = useNavigate();
-  const login = () => {
+  const reset = () => {
     axios
-      .post("http://127.0.0.1:8000/login/", {
+      .post("http://127.0.0.1:8000/password_reset/", {
         email: state.email,
       })
       .then((res) => {
-        if (res.data.message === "¡Login exitoso!") { //mensaje que va a llegar desde el backend
+        if (res.data.message === "Correo enviado") { //mensaje que va a llegar desde el backend
           alert("¡Se ha enviado el email exitosamente! Revisa tu bandeja de entrada, también tu bandeja de spam");
           navigate("/");
         } else {

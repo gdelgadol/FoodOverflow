@@ -19,7 +19,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
           <Route path="/recuperar_contrasena" element={<Rec_contrasena />} />
-          <Route path="/restablecer_contrasena" element={<Restablecer_contrasena />} />
+          <Route path="/restablecer_contrasena/:uid/:token/" element={<Restablecer_contrasena />} />
         </Routes>
       </div>
       <br></br>

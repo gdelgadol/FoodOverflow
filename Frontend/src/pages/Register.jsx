@@ -48,7 +48,7 @@ function Register() {
     }
 
     // Si la validación pasa, puedes enviar el formulario o hacer lo que necesites aquí
-    console.log("Contraseña válida:", state.password);
+    console.log("Contraseña válida");
     register();
   };
 
@@ -65,7 +65,7 @@ function Register() {
       .then((res) => {
         if (res.data.type === "SUCCESS") {
           alert(res.data.message);
-          navigate("/Home");
+          navigate("/");
         } else {
           alert(res.data.message);
         }
