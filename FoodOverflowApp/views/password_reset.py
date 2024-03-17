@@ -1,4 +1,5 @@
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.auth.hashers import make_password
 from django.utils.datastructures import MultiValueDictKeyError
 from django.shortcuts import render, redirect
 from django.contrib.sites.shortcuts import get_current_site
@@ -39,15 +40,16 @@ def password_reset(request):
 
 def reset(request, uidb64, token):
     try:
+        data = json.loads(request.body)
+        new_password = data.get("password")
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = Profile.objects.get(id=uid)
-        print(uid)
-        print(token)
-        print(user)
     except (TypeError, ValueError, OverflowError, Profile.DoesNotExist):
         user = None
     if user is not None and account_activation_token.check_token(user, token):
-        print("Sirve esta puta mierda")
+        user.set_password(new_password)
+        user.save()
+        return JsonResponse({"message":"Contraseña reseteada"})
     else:
         return JsonResponse({"message":"Link no es válido"})
 

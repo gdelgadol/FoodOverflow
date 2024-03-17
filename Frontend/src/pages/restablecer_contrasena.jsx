@@ -61,7 +61,7 @@ function Restablecer_contrasena() {
         password: state.password,
       })
       .then((res) => {
-        if (res.data.message === "¡Usuario creado con éxito!") { //desde el back se configura este mensaje
+        if (res.data.message === "Contraseña reseteada") { //desde el back se configura este mensaje
           alert("¡Contraseña restablecida con exito! Puedes volver a iniciar sesión.");
           navigate("/");
         } else {
