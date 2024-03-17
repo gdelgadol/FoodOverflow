@@ -7,15 +7,16 @@ import iconoImg from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 
 /* Toda esta función es generada por chat gpt, para ver como conectamos eso con el back*/
-function Register() {
+function Restablecer_contrasena() {
   const [errMsg, setErrMsg] = useState("");
   const errRef = useRef();
+  const urlParams = new URLSearchParams(window.location.search);
+  const uidb64 = urlParams.get('uidb64');
+  const token = urlParams.get('token');
 
   const [state, setState] = useState({
-    email: "",
     password: "",
     check_password: "",
-    username: "",
   });
 
   const handleInput = (event) => {
@@ -49,27 +50,22 @@ function Register() {
     }
 
     // Si la validación pasa, puedes enviar el formulario o hacer lo que necesites aquí
-    console.log("Contraseña válida:", state.password);
-    register();
+    console.log("Contraseña válida");
+    resetPass();
   };
 
   const navigate = useNavigate();
 
-  const register = () => {
+  const resetPass = () => {
     axios
-      .post("http://127.0.0.1:8000/signup/", {
-        email: state.email,
-        username: state.username,
+      .post('http://127.0.0.1:8000/password_reset/', {
         password: state.password,
-        check_password: state.check_password,
       })
       .then((res) => {
         if (res.data.message === "¡Usuario creado con éxito!") { //desde el back se configura este mensaje
           alert("¡Contraseña restablecida con exito! Puedes volver a iniciar sesión.");
           navigate("/");
-          console.log(state.email, state.username, state.password);
         } else {
-          console.log(state.email);
         }
       });
   };
@@ -133,4 +129,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default Restablecer_contrasena;
