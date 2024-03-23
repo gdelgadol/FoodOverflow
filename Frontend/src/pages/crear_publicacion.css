@@ -1,0 +1,135 @@
+.form-container {
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+    margin-bottom: 50px;
+  }
+  
+  .publication-form {
+    width: 800px;
+    max-width: 100%;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .publication-form .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  
+  .publication-form .icon img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .publication-form h1 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333333;
+    margin-bottom: 20px;
+  }
+  
+  .publication-form .input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  
+  .publication-form label {
+    font-size: 16px;
+    font-weight: normal;
+    color: #333333;
+    margin-bottom: 5px;
+  }
+  
+  .publication-form input,
+  .publication-form select,
+  .publication-form textarea {
+    height: 30px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    padding: 5px 10px;
+    outline: none;
+  }
+  
+  .publication-form .note {
+    font-size: 14px;
+    font-style: italic;
+    color: #999999;
+    margin-bottom: 10px;
+  }
+  
+  .publication-form .register-button {
+    height: 40px;
+    width: 60%;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    background-color: #ff5c00;
+    color: #ffffff;
+    cursor: pointer;
+    text-align: center;
+  }
+  
+  .publication-form .register-button:hover {
+    background-color: #ff7538;
+  }
+  
+  .publication-form .terms {
+    font-size: 14px;
+    font-weight: normal;
+    color: #333333;
+    margin-bottom: 10px;
+  }
+  
+  .publication-form .terms a {
+    color: #ff5c00;
+    text-decoration: none;
+  }
+  
+  .publication-form .terms a:hover {
+    text-decoration: underline;
+  }
+  
+  .publication-form .loginRegister {
+    font-size: 14px;
+    color: #333333;
+  }
+  
+  .publication-form .loginRegister a {
+    color: #ff5c00;
+    text-decoration: none;
+  }
+  
+  .publication-form .loginRegister a:hover {
+    text-decoration: underline;
+  }
+  
+  .publication-form .center-button {
+    margin: 0 auto;
+    display: block;
+  }
+
+  .content-textarea {
+    height: 1000px; 
+
+  }
+  
+  @media (max-width: 900px) {
+    .publication-form {
+      width: 400px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .publication-form {
+      width: 300px;
+    }
+  }
+  
