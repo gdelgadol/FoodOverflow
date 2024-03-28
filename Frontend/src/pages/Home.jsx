@@ -124,9 +124,10 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/home/");
-        if (response.data.message === "SUCCESS") {
-          setPosts(response.data);
+        const response = await axios.get("http://127.0.0.1:8000/forum/");
+        if (response.data.type === "SUCCESS") {
+          setPosts(response.posts);
+          console.log(setPosts);
         } else {
           alert(response.data.message);
         }
@@ -143,7 +144,7 @@ const Home = () => {
   const currentPosts = publicaciones.slice(firstPostIndex, lastPostIndex);
 
   // Consultar la cookie creada
-  const cookies = new Cookies();
+  /*const cookies = new Cookies();
   const jwt = cookies.get("auth_token");
 
   if(jwt){ 
@@ -156,7 +157,7 @@ const Home = () => {
           const username = res.data.username;
           console.log(username);
         });
-    }
+    }*/
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
       {
