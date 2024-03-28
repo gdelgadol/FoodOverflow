@@ -50,3 +50,23 @@ class Profile(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+
+#Publication Model
+class PublicationManager(models.Manager):
+    def create_publication(self, title, description, user_id):
+        publication = self.model(
+            publication_title = title,
+            publication_description = description,
+            profile_id = user_id
+        )
+        publication.save(using=self.db)
+        return publication
+
+class Publication(models.Model):
+    publication_id = models.BigAutoField(primary_key=True)
+    publication_title = models.CharField(max_length=100)
+    profile_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    publication_description = models.TextField(unique=True)
+
+    on_delete = models.CASCADE
+    objects = PublicationManager()
