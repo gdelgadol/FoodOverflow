@@ -1,7 +1,7 @@
 from ..models import Publication
 from ..models import Profile
 from django.http import JsonResponse
-from token import decode_jwt
+from .token import decode_jwt
 import json
 
 # View the main page publications 
