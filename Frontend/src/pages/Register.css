@@ -61,6 +61,7 @@
     font-style: italic;
     color: #999999;
     margin-bottom: 10px;
+    font-weight: 400;
   }
   
   .register-button {
@@ -99,6 +100,7 @@
   .loginRegister {
     font-size: 14px;
     color: #333333;
+    font-weight: 400;
   }
   
   .loginRegister a {

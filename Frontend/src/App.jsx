@@ -13,7 +13,7 @@ import Footer from "./components/Footer.jsx"
 function App() {
 
   return (
-    <>
+    <body>
       <Encabezado />
       <div className="container">
         <Routes>
@@ -26,10 +26,8 @@ function App() {
           <Route path="/crear_publicacion" element={<Crear_publicacion />} />
         </Routes>
       </div>
-      <br></br>
-      <br></br>
       <Footer />
-    </>
+    </body>
   );
 }
 
