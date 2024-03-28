@@ -1,7 +1,7 @@
 from ..models import Publication
 from ..models import Profile
 from django.http import JsonResponse
-#from jwt import decode as decode_jwt
+from ..views.token import decode_jwt
 import json
 
 
@@ -65,3 +65,23 @@ def get_forum_posts(request):
         return JsonResponse({"type": "ERROR", "message": "No se encontraron publicaciones"}, status=404)
     except Exception as e:
         return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
+    
+
+
+def create_forum_publication(request):
+    try:
+        data = json.loads(request.body)
+        title = data.get("title")
+        description = data.get("content")
+        jwt_token = decode_jwt(data.get("jwt"))
+        username = jwt_token['username']
+        user = Profile.objects.get(username=username)
+        Publication.objects.create_publication(title, description, user)
+        return JsonResponse({"message" : "¡Publicación creada con éxito!", "type" : "SUCCESS"})
+    except Exception as e:
+        # Catch all other exceptions
+        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
+    
+
+
+

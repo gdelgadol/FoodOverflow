@@ -1,21 +1,22 @@
 import { useRef, useState } from "react";
 import axios from "axios";
 import "./crear_publicacion.css";
+import Cookies from "universal-cookie";
 import iconoImg from "../assets/logo.png";
 
 import { Link, useNavigate } from "react-router-dom";
 
 function Crear_publicacion() {
+  // Initialize cookies
+  const cookies = new Cookies();
+  const jwt = cookies.get("auth_token");
+
   const [errMsg, setErrMsg] = useState("");
   const errRef = useRef();
   
     const [state, setState] = useState({
-      /*email: "",
-      password: "",
-      check_password: "",
-      username: "",*/
-
-      //configurar desde el backend
+      title: "",
+      content: "",
     });
   
     const handleInput = (event) => {
@@ -35,26 +36,26 @@ function Crear_publicacion() {
     const navigate = useNavigate();
   
     const crear_publicacion = () => {
-      axios
-        .post("http://127.0.0.1:8000/signup/", { //configurar el backend para crear la publicación
-        /*
-        email: state.email,
-        username: state.username,
-        password: state.password,
-        check_password: state.check_password,
-        */
-        
-        //configurar desde el backend
+      if(jwt){ 
+        axios
+          .post("http://127.0.0.1:8000/crear_publicacion/", {
+            title: state.title,
+            content: state.content,
+            jwt: jwt,
         })
         .then((res) => {
           if (res.data.type === "SUCCESS") {
             alert(res.data.message);
-            navigate("/");
+            navigate("/Home");
           } else {
             alert(res.data.message);
           }
         });
-    };
+      }
+      else{
+        alert("Usuario no ha iniciado sesión");
+      }
+    }
 
     return (
         <div className="register">
@@ -69,7 +70,7 @@ function Crear_publicacion() {
                 {errMsg}
               </h1>
               <form onSubmit={handleSubmit}>
-                <div className="input-group">
+                {/* <div className="input-group">
                   <label htmlFor="postType">¿Qué quieres publicar?</label>
                   <select
                     id="postType"
@@ -80,7 +81,7 @@ function Crear_publicacion() {
                     <option value="Receta">Receta</option>
                     <option value="Publicación">Pregunta</option>
                   </select>
-                </div>
+                </div> */}
                 <div className="input-group">
                   <label htmlFor="title">Título</label>
                   <input
@@ -111,6 +112,5 @@ function Crear_publicacion() {
           </div>
         </div>
       );
-    }
-    
+    }   
 export default Crear_publicacion;

@@ -62,7 +62,6 @@ class PublicationManager(models.Manager):
             publication_description = description,
             profile = user_id
         )
-        publication.publication_creation_date = date.today
         publication.save(using=self.db)
         return publication
 
