@@ -36,6 +36,7 @@ def signup(request):
                 )
                 # send the activation Email
                 activate_email(request, user, user.email)
+              
                 # return Success
                 return JsonResponse(
                     {

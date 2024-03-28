@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import "./Encabezado.css";
 import iconoImg from "../assets/logo.png";
+import { Link } from "react-router-dom";
 
 function Encabezado() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -25,22 +26,32 @@ function Encabezado() {
         <input type="text" placeholder="Buscar..." />
       </div>
       <div className="menu">
+        <Link to={"/About"}>
         <button className="menu-button">
         <strong>Sobre nosótros</strong>
         </button>
+        </Link>
+        <Link to={"/Contact"}>
         <button className="menu-button">
           <strong>Contáctenos</strong>
         </button>
+        </Link>
+        <Link to={"/Apoyanos"}>
         <button className="menu-button">
           <strong>Apóyanos</strong>
         </button>
+        </Link>
         {/* Botones para tamaños de pantalla más pequeños */}
-        <button className="menu-button2">
-          <strong>Iniciar sesión</strong>
+        <Link to={"/"}>
+        <button className="menu-button2" >
+          <strong>Iniciar sesión</strong> 
         </button>
+        </Link>
+        <Link to={"/Register"}>
         <button className="menu-button3">
           <strong>Registrarse</strong>
         </button>
+        </Link>
       </div>
 
       {/* Hamburguesa */}
@@ -56,31 +67,41 @@ function Encabezado() {
           <div className="search">
             <input type="text" placeholder="Buscar..." />
           </div>
+          <Link to={"/"}>
           <button className="menu-button2">
             <center>
             <strong>Iniciar sesión</strong>
             </center>
           </button>
+          </Link>
+          <Link to={"/Register"}>
           <button className="menu-button3">
             <center>
             <strong>Registrarse</strong>
             </center>
           </button>
+          </Link>
+          <Link to={"/About"}>
           <button className="menu-button">
             <center>
             <strong>Sobre nosótros</strong>
             </center>
           </button>
+          </Link>
+          <Link to={"/Contact"}>
           <button className="menu-button">
             <center>
             <strong>Contáctenos</strong>
             </center>
           </button>
+          </Link>
+          <Link to={"/Apoyanos"}>
           <button className="menu-button">
             <center>
             <strong>Apóyanos</strong>
             </center>
           </button>
+          </Link>
         </div>
       )}
     </div>
