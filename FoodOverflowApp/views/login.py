@@ -86,7 +86,7 @@ def create_token(request):
     # If user is logged in then return user's data
     payload = {
         'is_authenticated' : request.user.is_authenticated,
-        'username' : request.user.username
+        'username' : request.user.username,
     }
 
     #Encode the user's info
