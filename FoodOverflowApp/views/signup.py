@@ -25,17 +25,18 @@ def signup(request):
             # check if the password are the same
             if data.get("password") == data.get("check_password"):
                 # get the username
-                userName = data.get("username")
+                user_name = data.get("username")
                 # get the email
-                email = data.get("email")
+                user_email = data.get("email")
                 # create the user profile
                 user = Profile.objects.create_user(
-                    username = userName,
-                    passwor = data.get("password"),
-                    email = email.lower(),
+                    username = user_name,
+                    password = data.get("password"),
+                    email = user_email.lower(),
                 )
                 # send the activation Email
-                activateEmail(request, user, user.email)
+                activate_email(request, user, user.email)
+              
                 # return Success
                 return JsonResponse(
                     {
@@ -52,13 +53,11 @@ def signup(request):
             # If user already exists return error
             return JsonResponse({"message": "El usuario ya existe", "type": "ERROR"})
     except MultiValueDictKeyError:
-        userName = False
-        userPassword = False
-        checkUserPassword = False
-        email = False
+        user_name = False
+        user_email = False
 
 # send email function
-def activateEmail(request, user, to_email):
+def activate_email(request, user, to_email):
     # Define the email subject
     mail_subject = "Activa tu cuenta de FoodOverflow"
     # Define the email message

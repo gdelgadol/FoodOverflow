@@ -1,20 +1,16 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 
-
-# Create your models here.
-
 # User model
-
 class UserManager(BaseUserManager):
 
     def create_user(self, username, password, email):
         user = self.model(
-            username=username,
-            email=self.normalize_email(email)
+            username = username,
+            email = self.normalize_email(email)
         )
         user.set_password(password)
-        user.save(using=self._db)
+        user.save(using = self._db)
         return user
 
     def create_superuser(self, username, password, email):
@@ -24,21 +20,23 @@ class UserManager(BaseUserManager):
             email
         )
         user.is_admin = True
-        user.save(using=self._db)
+        user.save(using = self._db)
         return user
 
 
 class Profile(AbstractBaseUser):
-    username = models.CharField(max_length=200, unique=True)
-    email = models.EmailField(max_length=200, unique=True)
-    active = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
+    username = models.CharField(max_length = 200, unique = True)
+    email = models.EmailField(max_length = 200, unique = True)
+    active = models.BooleanField(default = False)
+
+    is_admin = models.BooleanField(default = False)
     description = models.CharField(max_length = 240)
 
-    objects = UserManager()
-
     USERNAME_FIELD = "username"
+    EMAIL_FIELD = "email"
     REQUIRED_FIELDS = ["password", "email"]
+
+    objects = UserManager()
 
     def __str__(self):
         return self.username
@@ -52,7 +50,8 @@ class Profile(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
-    
+
+#Publication Model
 class PublicationManager(models.Manager):
     def create_publication(self, title, description, user_id):
         publication = self.model(
@@ -71,5 +70,3 @@ class Publication(models.Model):
 
     on_delete = models.CASCADE
     objects = PublicationManager()
-
-    

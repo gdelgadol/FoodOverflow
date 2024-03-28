@@ -38,7 +38,8 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS', default = True, cast = bool)
 # Application definition
 
 INSTALLED_APPS = [
-    "FoodOverflowApp",
+#    "FoodOverflowApp",
+    "whitenoise.runserver_nostatic",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -46,10 +47,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "corsheaders",
+    "FoodOverflowApp.apps.FoodoverflowappConfig",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -113,6 +116,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#AUTH_USER
+AUTH_USER_MODEL = 'FoodOverflowApp.Profile'
+LOGIN_URL = '/login/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

@@ -1,34 +1,39 @@
 from django.utils.datastructures import MultiValueDictKeyError
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import login as create_cookie, logout as remove_cookie
-from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import JsonResponse
 from ..models import Profile
+from decouple import config
 import json
+import jwt
 
 # Log in function
 def login(request):
     try:
         #get the Json Data, Email and Password
         data = json.loads(request.body)
-        userEmail = data.get("email")
-        userPassword = data.get("password")
+        user_email = data.get("email")
+        user_password = data.get("password")
 
         #Check if user exists
-        if Profile.objects.filter(email=userEmail).exists():
+        if Profile.objects.filter(email=user_email).exists():
             #Get the user password
-            password = Profile.objects.get(email=userEmail).password
+            password = Profile.objects.get(email=user_email).password
             # check the passwords
-            if check_password(userPassword, password):
+            if check_password(user_password, password):
                 #check if the user account is activated
-                if Profile.objects.get(email=userEmail).active:
+                if Profile.objects.get(email=user_email).active:
                     # Look for the logged in user and create the cookie
-                    user = Profile.objects.get(email=userEmail)
+                    user = Profile.objects.get(email=user_email)
                     create_cookie(request, user)
+                    # Create the JWT token
+                    token = create_token(request)
 
-                    #return Success
+                    #return Success and JWT token
                     return JsonResponse(
-                        {"message": "¡Login exitoso!", "type": "SUCCESS"}
+                        {"message": "¡Login exitoso!", 
+                         "type": "SUCCESS",
+                         'jwt' : token}
                     )
 
                 else:
@@ -57,11 +62,11 @@ def login(request):
             )
     # If the backend response fails return error
     except MultiValueDictKeyError:
-        userEmail = False
-        userPassword = False
+        user_email = False
+        user_password = False
         return JsonResponse(
             {
-                "message": "HA surgido un error. Intenta de nuevo.",
+                "message": "Ha surgido un error. Intenta de nuevo.",
                 "type": "ERROR",
             }
         )
@@ -72,20 +77,22 @@ def logout(request):
     if request.user.is_authenticated:
         remove_cookie(request)
 
-# Check the user state
-@ensure_csrf_cookie
-def is_authenticated(request):
-    # If user does not logged in then return False
-    if not request.user.is_authenticated:
-        return JsonResponse({'status' : False})
-    # If user is logged in then return True
-    return JsonResponse({'status' : True})
-
 # Get the user data
-@ensure_csrf_cookie
-def user_info(request):
+def create_token(request):
     # If user does not logged in then return Error
     if not request.user.is_authenticated:
-        return JsonResponse({'type' : 'Error, el usuario no ha iniciado sesión.'})
+        return JsonResponse({'type' : 'ERROR' , 'message' : 'El usuario no ha iniciado sesión.'})
+    
     # If user is logged in then return user's data
-    return JsonResponse({'username' : request.user.username})
+    payload = {
+        'is_authenticated' : request.user.is_authenticated,
+        'username' : request.user.username
+    }
+
+    #Encode the user's info
+    secret = config('SECRET_JWT_KEY')
+    algorithm = config('JWT_ALGORITHM')
+    token = jwt.encode(payload, secret, algorithm = algorithm)
+
+    #return token
+    return token
