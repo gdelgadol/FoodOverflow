@@ -1,0 +1,40 @@
+from ..models import Publication
+from ..models import Profile
+from django.http import JsonResponse
+from token import decode_jwt
+import json
+
+# View the main page publications 
+def get_first_n_publications(request):
+    #get the Json Data, Email and Password
+    data = json.loads(request.body)
+    page = int(data.get("page"))
+    num_of_searchs = int(data.get("num_of_searchs"))
+    filter = data.get("filter")
+
+    start = (page-1)*num_of_searchs
+    end = page*num_of_searchs-1
+
+    publications_querries = Publication.objects.filter(filter)[start : end]
+
+    publications = {}
+
+    count = 0
+    for publication_querrie in publications_querries:
+        username = Profile.objects.get(pk = publication_querrie.profile_id).username
+        publication = {'author' : username, 
+                       'title' : publication_querrie.publication_title,
+                       'content' : publication_querrie.publication_description,
+                       'id' : publication_querrie.publication_id}
+        publications['publication_'+str(count)] = publication
+        count+=1
+    
+    return JsonResponse(publications)
+
+
+def get_publication(request):
+    #get the Json Data, Email and Password
+    data = json.loads(request.body)
+    publication_id = int(data.get("publication_id"))
+
+    return
