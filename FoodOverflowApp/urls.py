@@ -9,6 +9,6 @@ urlpatterns = [
     path('restablecer_contrasena/<uidb64>/<token>', views.reset, name='restablecer'), # Reset password path
     path('logout/', views.logout, name = "logout"), # Log out path
     path('user_token/', views.get_user_data, name = "user_token"), # user's info in JWT Token
-    path('forum/', views.get_first_n_publications, name = "get_forum_posts"), 
+    path('forum/', views.get_forum_posts, name = "get_forum_posts"), 
 ]
 
