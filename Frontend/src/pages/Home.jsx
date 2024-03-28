@@ -2,6 +2,7 @@ import Publicacion from "../components/Publicacion";
 import Paginacion from "../components/Paginacion";
 import { useEffect, useState } from "react";
 import axios from "../api/axios.jsx";
+import Cookies from 'universal-cookie';
 
 const publicaciones = [
   {
@@ -141,6 +142,21 @@ const Home = () => {
   const firstPostIndex = lastPostIndex - postsPerPage;
   const currentPosts = publicaciones.slice(firstPostIndex, lastPostIndex);
 
+  // Consultar la cookie creada
+  const cookies = new Cookies();
+  const jwt = cookies.get("auth_token");
+
+  if(jwt){ 
+  // Si la cookie existe se hace una petición al back para devolver el username (Depende de qué necesita miramos qué retorna este post)
+    axios
+        .post("http://127.0.0.1:8000/user_token/", {
+          jwt: jwt,
+        })
+        .then((res) => {
+          const username = res.data.username;
+          console.log(username);
+        });
+    }
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
       {
