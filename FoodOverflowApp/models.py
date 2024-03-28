@@ -2,6 +2,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.utils import timezone
 from django.db import models
+from datetime import date
 
 # User model
 class UserManager(BaseUserManager):
@@ -61,7 +62,7 @@ class PublicationManager(models.Manager):
             publication_description = description,
             profile = user_id
         )
-        publication_creation_date = timezone.now()
+        publication.publication_creation_date = timezone.now()
         publication.save(using=self.db)
         return publication
 
@@ -70,8 +71,9 @@ class Publication(models.Model):
     publication_title = models.CharField(max_length=100)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     publication_description = models.TextField(unique=True)
-    publication_creation_date = models.DateField()
-    publication_tags = ArrayField(models.IntegerField())
+    publication_creation_date = models.DateField(default=date.today)
+
+    #publication_tags = ArrayField(models.IntegerField(blank = True, default = -1))
 
     on_delete = models.CASCADE
     objects = PublicationManager()
