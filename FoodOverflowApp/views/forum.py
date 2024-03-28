@@ -39,12 +39,24 @@ def get_publication(request):
     data = json.loads(request.body)
     publication_id = int(data.get("publication_id"))
 
-    return
+    publication = Publication.objects.select_related('profile').get(publication_id = publication_id)
+    num_comments = 0
+    publication_score = 0
+
+    publication_json = {
+        'username' : publication.profile.username,
+        'title' : publication.publication_description,
+        'description' : publication.publication_description,
+        "num_comments": num_comments,
+        "score": publication_score
+        }
+    
+    return JsonResponse(publication_json)
 
 
 def get_forum_posts(request):
     try:
-        publications_query = Publication.objects.select_related('profile').all()
+        publications_query = Publication.objects.order_by('publication_creation_date').select_related('profile').all()
         posts = []
 
         for publication in publications_query:
