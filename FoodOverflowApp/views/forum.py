@@ -12,10 +12,10 @@ def get_first_n_publications(request):
     num_of_searchs = int(data.get("num_of_searchs"))
     filter = data.get("filter")
 
-    start = (page-1)*num_of_searchs
+    start = (page-1)*num_of_searchs-1
     end = page*num_of_searchs-1
 
-    publications_querries = Publication.objects.filter(filter)[start : end]
+    publications_querries = Publication.objects.order_by(filter)[start : end]
 
     publications = {}
 
@@ -28,6 +28,8 @@ def get_first_n_publications(request):
                        'id' : publication_querrie.publication_id}
         publications['publication_'+str(count)] = publication
         count+=1
+
+    print(publications)
     
     return JsonResponse(publications)
 
