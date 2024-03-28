@@ -408,4 +408,3 @@ logs/
 
 # Ignore postgres volume
 postgres-data/
-
