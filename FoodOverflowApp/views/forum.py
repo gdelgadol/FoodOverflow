@@ -13,25 +13,24 @@ def get_first_n_publications(request):
     num_of_searchs = int(data.get("num_of_searchs"))
     filter = data.get("filter")
 
-    start = (page - 1) * num_of_searchs
-    end = page * num_of_searchs - 1
+    start = (page-1)*num_of_searchs-1
+    end = page*num_of_searchs-1
 
-    publications_querries = Publication.objects.filter(filter)[start:end]
+    publications_querries = Publication.objects.order_by(filter)[start : end]
 
     publications = {}
 
     count = 0
     for publication_querrie in publications_querries:
-        username = Profile.objects.get(pk=publication_querrie.profile_id).username
-        publication = {
-            "author": username,
-            "title": publication_querrie.publication_title,
-            "content": publication_querrie.publication_description,
-            "id": publication_querrie.publication_id,
-        }
-        publications["publication_" + str(count)] = publication
-        count += 1
+        username = Profile.objects.get(pk = publication_querrie.profile_id).username
+        publication = {'author' : username, 
+                       'title' : publication_querrie.publication_title,
+                       'content' : publication_querrie.publication_description,
+                       'id' : publication_querrie.publication_id}
+        publications['publication_'+str(count)] = publication
+        count+=1
 
+    print(publications)
     return JsonResponse(publications)
 
 

@@ -62,7 +62,7 @@ class PublicationManager(models.Manager):
             publication_description = description,
             profile = user_id
         )
-        publication.publication_creation_date = timezone.now()
+        publication.publication_creation_date = date.today
         publication.save(using=self.db)
         return publication
 
@@ -73,7 +73,7 @@ class Publication(models.Model):
     publication_description = models.TextField(unique=True)
     publication_creation_date = models.DateField(default=date.today)
 
-    #publication_tags = ArrayField(models.IntegerField(blank = True, default = -1))
+    publication_tags = ArrayField(models.IntegerField(blank = True, default = -1), default = [])
 
     on_delete = models.CASCADE
     objects = PublicationManager()
