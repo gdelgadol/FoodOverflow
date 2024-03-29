@@ -102,7 +102,8 @@ const Login = () => {
           login_cookie.set("auth_token", jwt_token);
 
           alert("Inicio exitoso!");
-          navigate("/Home");
+          navigate("/");
+          window.location.reload();
         } else {
           setErrMsg(res.data.message);
         }
