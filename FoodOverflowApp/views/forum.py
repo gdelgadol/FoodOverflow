@@ -1,7 +1,7 @@
 from ..models import Publication
 from ..models import Profile
 from django.http import JsonResponse
-#from jwt import decode as decode_jwt
+from ..views.token import decode_jwt
 import json
 
 
@@ -39,12 +39,24 @@ def get_publication(request):
     data = json.loads(request.body)
     publication_id = int(data.get("publication_id"))
 
-    return
+    publication = Publication.objects.select_related('profile').get(publication_id = publication_id)
+    num_comments = 0
+    publication_score = 0
+
+    publication_json = {
+        'username' : publication.profile.username,
+        'title' : publication.publication_description,
+        'description' : publication.publication_description,
+        "num_comments": num_comments,
+        "score": publication_score
+        }
+    
+    return JsonResponse(publication_json)
 
 
 def get_forum_posts(request):
     try:
-        publications_query = Publication.objects.select_related('profile').all()
+        publications_query = Publication.objects.order_by('publication_creation_date').select_related('profile').all()
         posts = []
 
         for publication in publications_query:
@@ -66,3 +78,23 @@ def get_forum_posts(request):
         return JsonResponse({"type": "ERROR", "message": "No se encontraron publicaciones"}, status=404)
     except Exception as e:
         return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
+    
+
+
+def create_forum_publication(request):
+    try:
+        data = json.loads(request.body)
+        title = data.get("title")
+        description = data.get("content")
+        jwt_token = decode_jwt(data.get("jwt"))
+        username = jwt_token['username']
+        user = Profile.objects.get(username=username)
+        Publication.objects.create_publication(title, description, user)
+        return JsonResponse({"message" : "¡Publicación creada con éxito!", "type" : "SUCCESS"})
+    except Exception as e:
+        # Catch all other exceptions
+        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
+    
+
+
+

@@ -2,8 +2,12 @@ import React, { useState } from 'react';
 import "./Encabezado.css";
 import iconoImg from "../assets/logo.png";
 import { Link } from "react-router-dom";
+import Cookies from 'universal-cookie';
 
 function Encabezado() {
+  const cookies = new Cookies();
+  const jwt = cookies.get("auth_token");
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -42,16 +46,33 @@ function Encabezado() {
         </button>
         </Link>
         {/* Botones para tamaños de pantalla más pequeños */}
-        <Link to={"/"}>
-        <button className="menu-button2" >
-          <strong>Iniciar sesión</strong> 
-        </button>
-        </Link>
-        <Link to={"/Register"}>
-        <button className="menu-button3">
-          <strong>Registrarse</strong>
-        </button>
-        </Link>
+        {jwt ? (
+          <>
+            <Link to={"/crear_publicacion"}>
+              <button className="menu-button2">
+                <strong>Crear</strong> 
+              </button>
+            </Link>
+            <Link to={"/Home"}>
+              <button className="menu-button3">
+                <strong>Usuario</strong>
+              </button>
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link to={"/"}>
+              <button className="menu-button2">
+                <strong>Iniciar sesión</strong> 
+              </button>
+            </Link>
+            <Link to={"/Register"}>
+              <button className="menu-button3">
+                <strong>Registrarse</strong>
+              </button>
+            </Link>
+          </>
+        )}
       </div>
 
       {/* Hamburguesa */}
@@ -64,23 +85,41 @@ function Encabezado() {
       {/* Tamaños de pantalla más pequeños */}
       {menuOpen && (
         <div className="menu-dropdown">
-          <div className="search">
-            <input type="text" placeholder="Buscar..." />
-          </div>
-          <Link to={"/"}>
-          <button className="menu-button2">
-            <center>
-            <strong>Iniciar sesión</strong>
-            </center>
-          </button>
-          </Link>
-          <Link to={"/Register"}>
-          <button className="menu-button3">
-            <center>
-            <strong>Registrarse</strong>
-            </center>
-          </button>
-          </Link>
+            {jwt ? (
+            <>
+              <Link to={"/crear_publicacion"}>
+                <button className="menu-button2">
+                  <center>
+                  <strong>Crear</strong>
+                  </center>
+                </button>
+              </Link>
+              <Link to={"/Home"}>
+                <button className="menu-button3">
+                  <center>
+                  <strong>Usuario</strong>
+                  </center>
+                </button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link to={"/"}>
+                <button className="menu-button2">
+                  <center>
+                  <strong>Iniciar sesión</strong> 
+                  </center>
+                </button>
+              </Link>
+              <Link to={"/Register"}>
+                <button className="menu-button3">
+                  <center>
+                  <strong>Registrarse</strong>
+                  </center>
+                </button>
+              </Link>
+            </>
+          )}
           <Link to={"/About"}>
           <button className="menu-button">
             <center>
