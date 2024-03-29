@@ -117,17 +117,18 @@ const Home = () => {
 
   const [posts, setPosts] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
-  const [postsPerPage, setPostsPerPage] = useState(1) // Numero de post por pagina
+  const [postsPerPage, setPostsPerPage] = useState(10) // Numero de post por pagina
 
-  const maxPage = publicaciones.length / postsPerPage
+  const maxPage = posts.length / postsPerPage
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://127.0.0.1:8000/forum/");
         if (response.data.type === "SUCCESS") {
-          setPosts(response.posts);
-          console.log(setPosts);
+          setPosts(response.data.posts);
+          console.log("AQUI")
+          console.log(response.data);
         } else {
           alert(response.data.message);
         }
@@ -141,7 +142,7 @@ const Home = () => {
   
   const lastPostIndex = currentPage * postsPerPage;
   const firstPostIndex = lastPostIndex - postsPerPage;
-  const currentPosts = publicaciones.slice(firstPostIndex, lastPostIndex);
+  const currentPosts = posts.slice(firstPostIndex, lastPostIndex);
 
   // Consultar la cookie creada
   /*const cookies = new Cookies();

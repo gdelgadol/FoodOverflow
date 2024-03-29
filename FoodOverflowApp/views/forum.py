@@ -52,6 +52,7 @@ def get_forum_posts(request):
             num_comments = 0
             score = 0
             post_data = {
+                "id": publication.publication_id,
                 "userName": username,
                 "title": publication.publication_title,
                 "description": publication.publication_description,
