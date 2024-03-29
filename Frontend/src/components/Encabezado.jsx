@@ -17,6 +17,7 @@ function Encabezado() {
   return (
     <div className="header">
       {/* Contenido para tamaños de pantalla más grandes */}
+      <Link to={"/"}>
       <div className="icon-header">
         <img
           src={iconoImg}
@@ -25,7 +26,7 @@ function Encabezado() {
         />
         <div className="logo">Food Overflow</div>
       </div>
-
+      </Link>
       <div className="search">
         <input type="text" placeholder="Buscar..." />
       </div>
@@ -53,7 +54,7 @@ function Encabezado() {
                 <strong>Crear</strong> 
               </button>
             </Link>
-            <Link to={"/Home"}>
+            <Link to={"/Profile"}>
               <button className="menu-button3">
                 <strong>Usuario</strong>
               </button>
@@ -61,7 +62,7 @@ function Encabezado() {
           </>
         ) : (
           <>
-            <Link to={"/"}>
+            <Link to={"/Login"}>
               <button className="menu-button2">
                 <strong>Iniciar sesión</strong> 
               </button>
