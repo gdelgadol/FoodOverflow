@@ -28,24 +28,25 @@ function Encabezado() {
       </div>
       </Link>
       <div className="search">
-        <input type="text" placeholder="Buscar..." />
+        <input type="text" placeholder="Buscar" />
       </div>
       <div className="menu">
         <Link to={"/About"}>
         <button className="menu-button">
-        <strong>Sobre nosótros</strong>
+        <span className="spanHeader">Sobre nosótros</span>
         </button>
         </Link>
         <Link to={"/Contact"}>
         <button className="menu-button">
-          <strong>Contáctenos</strong>
+          <span className="spanHeader">Contáctenos</span>
         </button>
         </Link>
         <Link to={"/Apoyanos"}>
         <button className="menu-button">
-          <strong>Apóyanos</strong>
+          <span className="spanHeader">Apóyanos</span>
         </button>
         </Link>
+        <div className="separator"></div>
         {/* Botones para tamaños de pantalla más pequeños */}
         {jwt ? (
           <>

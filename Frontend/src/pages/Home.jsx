@@ -2,122 +2,16 @@ import Publicacion from "../components/Publicacion";
 import Paginacion from "../components/Paginacion";
 import { useEffect, useState } from "react";
 import axios from "../api/axios.jsx";
+import "./Home.css"
 import Cookies from 'universal-cookie';
-
-const publicaciones = [
-  {
-    userName: 'juan',
-    title: 'Prueba',
-    description: 'Llevo tiempo queriendo preparar una labor tan especial.',
-    numComments: 8,
-    score: 10
-  },
-  {
-    userName: 'juan',
-    title: 'Prueba',
-    description: 'mvslkvskvnslkvnvsvns',
-    numComments: 25000,
-    score: 10
-  },
-  {
-    userName: 'juan',
-    title: 'Prueba',
-    description: 'Llevo tiempo queriendo preparar una labor tan especial.',
-    numComments: 25000,
-    score: 10
-  },
-  {
-    userName: 'juan',
-    title: 'Prueba',
-    description: 'mvslkvskvnslkvnvsvns',
-    numComments: 25000,
-    score: 10
-  },
-  {
-    userName: 'juan',
-    title: 'Prueba',
-    description: 'mvslkvskvnslkvnvsvns',
-    numComments: 25000,
-    score: 10
-  },
-  {
-    userName: 'juan',
-    title: 'Prueba',
-    description: 'Llevo tiempo queriendo preparar una labor tan especial.',
-    numComments: 8,
-    score: 10
-  },
-  {
-    userName: 'juan',
-    title: 'Prueba',
-    description: 'mvslkvskvnslkvnvsvns',
-    numComments: 25000,
-    score: 10
-  },
-  {
-    userName: 'juan',
-    title: 'Prueba',
-    description: 'Llevo tiempo queriendo preparar una labor tan especial.',
-    numComments: 25000,
-    score: 10
-  },
-  {
-    userName: 'juan',
-    title: 'Prueba',
-    description: 'mvslkvskvnslkvnvsvns',
-    numComments: 25000,
-    score: 10
-  },
-  {
-    userName: 'juan',
-    title: 'Prueba',
-    description: 'mvslkvskvnslkvnvsvns',
-    numComments: 25000,
-    score: 10
-  },
-  {
-    userName: 'juan',
-    title: 'Prueba',
-    description: 'Llevo tiempo queriendo preparar una labor tan especial.',
-    numComments: 8,
-    score: 10
-  },
-  {
-    userName: 'juan',
-    title: 'Prueba',
-    description: 'mvslkvskvnslkvnvsvns',
-    numComments: 25000,
-    score: 10
-  },
-  {
-    userName: 'juan',
-    title: 'Prueba',
-    description: 'Llevo tiempo queriendo preparar una labor tan especial.',
-    numComments: 25000,
-    score: 10
-  },
-  {
-    userName: 'juan',
-    title: 'Prueba',
-    description: 'mvslkvskvnslkvnvsvns',
-    numComments: 25000,
-    score: 10
-  },
-  {
-    userName: 'juan',
-    title: 'Prueba',
-    description: 'mvslkvskvnslkvnvsvns',
-    numComments: 25000,
-    score: 10
-  }
-]
-
 
 const Home = () => {
 
   const [posts, setPosts] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
-  const [postsPerPage, setPostsPerPage] = useState(10) // Numero de post por pagina
+  const [postsPerPage, setPostsPerPage] = useState(1) // Numero de post por pagina
+  const [filtro_1, setFiltro_1] = useState()
+  const [filtro_2, setFiltro_2] = useState()
 
   const maxPage = posts.length / postsPerPage
 
@@ -160,7 +54,22 @@ const Home = () => {
         });
     }*/
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+    <div className="posts-container">
+      <div className="hm-filtro">
+        <div className="hm-filtro-container">
+          Ordenar por
+          <select className="hm-filtro-select" onChange={(e) => setFiltro_1(e.target.value)}>
+            <option value="Recientes">Recientes</option>
+            <option value="Más votados">Más votados</option>
+          </select>
+          <select className="hm-filtro-select" onChange={(e) => setFiltro_2(e.target.value)}>
+            <option value="Todas">Todas</option>
+            <option value="Preguntas">Preguntas</option>
+            <option value="Recetas">Recetas</option>
+          </select>
+        </div>
+        <div className='hm-separator'></div>
+      </div>
       {
         currentPosts.map((publicacion, index) => (
           <Publicacion

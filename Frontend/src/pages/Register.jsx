@@ -151,7 +151,7 @@ function Register() {
         </p>
         <center>
         <p className="loginRegister">
-          ¿Ya tienes una cuenta? <Link to={"/"}>Inicia sesión</Link>
+          ¿Ya tienes una cuenta? <Link to={"/login"}>Inicia sesión</Link>
         </p>
         </center>
       </div>
