@@ -1,8 +1,6 @@
 .publicacion {
     display: flex;
     align-items: center;
-    background-color: #fdfdfdeb;
-    border-radius: 10px;
     width: 60vw;
 }
 
@@ -14,8 +12,6 @@
     justify-content: center;
     flex-direction: column;
     flex: 0 0 60px;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
     gap: 8px;
     font-weight: bold; /*700*/
 }
@@ -74,3 +70,9 @@
     padding-top: 7px;
     padding-bottom: 7px;
 }
+
+.separatorPost {
+    width: auto; 
+    height: 1px;
+    background-color: #c3c3c3;
+  }
