@@ -101,7 +101,7 @@ const Rec_contrasena = () => {
               />
             </div>
             <h1 className="li-h1">Reestablece tu contraseña</h1>
-            <p class="note">Introduce tu dirección de correo electrónico y te enviaremos un enlace de restablecimiento de tu contraseña.</p>
+            <p className="note">Introduce tu dirección de correo electrónico y te enviaremos un enlace de restablecimiento de tu contraseña.</p>
             <h1
               ref={errRef}
               className={errMsg ? "errmsg li-h1-error " : "offscreen"}
@@ -135,7 +135,7 @@ const Rec_contrasena = () => {
               <p className="li-p">
                 <center>
                 <span>
-                  <Link to={"/"}>
+                  <Link to={"/login"}>
                     Volver al inicio de sesión
                   </Link>
                 </span>

@@ -2,7 +2,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100v;
   }
   
   .form {
@@ -27,10 +26,10 @@
     height: 50px;
   }
   
-  h1 {
+  .rt-h1 {
     text-align: center;
     font-size: 24px;
-    font-weight: bold;
+    font-weight: 600;
     color: #333333;
     margin-bottom: 20px;
   }

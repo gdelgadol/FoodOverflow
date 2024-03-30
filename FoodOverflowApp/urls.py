@@ -12,5 +12,6 @@ urlpatterns = [
     path('forum/', views.get_forum_posts, name = "get_forum_posts"), # get the publications path
     path('crear_publicacion/', views.create_forum_publication, name= "crear_publicaion"), # create publication path
     path('delete_user/',views.delete_user, name = 'delete_user'), # delete_user path
+    path('post/', views.get_publication, name= "get_publication"), # get the publication 
 ]
 

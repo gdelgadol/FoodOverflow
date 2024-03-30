@@ -83,7 +83,7 @@ function Register() {
             style={{ width: "45px", height: "50px" }}
           />
         </div>
-        <h1>Únete a Food Overflow hoy</h1>
+        <h1 className="rt-h1">Únete a Food Overflow hoy</h1>
         <h1
           ref={errRef}
           className={errMsg ? "errmsg li-h1-error " : "offscreen"}

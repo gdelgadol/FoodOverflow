@@ -10,10 +10,11 @@ import {Routes, Route} from "react-router-dom";
 import Encabezado from "./components/Encabezado.jsx"
 import Footer from "./components/Footer.jsx"
 import PrivateRoute from "./utils/PrivateRoute"
+import DetallesPublicacion from "./pages/DetallesPublicacion"
 
 function App() {
   return (
-    <body>
+    <div className="app-body">
       <Encabezado />
       <div className="container">
         <Routes>
@@ -23,13 +24,14 @@ function App() {
           <Route path="/activate/:uid/:token" element={<Activate />} />
           <Route path="/recuperar_contrasena" element={<Rec_contrasena />} />
           <Route path="/restablecer_contrasena/:uid/:token/" element={<Restablecer_contrasena />} />
+          <Route path="/post/:id" element={<DetallesPublicacion />}/>
           <Route element={<PrivateRoute />}>
             <Route path="/crear_publicacion" element={<Crear_publicacion />} />
           </Route>
         </Routes>
       </div>
       <Footer />
-    </body>
+    </div>
   );
 }
 

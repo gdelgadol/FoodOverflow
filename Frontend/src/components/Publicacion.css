@@ -2,6 +2,14 @@
     display: flex;
     align-items: center;
     width: 60vw;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    color: inherit !important;
+}
+
+.publicacion:hover,
+.publicacion:active {
+    transform: scale(1.05);
 }
 
 .score{
@@ -43,16 +51,6 @@
     margin-bottom: 8px;
     font-weight: 500;
 }
-
-.texto-con-desvanecimiento::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 1.2em; /* Altura de una línea */
-    background-image: linear-gradient(to bottom, transparent, white); /* Gradiente de transparente a blanco */
-  }
 
 .comments{
     display: flex;
