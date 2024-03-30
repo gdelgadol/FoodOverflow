@@ -4,6 +4,8 @@ body {
   background-image: url(assets/background.png);
   min-height: 100vh;
   background-size: cover;
+  display: flex;
+  flex-direction: column;
 }
 
 @font-face {

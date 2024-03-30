@@ -194,19 +194,17 @@ const Login = () => {
             </form>
             <div className="li-div-text">
               <p className="li-p">
-                <center>
                 <span>
                   <Link to={"/recuperar_contrasena"}>
                     ¿Has olvidado tu contraseña?
                   </Link>
                 </span>
-                </center>
-                <p className="li-p">
+                <br></br>
+                <br></br>
                   ¿Es tu primera vez en Food Overflow?
                   <span>
                     <Link to={"/register"}> Registrate</Link>
                   </span>
-                </p>
               </p>
             </div>
           </div>

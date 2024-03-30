@@ -1,0 +1,117 @@
+.dp-container {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+    background-color: #fdfdfdeb;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    gap: 20px;
+}
+
+.dp-post {
+    display: flex;
+    align-items: center;
+    width: 60vw;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+}
+
+.dp-score{
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: #d6d6d6;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    flex: 0 0 60px;
+    gap: 8px;
+    font-weight: bold; /*700*/
+    padding-top: 25px;
+}
+
+.dp-contenido{
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    margin: 15px;
+}
+
+.dp-userName{
+    font-size: 12px;
+    font-weight: 400;
+    color: #000000;
+}
+
+.dp-title{
+    font-size: 20px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.dp-description {
+    line-height: 1.2em;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.dp-numComments{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background-color: #d6d6d6;
+    font-weight: 600;
+    font-size: 15px;
+    gap: 8px;
+    max-width: 80%;
+    width: fit-content;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+.dp-makeComment{
+    display: flex;
+    width: 60vw;
+    border-radius: 10px;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.dp-inputComment{
+    margin: 20px;
+    font-weight: 600;
+}
+
+.dp-submitComment{
+    width: 90px;
+    height: 30px;
+    border: none;
+    margin-bottom: 20px;
+    background-color: #ff5c00;
+    color: #ffffff;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: 20px;
+    font-weight: 600;
+    border-radius: 10px;
+}
+
+.dp-comments {
+    display: flex;
+    align-items: center;
+    width: 60vw;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+}
+
+.ql-editor ul {
+    list-style-type: square; 
+    margin-left: 20px;
+  }

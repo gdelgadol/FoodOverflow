@@ -41,13 +41,14 @@ def get_publication(request):
 
     publication = Publication.objects.select_related('profile').get(publication_id = publication_id)
     num_comments = 0
-    publication_score = 0
+    publication_score = 5
 
     publication_json = {
+        "type": "SUCCESS",
         'username' : publication.profile.username,
-        'title' : publication.publication_description,
+        'title' : publication.publication_title,
         'description' : publication.publication_description,
-        "num_comments": num_comments,
+        "numComments": num_comments,
         "score": publication_score
         }
     

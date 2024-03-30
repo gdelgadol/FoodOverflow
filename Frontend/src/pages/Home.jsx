@@ -9,7 +9,7 @@ const Home = () => {
 
   const [posts, setPosts] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
-  const [postsPerPage, setPostsPerPage] = useState(1) // Numero de post por pagina
+  const [postsPerPage, setPostsPerPage] = useState(10) // Numero de post por pagina
   const [filtro_1, setFiltro_1] = useState()
   const [filtro_2, setFiltro_2] = useState()
 
@@ -21,8 +21,6 @@ const Home = () => {
         const response = await axios.get("http://127.0.0.1:8000/forum/");
         if (response.data.type === "SUCCESS") {
           setPosts(response.data.posts);
-          console.log("AQUI")
-          console.log(response.data);
         } else {
           alert(response.data.message);
         }
@@ -74,6 +72,7 @@ const Home = () => {
         currentPosts.map((publicacion, index) => (
           <Publicacion
             key={index}
+            id_post={publicacion.id}
             userName={publicacion.userName}
             title={publicacion.title}
             description={publicacion.description}

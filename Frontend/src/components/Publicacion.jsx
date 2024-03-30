@@ -1,12 +1,13 @@
 import './Publicacion.css';
 import {HiArrowCircleDown, HiArrowCircleUp} from "react-icons/hi";
 import { BiComment } from "react-icons/bi";
+import { Link } from 'react-router-dom';
 
-export default function Publicacion ({userName, title, description, numComments, score}) {
+export default function Publicacion ({id_post, userName, title, description, numComments, score}) {
 
     return (
         <div>
-            <div className='publicacion'>
+            <Link to={`/post/${id_post}`} className='publicacion'>
                 <div className='score'>
                     <HiArrowCircleDown size={30} />
                     {score}
@@ -21,7 +22,7 @@ export default function Publicacion ({userName, title, description, numComments,
                         {numComments}
                     </div>
                 </div>
-            </div>
+            </Link>
             <div className='separatorPost'></div>
         </div>
     )
