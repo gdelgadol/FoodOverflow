@@ -46,7 +46,7 @@ function Crear_publicacion() {
         .then((res) => {
           if (res.data.type === "SUCCESS") {
             alert(res.data.message);
-            navigate("/Home");
+            navigate("/");
           } else {
             alert(res.data.message);
           }
