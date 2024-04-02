@@ -103,8 +103,7 @@ const Login = () => {
           login_cookie.set("auth_token", jwt_token);
 
           alert("Inicio exitoso!");
-          navigate("/");
-          window.location.reload();
+          window.location.href = "http://localhost:5173/";
         } else {
           setErrMsg(res.data.message);
         }

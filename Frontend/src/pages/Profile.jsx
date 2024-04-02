@@ -1,15 +1,15 @@
 import { useState } from "react";
 import "./Profile.css"; 
 import axios from "../api/axios.jsx";
-import imagen from "../assets/logo.png";
 import Cookies from 'universal-cookie';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function AccountDetails() {
     const [userInfo, setUserInfo] = useState({
       email: "usuario@example.com", 
       password: "********", 
     });
+    
     const cookies = new Cookies();
     const jwt = cookies.get("auth_token");
   
@@ -22,7 +22,6 @@ function AccountDetails() {
     };
   
     const handleChangePassword = () => {
-
       console.log("Cambiar contraseña");
     };
   
@@ -33,7 +32,7 @@ function AccountDetails() {
     const handleConfirmPasswordChange = (event) => {
       setConfirmPassword(event.target.value);
     };
-    const navigate = useNavigate();
+
     const handleDeleteAccount = () => {
         if (!deleteChecked || confirmPassword === "") {
           alert(
@@ -49,11 +48,8 @@ function AccountDetails() {
           .then((res) => {
             if (res.data.type === "SUCCESS") {
               alert(res.data.message);
-              navigate("/login");
-              setUserInfo({
-                email: "", 
-                password: "", 
-              });
+              cookies.remove("auth_token");
+              window.location.href = "http://localhost:5173/login";
             } else {
               alert(res.data.message);
             }

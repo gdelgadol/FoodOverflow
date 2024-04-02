@@ -65,7 +65,7 @@ function Register() {
       .then((res) => {
         if (res.data.type === "SUCCESS") {
           alert(res.data.message);
-          navigate("/");
+          navigate("/login");
         } else {
           alert(res.data.message);
         }
