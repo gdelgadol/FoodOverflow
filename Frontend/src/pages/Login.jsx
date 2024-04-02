@@ -10,7 +10,8 @@ import { Link, useNavigate } from "react-router-dom";
 const Login = () => {
 
   // Initialize cookies
-  const login_cookie = new Cookies(null, {path: '/'});
+
+  const login_cookie = new Cookies(null, {path: "/"});
 
   const userRef = useRef();
   const errRef = useRef();

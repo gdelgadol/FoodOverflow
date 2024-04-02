@@ -88,12 +88,13 @@ def create_forum_publication(request):
         title = data.get("title")
         description = data.get("content")
         jwt_token = decode_jwt(data.get("jwt"))
-
+        
         username = jwt_token['username']
         user = Profile.objects.get(username = username)
         Publication.objects.create_publication(title, description, user)
         return JsonResponse({"message" : "¡Publicación creada con éxito!", "type" : "SUCCESS"})
     except Exception as e:
+        print(e)
         # Catch all other exceptions
         return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
     

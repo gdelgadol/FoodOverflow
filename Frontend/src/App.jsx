@@ -5,6 +5,7 @@ import Rec_contrasena from "./pages/recuperar_contrasena"
 import Restablecer_contrasena from "./pages/restablecer_contrasena"
 import Activate from "./pages/Activate"
 import Crear_publicacion from "./pages/crear_publicacion"
+import Profile from "./pages/Profile"
 import './App.css'
 import {Routes, Route} from "react-router-dom";
 import Encabezado from "./components/Encabezado.jsx"
@@ -27,6 +28,7 @@ function App() {
           <Route path="/post/:id" element={<DetallesPublicacion />}/>
           <Route element={<PrivateRoute />}>
             <Route path="/crear_publicacion" element={<Crear_publicacion />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
         </Routes>
       </div>
