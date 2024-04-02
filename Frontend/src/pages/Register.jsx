@@ -63,7 +63,6 @@ function Register() {
         check_password: state.check_password,
       })
       .then((res) => {
-        console.log(res.data.message);
         if (res.data.type === "SUCCESS") {
           alert(res.data.message);
           navigate("/");
