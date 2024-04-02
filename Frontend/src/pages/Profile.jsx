@@ -33,7 +33,7 @@ function AccountDetails() {
     const handleConfirmPasswordChange = (event) => {
       setConfirmPassword(event.target.value);
     };
-  
+    const navigate = useNavigate();
     const handleDeleteAccount = () => {
         if (!deleteChecked || confirmPassword === "") {
           alert(

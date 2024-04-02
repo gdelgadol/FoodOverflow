@@ -73,7 +73,7 @@ const Rec_contrasena = () => {
       .then((res) => {
         if (res.data.message === "Correo enviado") { //mensaje que va a llegar desde el backend
           alert("¡Se ha enviado el email exitosamente! Revisa tu bandeja de entrada, también tu bandeja de spam");
-          navigate("/");
+          navigate("/login");
         } else {
           setErrMsg(res.data.message);
         }
