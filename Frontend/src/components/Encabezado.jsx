@@ -14,6 +14,12 @@ function Encabezado() {
     setMenuOpen(!menuOpen);
   };
 
+  const handleLogout = () => {
+    // Eliminar el token JWT
+    cookies.remove('auth_token');
+    window.location.href = "http://localhost:5173/Login";
+  };
+
   return (
     <div className="header">
       {/* Contenido para tamaños de pantalla más grandes */}
@@ -60,6 +66,9 @@ function Encabezado() {
                 <strong>Usuario</strong>
               </button>
             </Link>
+            <button className="menu-button2" onClick={handleLogout}>
+              <strong>Cerrar sesión</strong>
+            </button>
           </>
         ) : (
           <>
