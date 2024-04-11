@@ -63,7 +63,7 @@ function Restablecer_contrasena() {
       .then((res) => {
         if (res.data.message === "Contraseña reseteada") { //desde el back se configura este mensaje
           alert("¡Contraseña restablecida con exito! Puedes volver a iniciar sesión.");
-          navigate("/");
+          navigate("/login");
         } else {
         }
       });

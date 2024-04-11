@@ -25,15 +25,15 @@ from django.http import JsonResponse
 def password_reset(request):
     try:
         data = json.loads(request.body)
-        userEmail = data.get("email")
-        if Profile.objects.filter(email=userEmail).exists():
-            user = Profile.objects.get(email__exact=userEmail)
-            sendEmail(request, user, user.email)
+        user_email = data.get("email")
+        if Profile.objects.filter(email=user_email).exists():
+            user = Profile.objects.get(email__exact = user_email)
+            send_email(request, user, user.email)
             return JsonResponse({"message": "Correo enviado", "type": "SUCCESS"})
         else:
             return JsonResponse({"message": "El usuario no existe", "type": "ERROR"})
     except:
-        userEmail=False
+        user_email=False
 
 
 # If link is valid send reset form and check if form is valid for the user
@@ -54,7 +54,7 @@ def reset(request, uidb64, token):
         return JsonResponse({"message":"Link no es válido"})
 
 
-def sendEmail(request, user, to_email):
+def send_email(request, user, to_email):
     mail_subject = "Restablece tu contraseña de FoodOverflow"
     message = render_to_string(
         "email_templates/pass_reset.html",
@@ -68,4 +68,3 @@ def sendEmail(request, user, to_email):
     )
     email = EmailMessage(mail_subject, message, to=[to_email])
     email.send()
-    print("Se envió el correo")

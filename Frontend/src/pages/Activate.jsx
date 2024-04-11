@@ -11,7 +11,7 @@ function Activate() {
       .post(`http://127.0.0.1:8000/activate/${uid}/${token}`, {
       })
       .then((res) => {
-          navigate("/");
+          navigate("/login");
           alert(res.data.message);
       });
   };

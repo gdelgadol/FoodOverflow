@@ -3,10 +3,16 @@ import "./Login.css";
 import imagen from "../assets/logo.png";
 import eyeOpenIcon from "../assets/ojo.png";
 import axios from "../api/axios.jsx";
+import Cookies from "universal-cookie";
 
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+
+  // Initialize cookies
+
+  const login_cookie = new Cookies(null, {path: "/"});
+
   const userRef = useRef();
   const errRef = useRef();
   const labelUserRef = useRef();
@@ -81,7 +87,7 @@ const Login = () => {
     event.preventDefault();
     login();
   };
-
+  
   const navigate = useNavigate();
   const login = () => {
     axios
@@ -91,8 +97,13 @@ const Login = () => {
       })
       .then((res) => {
         if (res.data.message === "¡Login exitoso!") {
+          const jwt_token = res.data.jwt;
+
+          //Creating cookie
+          login_cookie.set("auth_token", jwt_token);
+
           alert("Inicio exitoso!");
-          navigate("/Home");
+          window.location.href = "http://localhost:5173/";
         } else {
           setErrMsg(res.data.message);
         }
@@ -183,19 +194,17 @@ const Login = () => {
             </form>
             <div className="li-div-text">
               <p className="li-p">
-                <center>
                 <span>
                   <Link to={"/recuperar_contrasena"}>
                     ¿Has olvidado tu contraseña?
                   </Link>
                 </span>
-                </center>
-                <p className="li-p">
+                <br></br>
+                <br></br>
                   ¿Es tu primera vez en Food Overflow?
                   <span>
                     <Link to={"/register"}> Registrate</Link>
                   </span>
-                </p>
               </p>
             </div>
           </div>

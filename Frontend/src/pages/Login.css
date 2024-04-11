@@ -12,6 +12,7 @@
 
 .li-h1 {
     font-size: 20px;
+    font-weight: 600;
     color: #000000;
 }
 
@@ -24,7 +25,6 @@
     font-weight: bold;
     border: none;
     font-size: 15px;
-    font-family: 'Inter', sans-serif;
     cursor: pointer;
 }
 
@@ -33,7 +33,6 @@
     height: 40px;
     border-radius: 10px;
     font-size: 15px;
-    font-family: 'Inter', sans-serif;
     border-color: #d2d2d2;
     border-width: 1px;
     border-style: solid;
@@ -59,7 +58,6 @@ a:visited {
 
 p {
     font-size: 15px;
-    font-family: 'Inter', sans-serif;
     font-weight: lighter
 }
 
@@ -90,6 +88,7 @@ p {
 
 .li-p {
     font-size: 14px;
+    font-weight: 400;
 }
 
 .li-label {

@@ -1,9 +1,26 @@
 body {
   margin: 0;
-  background-image: url(assets/background.png);
+  padding: 0;
+  background-image: url(assets/backgroundOp15.png);
+  background-color: rgb(rgb(228, 226, 226));
+  min-height: 100vh;
   background-size: cover;
+  display: flex;
+  flex-direction: column;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('./assets/fonts/Inter-VariableFont_slnt,wght.ttf') format('truetype');
 }
 
 * {
-  font-family: Arial, sans-serif; /* Cambia 'Arial, sans-serif' por la fuente que desees utilizar */
+  font-family: 'Inter', sans-serif;
 }
+
+/*light = 300-400
+  regular = 400-500
+  medium = 500-600
+  bold = 600-700
+  black = 700-800
+*/

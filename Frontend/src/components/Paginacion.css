@@ -1,0 +1,31 @@
+.paginacion {
+    display: inline-flex;
+    margin-top: 15px;
+    background-color: transparent;
+    gap: 5px
+}
+
+.paginacion input {
+    margin-top: 5px;
+    width: 20px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.paginacion p {
+    margin-top: 16px;
+    font-weight: 500;
+}
+
+.paginacion button {
+    margin: 0;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+    
+}
+
+.paginacion button:disabled {
+    cursor: not-allowed; /* Cambiar el cursor cuando el botón está deshabilitado */
+  }

@@ -1,0 +1,101 @@
+.account-details {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .form {
+    width: 500px;
+    max-width: 90%;
+    padding: 20px;
+    background-color: #ffffff; /* Fondo blanco */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    align-items: center;
+  }
+  
+  .rt-h1 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    color: #333333;
+    margin-bottom: 20px;
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  
+  label {
+    font-size: 16px;
+    font-weight: normal;
+    color: #333333;
+    margin-bottom: 5px;
+  }
+  
+  .change-button {
+    height: 40px;
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    background-color: #ff5c00;
+    color: #ffffff;
+    cursor: pointer;
+    text-align: center;
+  }
+  
+  .change-button:hover {
+    background-color: #ff7538;
+  }
+  
+  @media (max-width: 600px) {
+    .form {
+      width: 400px;
+    }
+  }
+  
+
+  .delete-account {
+    margin-top: 20px;
+  }
+  
+  .delete-message {
+    font-size: 14px;
+    color: #999999;
+    margin-bottom: 10px;
+  }
+  
+  .delete-button {
+    height: 40px;
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    background-color: #ff0000; /* Rojo */
+    color: #ffffff;
+    cursor: pointer;
+    text-align: center;
+  }
+  
+  .delete-button:hover {
+    background-color: #cc0000; /* Rojo más oscuro al pasar el ratón */
+  }
+
+  .confirm-password {
+    margin-top: 10px;
+  }
+  
+  .confirm-password input {
+    height: 30px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-top: 5px;
+    outline: none;
+    width: 450px;
+  }

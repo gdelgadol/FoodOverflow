@@ -1,53 +1,55 @@
-.register {
-    display: flex;
-    align-items: center;
+.form-container {
     justify-content: center;
+    align-items: center;
+    height: 70vh;
+    margin-bottom: 50px;
   }
   
-  .form {
-    width: 500px;
-    max-width: 90%;
+  .publication-form {
+    width: 800px;
+    max-width: 100%;
     padding: 20px;
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    align-items: center;
   }
   
-  .icon {
+  .publication-form .icon {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 10px;
   }
   
-  .icon img {
+  .publication-form .icon img {
     width: 50px;
     height: 50px;
   }
   
-  .rt-h1 {
+  .publication-form h1 {
     text-align: center;
     font-size: 24px;
-    font-weight: 600;
+    font-weight: bold;
     color: #333333;
     margin-bottom: 20px;
   }
   
-  .input-group {
+  .publication-form .input-group {
     display: flex;
     flex-direction: column;
     margin-bottom: 10px;
   }
   
-  label {
+  .publication-form label {
     font-size: 16px;
     font-weight: normal;
     color: #333333;
     margin-bottom: 5px;
   }
   
-  input {
+  .publication-form input,
+  .publication-form select,
+  .publication-form textarea {
     height: 30px;
     border: 1px solid #cccccc;
     border-radius: 5px;
@@ -55,17 +57,16 @@
     outline: none;
   }
   
-  .note {
+  .publication-form .note {
     font-size: 14px;
     font-style: italic;
     color: #999999;
     margin-bottom: 10px;
-    font-weight: 400;
   }
   
-  .register-button {
+  .publication-form .register-button {
     height: 40px;
-    width: 80%;
+    width: 60%;
     border: none;
     border-radius: 10px;
     padding: 10px 20px;
@@ -73,57 +74,62 @@
     background-color: #ff5c00;
     color: #ffffff;
     cursor: pointer;
-    text-align: center; 
+    text-align: center;
   }
   
-  .register-button:hover {
-    background-color: #ff5c00;
+  .publication-form .register-button:hover {
+    background-color: #ff7538;
   }
   
-  .terms {
+  .publication-form .terms {
     font-size: 14px;
     font-weight: normal;
     color: #333333;
     margin-bottom: 10px;
   }
   
-  .terms a {
+  .publication-form .terms a {
     color: #ff5c00;
     text-decoration: none;
   }
   
-  .terms a:hover {
+  .publication-form .terms a:hover {
     text-decoration: underline;
   }
   
-  .loginRegister {
+  .publication-form .loginRegister {
     font-size: 14px;
     color: #333333;
-    font-weight: 400;
   }
   
-  .loginRegister a {
+  .publication-form .loginRegister a {
     color: #ff5c00;
     text-decoration: none;
   }
   
-  .loginRegister a:hover {
+  .publication-form .loginRegister a:hover {
     text-decoration: underline;
   }
-
-  .center-button {
+  
+  .publication-form .center-button {
     margin: 0 auto;
     display: block;
-}
+  }
 
-.register-button:hover {
-    background-color: #ff7538; 
-}
+  .content-textarea {
+    height: 1000px; 
+
+  }
   
-  @media (max-width: 600px) {
-    .form {
+  @media (max-width: 900px) {
+    .publication-form {
       width: 400px;
     }
   }
-  
+
+  @media (max-width: 400px) {
+    .publication-form {
+      width: 300px;
+    }
+  }
   

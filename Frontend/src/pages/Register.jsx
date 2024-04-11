@@ -65,7 +65,7 @@ function Register() {
       .then((res) => {
         if (res.data.type === "SUCCESS") {
           alert(res.data.message);
-          navigate("/");
+          navigate("/login");
         } else {
           alert(res.data.message);
         }
@@ -82,7 +82,7 @@ function Register() {
             style={{ width: "45px", height: "50px" }}
           />
         </div>
-        <h1>Únete a Food Overflow hoy</h1>
+        <h1 className="rt-h1">Únete a Food Overflow hoy</h1>
         <h1
           ref={errRef}
           className={errMsg ? "errmsg li-h1-error " : "offscreen"}
@@ -150,7 +150,7 @@ function Register() {
         </p>
         <center>
         <p className="loginRegister">
-          ¿Ya tienes una cuenta? <Link to={"/"}>Inicia sesión</Link>
+          ¿Ya tienes una cuenta? <Link to={"/login"}>Inicia sesión</Link>
         </p>
         </center>
       </div>

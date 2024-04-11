@@ -1,40 +1,45 @@
 .footer {
-    position:fixed;
-    bottom: 0;
-    left: 0;
+    position:relative;
     width: 100%;
     background-color: #282828;
     color: #b7b7b7;
-    padding: 5px 0;
-    text-align: center;
-    margin-top: 5px; 
+    display: flex;
+    bottom: 0;
+    height: 75px;
   }
   
   .footer-content {
     display: flex;
-    justify-content: space-around; 
+    justify-content: space-around;
     align-items: center;
+    padding-left: 15vh;
   }
   
-  .additional-links {
-    margin-top: 1rem;
+  .info {
+    display: flex;
+    gap: 30px;
+  }
+
+  .social-links{
+    display: flex;
+    gap: 30px;
+    padding-left: 30vw;
+    padding-right: 10vh;
   }
   
-  .social-links,
-  .additional-links {
-    margin-top: 1rem;
+  .link {
+    color: #b7b7b7;
   }
   
-  .social-links a,
-  .additional-links a {
-    display: inline-block;
-    margin: 0 1rem;
+  @media screen and (max-width: 1300px) {
+    .social-links{
+      padding-left: 8vw;
+    }
+    .footer-content {
+      padding-left: 3vh;
+    }
   }
-  
-  .social-links img {
-    width: 2.5rem;
-  }
-  
+
   /* Estilos para pantallas más pequeñas */
   @media screen and (max-width: 900px) {
     .footer-content {
@@ -42,26 +47,24 @@
       align-items: center;
     }
   
-    .social-links,
-    .additional-links {
-      margin-top: 0;
-    }
-  
-    .social-links img {
-      width: 2rem;
+    .social-links {
+      padding: 0;
     }
   
     .footer {
       padding: 1rem 0;
+      height: 100%;
+      justify-content: space-around;
     }
-  
-    .additional-links,
-    .social-links {
-      margin-top: 0.5rem;
+
+    .footer-content {
+      gap: 5vh
     }
-  
-    .additional-links div {
-      font-size: 0.8rem;
+
+    .info {
+      flex-direction: column;
+      align-items: center;
+      margin-left: 0;
     }
   }
   
