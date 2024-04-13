@@ -2,6 +2,7 @@ import json
 import jwt
 from decouple import config
 from django.http import JsonResponse
+from ..models import Profile
 
 
 # Decode the JWT token
@@ -25,5 +26,8 @@ def get_user_data(request):
     #Decode the jwt
     decoded = decode_jwt(token)
 
+    #get profile
+    profile = Profile.objects.get(username = decoded["username"])
+
     #return desired data
-    return JsonResponse({'username' : decoded['username']})
+    return JsonResponse({'username' : profile.username, 'email' : profile.email, 'id': profile.id})
