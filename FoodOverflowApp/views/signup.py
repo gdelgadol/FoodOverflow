@@ -16,6 +16,14 @@ def signup(request):
         # get json data
         data = json.loads(request.body)
         try:
+            # chack if username or email exists
+            if Profile.objects.filter(username = data.get('username')).exists() or Profile.objects.filter(email = data.get('email')).exists():
+                return JsonResponse(
+                    {
+                        "message": "El nombre de usuario o correo ya se encuentran registrados.",
+                        "type": "ERROR",
+                    }
+                )
             # check if the password are the same
             if data.get("password") == data.get("check_password"):
                 # get the username

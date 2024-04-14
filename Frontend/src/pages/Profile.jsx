@@ -12,6 +12,17 @@ function AccountDetails() {
     
     const cookies = new Cookies();
     const jwt = cookies.get("auth_token");
+
+    axios
+      .post("http://127.0.0.1:8000/get_user/", {
+        jwt: jwt, 
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.error("Error al eliminar la cuenta:", error);
+      });
   
     const [deleteChecked, setDeleteChecked] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState("");

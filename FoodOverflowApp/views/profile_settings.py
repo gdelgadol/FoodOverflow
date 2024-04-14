@@ -195,15 +195,18 @@ def email_confirmated(request, uidb64, token, email):
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = Profile.objects.get(id=uid)
     except (TypeError, ValueError, OverflowError, Profile.DoesNotExist):
+        #Some errors
         user = None
         return JsonResponse({
             'type' : 'ERROR',
             'message' : 'Algo ha salido mal. Por favor intentalo de nuevo.'
         })
-    if user is not None and account_activation_token.check_token(user, token):
+    
+    #Verify token
+    if account_activation_token.check_token(user, token):
         user.email = email
         user.save()
-        
+        # Email updated Successfully
         return JsonResponse({
             'type' : 'SUCCESS',
             'message' : 'El correo electrónico ha sido actualizado con éxito.'
