@@ -42,7 +42,7 @@ def get_publication(request):
     publication_id = int(data.get("publication_id"))
 
     publication = Publication.objects.select_related('profile').get(publication_id = publication_id)
-    num_comments = PublicationComment.objects.filter(recipe = publication.publication_id).count()
+    num_comments = PublicationComment.objects.filter(publication = publication.publication_id).count()
     publication_score = PublicationVote.objects.filter(publication = publication.publication_id).aggregate(Sum('vote_type'))['vote_type__sum']
 
     if not publication_score:
@@ -67,7 +67,7 @@ def get_forum_posts(request):
 
         for publication in publications_query:
             username = publication.profile.username
-            num_comments = PublicationComment.objects.filter(recipe = publication.publication_id).count()
+            num_comments = PublicationComment.objects.filter(publication = publication.publication_id).count()
             score = PublicationVote.objects.filter(publication = publication.publication_id).aggregate(Sum('vote_type'))['vote_type__sum']
             if not score:
                 score = 0
@@ -147,7 +147,7 @@ def get_all_recipes(reqest):
     except Exception as e:
         return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
 
-def get_publication(request):
+def get_recipe(request):
     # get the Json Data, Email and Password
     data = json.loads(request.body)
     recipe_id = int(data.get("recipe_id"))

@@ -114,7 +114,7 @@ class PublicationComment(models.Model):
     comment_body = models.TextField()
 
     profile = models.ForeignKey(Profile, on_delete = models.CASCADE)
-    recipe = models.ForeignKey(Publication, on_delete = models.CASCADE)
+    publication = models.ForeignKey(Publication, on_delete = models.CASCADE)
     
     comment_response = models.ForeignKey('self', on_delete = models.SET_NULL, null = True )
 
