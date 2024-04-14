@@ -18,7 +18,7 @@ function AccountDetails() {
         jwt: jwt, 
       })
       .then((res) => {
-        cookies.remove("auth_token");
+        //cookies.remove("auth_token");
         console.log(res.data);
       })
       .catch((error) => {

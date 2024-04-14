@@ -97,12 +97,12 @@ function Encabezado() {
       {menuUsuarioOpen && (
         <div className="menu-usuario">
           <Link to={"/Profile"}>
-          <button className="menu-button-user">
+          <button className="menu-button-user" onClick={toggleMenuUsuario}>
             <span className="spanHeader">Configuración de la cuenta</span>
           </button>
           </Link>
           <Link to={"/mis-publicaciones"}>
-          <button className="menu-button-user">
+          <button className="menu-button-user" onClick={toggleMenuUsuario}>
             <span className="spanHeader">Mis publicaciones</span>
           </button>
           </Link>
