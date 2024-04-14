@@ -171,7 +171,7 @@ def update_email(request):
 #Send email function
 def confirm_email(request, user, to_email):
     # Define the email subject
-    mail_subject = "Activa tu cuenta de FoodOverflow"
+    mail_subject = "Confirma tu correo de FoodOverflow para realizar el cambio"
     # Define the email message
     message = render_to_string(
         "email_templates/confirm_email.html",
@@ -204,6 +204,7 @@ def email_confirmated(request, uidb64, token, email):
     
     #Verify token
     if account_activation_token.check_token(user, token):
+        print(user.email, email)
         user.email = email
         user.save()
         # Email updated Successfully
