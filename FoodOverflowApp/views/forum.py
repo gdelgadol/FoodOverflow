@@ -35,7 +35,6 @@ def get_first_n_publications(request):
     print(publications)
     return JsonResponse(publications)
 
-
 def get_publication(request):
     # get the Json Data, Email and Password
     data = json.loads(request.body)
@@ -58,7 +57,6 @@ def get_publication(request):
         }
     
     return JsonResponse(publication_json)
-
 
 def get_forum_posts(request):
     try:
@@ -153,8 +151,8 @@ def get_recipe(request):
     recipe_id = int(data.get("recipe_id"))
 
     recipe = Recipe.objects.select_related('profile').get(recipe_id = recipe_id)
-    num_comments = PublicationComment.objects.filter(recipe = recipe.recipe_id).count()
-    recipe_score = PublicationVote.objects.filter(recipe = recipe.recipe_id).aggregate(Sum('vote_type'))['vote_type__sum']
+    num_comments = RecipeComment.objects.filter(recipe = recipe.recipe_id).count()
+    recipe_score = RecipeVote.objects.filter(recipe = recipe.recipe_id).aggregate(Sum('vote_type'))['vote_type__sum']
 
     if not recipe_score:
         recipe_score = 0
