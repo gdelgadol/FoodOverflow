@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Profile.css"; 
 import axios from "../api/axios.jsx";
 import Cookies from 'universal-cookie';
@@ -7,29 +7,34 @@ import { Link } from "react-router-dom";
 function AccountDetails() {
     const [userInfo, setUserInfo] = useState({
       email: "usuario@example.com", 
+      username: "usuario", // Valor predeterminado
       password: "********", 
     });
-    
-    const cookies = new Cookies();
-    const jwt = cookies.get("auth_token");
 
-    axios
-      .post("http://127.0.0.1:8000/get_user/", {
-        jwt: jwt, 
-      })
-      .then((res) => {
-        cookies.remove("auth_token");
-        console.log(res.data);
-      })
-      .catch((error) => {
-        console.error("Error al eliminar la cuenta:", error);
-      });
-  
+    useEffect(() => {
+      const cookies = new Cookies();
+      const jwt = cookies.get("auth_token");
+
+      axios
+        .post("http://127.0.0.1:8000/get_user/", {
+          jwt: jwt, 
+        })
+        .then((res) => {
+          setUserInfo({
+            email: res.data.email,
+            username: res.data.username, // Actualizar con el nombre de usuario recibido
+            password: "********",
+          });
+        })
+        .catch((error) => {
+          console.error("Error al obtener datos del usuario:", error);
+        });
+    }, []);
+
     const [deleteChecked, setDeleteChecked] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState("");
   
     const handleChangeEmail = () => {
-
       console.log("Cambiar correo electrónico");
     };
   
@@ -76,6 +81,10 @@ function AccountDetails() {
           <div className="form">
             <h1 className="rt-h1">Detalles de la cuenta</h1>
             <div className="input-group">
+              <label htmlFor="username">Nombre de usuario</label>
+              <div>{userInfo.username}</div>
+            </div>
+            <div className="input-group">
               <label htmlFor="email">Correo electrónico</label>
               <div>{userInfo.email}</div>
             </div>
@@ -83,10 +92,17 @@ function AccountDetails() {
               <label htmlFor="password">Contraseña</label>
               <div>{userInfo.password}</div>
             </div>
-            <button className="change-button" onClick={handleChangeEmail}>
-              Cambiar correo
-            </button>
-            <Link to={"/restablecer_contrasena"}>
+            <Link to="/change_user"> 
+              <button className="change-button" onClick={handleChangeEmail}>
+                Cambiar nombre de usuario
+              </button>
+            </Link>
+            <Link to="/change_email"> 
+              <button className="change-button" onClick={handleChangeEmail}>
+                Cambiar correo electrónico
+              </button>
+            </Link>
+            <Link to={"/change_password"}>
                 <button className="change-button">
                 Cambiar contraseña
                 </button>
@@ -104,8 +120,6 @@ function AccountDetails() {
               <span className="delete-message">
                 Soy consciente de que esta acción es irreversible
               </span>
-
-              
               {deleteChecked && (
                 <div className="confirm-password">
                   <input
