@@ -12,6 +12,7 @@ import Encabezado from "./components/Encabezado.jsx"
 import Footer from "./components/Footer.jsx"
 import PrivateRoute from "./utils/PrivateRoute"
 import DetallesPublicacion from "./pages/DetallesPublicacion"
+import AboutUs from "./pages/AboutUs.jsx"
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/crear_publicacion" element={<Crear_publicacion />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
+          <Route path="/about" element={<AboutUs />} />
         </Routes>
       </div>
       <Footer />
