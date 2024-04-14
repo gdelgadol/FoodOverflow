@@ -33,13 +33,10 @@ function Change_user() {
       });
       
       if (response.data.type === "SUCCESS") {
-        // Nombre de usuario cambiado con éxito
         alert(response.data.message + " Inicia sesión nuevamente");
         cookies.remove("auth_token");
-        // Aquí podrías redirigir al usuario a alguna página de éxito o mostrar un mensaje
         window.location.href = "http://localhost:5173/login";
       } else {
-        // Mostrar mensaje de error del backend
         alert(response.data.message);
       }
     } catch (error) {

@@ -11,7 +11,6 @@ function AccountDetails() {
       password: "********", 
     });
 
-<<<<<<< HEAD
     useEffect(() => {
       const cookies = new Cookies();
       const jwt = cookies.get("auth_token");
@@ -32,20 +31,6 @@ function AccountDetails() {
         });
     }, []);
 
-=======
-    axios
-      .post("http://127.0.0.1:8000/get_user/", {
-        jwt: jwt, 
-      })
-      .then((res) => {
-        //cookies.remove("auth_token");
-        console.log(res.data);
-      })
-      .catch((error) => {
-        console.error("Error al eliminar la cuenta:", error);
-      });
-  
->>>>>>> 383d083d0e281357ab852faa4f7e99b4f42aab3c
     const [deleteChecked, setDeleteChecked] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState("");
   

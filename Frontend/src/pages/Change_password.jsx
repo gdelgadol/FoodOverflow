@@ -39,18 +39,14 @@ function Change_password() {
       });
       
       if (response.data.type === "SUCCESS") {
-        // Contraseña cambiada con éxito
         alert(response.data.message + " Inicia sesión nuevamente" );
         cookies.remove("auth_token");
-        // Aquí podrías redirigir al usuario a alguna página de éxito o mostrar un mensaje
         window.location.href = "http://localhost:5173/login";
       } else {
-        // Mostrar mensaje de error del backend
         alert(response.data.message);
       }
     } catch (error) {
       console.error("Error al cambiar la contraseña:", error);
-      //setErrMsg("Ocurrió un error al cambiar la contraseña. Por favor, inténtalo de nuevo.");
     }
   };
 
