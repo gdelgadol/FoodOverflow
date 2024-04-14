@@ -96,6 +96,9 @@ class PublicationVote(models.Model):
     #-1: dislike, 1: like
     vote_type = models.SmallIntegerField(default = 0)
 
+    on_delete = models.CASCADE
+    objects = PublicationVoteManager()
+
 ## Publication's Comments
 class PublicationCommentManager(models.Manager):
     def create_publication_comment(self, profile_id, publication_id, comment_body, comment_response_id):
@@ -117,6 +120,9 @@ class PublicationComment(models.Model):
     publication = models.ForeignKey(Publication, on_delete = models.CASCADE)
     
     comment_response = models.ForeignKey('self', on_delete = models.SET_NULL, null = True )
+
+    on_delete = models.CASCADE
+    objects = PublicationCommentManager()
 
 #Recipe Model
 class RecipeManager(models.Manager):
@@ -163,6 +169,9 @@ class RecipeVote(models.Model):
     #-1: dislike, 1: like
     vote_type = models.SmallIntegerField(default = 0)
 
+    on_delete = models.CASCADE
+    objects = RecipeVoteManager()
+
 ## Recipe's Comments
 class RecipeCommentManager(models.Manager):
     def create_recipe_comment(self, profile_id, recipe_id, comment_body, comment_response_id):
@@ -184,3 +193,6 @@ class RecipeComment(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete = models.CASCADE)
 
     comment_response = models.ForeignKey('self', on_delete = models.SET_NULL, null = True )
+
+    on_delete = models.CASCADE
+    objects = RecipeCommentManager()
