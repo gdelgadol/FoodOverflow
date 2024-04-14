@@ -13,5 +13,9 @@ urlpatterns = [
     path('crear_publicacion/', views.create_forum_publication, name= "crear_publicaion"), # create publication path
     path('delete_user/',views.delete_user, name = 'delete_user'), # delete_user path
     path('post/', views.get_publication, name= "get_publication"), # get the publication 
+    path('update_password/', views.update_password, name = "update_password"), # Change pasword
+    path('update_email/', views.update_email, name = "update_email"), # Change email
+    path('update_username/', views.update_username, name = "update_username"), # Change username
+    path('settings/<uidb64>/<token>/<str:email>', views.email_confirmated, name='confirmated'), #Confirm new email
 ]
 
