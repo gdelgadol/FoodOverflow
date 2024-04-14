@@ -36,29 +36,34 @@ def get_first_n_publications(request):
     return JsonResponse(publications)
 
 def get_publication(request):
-    # get the Json Data, Email and Password
-    data = json.loads(request.body)
-    publication_id = int(data.get("publication_id"))
+    try:
+        # get the Json Data, Email and Password
+        data = json.loads(request.body)
+        publication_id = int(data.get("publication_id"))
 
-    publication = Publication.objects.select_related('profile').get(publication_id = publication_id)
-    num_comments = PublicationComment.objects.filter(publication = publication.publication_id).count()
-    publication_score = PublicationVote.objects.filter(publication = publication.publication_id).aggregate(Sum('vote_type'))['vote_type__sum']
+        publication = Publication.objects.select_related('profile').get(publication_id = publication_id)
+        num_comments = PublicationComment.objects.filter(publication = publication.publication_id).count()
+        publication_score = PublicationVote.objects.filter(publication = publication.publication_id).aggregate(Sum('vote_type'))['vote_type__sum']
 
-    if not publication_score:
-        publication_score = 0
+        if not publication_score:
+            publication_score = 0
 
-    publication_json = {
-        "type": "SUCCESS",
-        'username' : publication.profile.username,
-        'title' : publication.publication_title,
-        'description' : publication.publication_description,
-        "numComments": num_comments,
-        "score": publication_score
-        }
-    
-    return JsonResponse(publication_json)
+        publication_json = {
+            "type": "SUCCESS",
+            'username' : publication.profile.username,
+            'title' : publication.publication_title,
+            'description' : publication.publication_description,
+            "numComments": num_comments,
+            "score": publication_score
+            }
+        
+        return JsonResponse(publication_json)
+    except Exception as e:
+        print(e)
+        # Catch all other exceptions
+        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
 
-def get_forum_posts(request):
+def get_publications(request):
     try:
         publications_query = Publication.objects.order_by('publication_creation_date').select_related('profile').all()
         posts = []
@@ -101,7 +106,7 @@ def create_forum_publication(request):
         # Catch all other exceptions
         return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
 
-def create_recipe_post(request):
+def create_recipe(request):
     try:
         data = json.loads(request.body)
         title = data.get("title")
@@ -117,7 +122,7 @@ def create_recipe_post(request):
         # Catch all other exceptions
         return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
     
-def get_all_recipes(reqest):
+def get_recipes(reqest):
     try:
         recipes_query = Recipe.objects.order_by('publication_creation_date').select_related('profile').all()
         posts = []
@@ -125,7 +130,7 @@ def get_all_recipes(reqest):
         for recipe in recipes_query:
             username = recipe.profile.username
             num_comments = RecipeComment.objects.filter(recipe = recipe.recipe_id).count()
-            score = RecipeComment.objects.filter(recipe = recipe.recipe_id).aggregate(Sum('vote_type'))['vote_type__sum']
+            score = RecipeVote.objects.filter(recipe = recipe.recipe_id).aggregate(Sum('vote_type'))['vote_type__sum']
             if not score:
                 score = 0
             post_data = {
@@ -146,25 +151,110 @@ def get_all_recipes(reqest):
         return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
 
 def get_recipe(request):
-    # get the Json Data, Email and Password
-    data = json.loads(request.body)
-    recipe_id = int(data.get("recipe_id"))
+    try:
+        # get the Json Data, Email and Password
+        data = json.loads(request.body)
+        recipe_id = int(data.get("recipe_id"))
 
-    recipe = Recipe.objects.select_related('profile').get(recipe_id = recipe_id)
-    num_comments = RecipeComment.objects.filter(recipe = recipe.recipe_id).count()
-    recipe_score = RecipeVote.objects.filter(recipe = recipe.recipe_id).aggregate(Sum('vote_type'))['vote_type__sum']
+        recipe = Recipe.objects.select_related('profile').get(recipe_id = recipe_id)
+        num_comments = RecipeComment.objects.filter(recipe = recipe.recipe_id).count()
+        recipe_score = RecipeVote.objects.filter(recipe = recipe.recipe_id).aggregate(Sum('vote_type'))['vote_type__sum']
 
-    if not recipe_score:
-        recipe_score = 0
+        if not recipe_score:
+            recipe_score = 0
 
-    publication_json = {
-        "type": "SUCCESS",
-        'username' : recipe.profile.username,
-        'title' : recipe.recipe_title,
-        'ingredients' : recipe.recipe_ingredients,
-        'description' : recipe.recipe_description,
-        "numComments": num_comments,
-        "score": recipe_score
-        }
-    
-    return JsonResponse(publication_json)
+        publication_json = {
+            "type": "SUCCESS",
+            'username' : recipe.profile.username,
+            'title' : recipe.recipe_title,
+            'ingredients' : recipe.recipe_ingredients,
+            'description' : recipe.recipe_description,
+            "numComments": num_comments,
+            "score": recipe_score
+            }
+        
+        return JsonResponse(publication_json)
+    except Exception as e:
+        print(e)
+        # Catch all other exceptions
+        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
+
+def make_vote(request, id_vote):
+    try:
+        data = json.loads(request.body)
+        post_id = int(data.get("post_id"))
+        vote_type = int(data.get("vote_type"))
+        jwt_decoded = decode_jwt(data.get("jwt"))
+
+        if Profile.objects.filter(pk = jwt_decoded["id"]).exists():
+            profile = Profile.objects.get(pk = jwt_decoded["id"])
+        else:
+            return JsonResponse({
+                "message" : "El usuario no se encuentra registrado.", 
+                "type" : "ERROR"
+                })       
+
+        if id_vote == "recipe":
+            if Recipe.objects.filter(pk = post_id).exists():
+                recipe = Recipe.objects.get(pk = post_id)
+            else:
+                return JsonResponse({
+                    "message" : "La receta no se encuentra registrada.", 
+                    "type" : "ERROR"
+                    })
+            if vote_type == 0 and RecipeVote.objects.filter(recipe = recipe, profile = profile):
+                vote = RecipeVote.objects.get(recipe = recipe, profile = profile)
+                vote.delete()
+                return JsonResponse({
+                    "message" : "Voto eliminado con éxito.",
+                    "type" : "SUCCESS"
+                    })
+            elif vote_type != 0:
+                if RecipeVote.objects.filter(recipe = recipe, profile = profile).exists():
+                    vote = RecipeVote.objects.get(recipe = recipe, profile = profile)
+                    vote.vote_type = vote_type
+                    vote.save()
+                else:
+                    RecipeVote.objects.create_recipe_vote(recipe, profile, vote_type)
+                return JsonResponse({
+                    "message" : "Voto registrado con éxito.",
+                    "type" : "SUCCESS"
+                    })
+        elif id_vote == "publication":
+            if Publication.objects.filter(pk = post_id).exists():
+                publication = Publication.objects.get(pk = post_id)
+            else:
+                return JsonResponse({
+                    "message" : "La publicación no se encuentra registrada.", 
+                    "type" : "ERROR"
+                    })
+            if vote_type == 0 and PublicationVote.objects.filter(publication = publication, profile = profile).exists():
+                vote = PublicationVote.objects.get(publication = publication, profile = profile)
+                vote.delete()
+                return JsonResponse({
+                    "message" : "Voto eliminado con éxito.",
+                    "type" : "SUCCESS"
+                    })
+            elif vote_type != 0:
+                if PublicationVote.objects.filter(publication = publication, profile = profile).exists():
+                    vote = PublicationVote.objects.get(publication = publication, profile = profile)
+                    vote.vote_type = vote_type
+                    vote.save()
+                else:
+                    PublicationVote.objects.create_publication_vote(publication, profile, vote_type)
+                return JsonResponse({
+                    "message" : "Voto registrado con éxito.",
+                    "type" : "SUCCESS"
+                    })
+        else:
+            return JsonResponse({
+                "message" : "Hubo un error, inténtelo de nuevo", 
+                "type" : "ERROR"
+                })
+    except Exception as e:
+        print(e)
+        # Catch all other exceptions
+        return JsonResponse({
+            "message" : "Hubo un error, inténtelo de nuevo",
+            "type" : "ERROR"
+            })
