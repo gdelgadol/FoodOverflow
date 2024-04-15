@@ -124,7 +124,7 @@ def create_recipe(request):
     
 def get_recipes(reqest):
     try:
-        recipes_query = Recipe.objects.order_by('publication_creation_date').select_related('profile').all()
+        recipes_query = Recipe.objects.order_by('recipe_creation_date').select_related('profile').all()
         posts = []
 
         for recipe in recipes_query:
