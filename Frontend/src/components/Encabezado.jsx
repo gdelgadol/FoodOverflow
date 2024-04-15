@@ -48,17 +48,17 @@ function Encabezado() {
       </div>
       <div className="menu">
         <div className="menu-info">
-        <Link to={"/About"}>
+        <Link to={"/about"}>
         <button className="menu-button">
         <span className="spanHeader">Sobre nosótros</span>
         </button>
         </Link>
-        <Link to={"/Contact"}>
+        <Link to={"/contact"}>
         <button className="menu-button">
           <span className="spanHeader">Contáctenos</span>
         </button>
         </Link>
-        <Link to={"/Apoyanos"}>
+        <Link to={"/support"}>
         <button className="menu-button">
           <span className="spanHeader">Apóyanos</span>
         </button>
@@ -79,12 +79,12 @@ function Encabezado() {
           </>
         ) : (
           <>
-            <Link to={"/Login"}>
+            <Link to={"/login"}>
               <button className="menu-button2">
                 <strong>Iniciar sesión</strong> 
               </button>
             </Link>
-            <Link to={"/Register"}>
+            <Link to={"/register"}>
               <button className="menu-button3">
                 <strong>Registrarse</strong>
               </button>
@@ -96,7 +96,7 @@ function Encabezado() {
       {/* Menú de usuario */}
       {menuUsuarioOpen && (
         <div className="menu-usuario">
-          <Link to={"/Profile"}>
+          <Link to={"/profile"}>
           <button className="menu-button-user" onClick={toggleMenuUsuario}>
             <span className="spanHeader">Configuración de la cuenta</span>
           </button>
