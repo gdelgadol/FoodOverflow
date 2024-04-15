@@ -30,7 +30,7 @@ function Change_email() {
       .then((res) => {
         if (res.data.type === "SUCCESS") {
           alert(res.data.message + " Inicia sesión nuevamente");
-          sendActivationEmail(formData.newEmail);
+          //sendActivationEmail(formData.newEmail);
           cookies.remove("auth_token");
           window.location.href = "http://localhost:5173/login";
         } else {
@@ -42,15 +42,6 @@ function Change_email() {
       });
   };
 
-  const sendActivationEmail = (email) => {
-    axios.post("http://127.0.0.1:8000/settings/u_id/token/email", { email })
-      .then((res) => {
-        console.log("Correo de activación enviado:", res.data);
-      })
-      .catch((error) => {
-        console.error("Error al enviar el correo de activación:", error);
-      });
-  };
 
   return (
     <div className="register">
