@@ -16,6 +16,7 @@ import Footer from "./components/Footer.jsx"
 import PrivateRoute from "./utils/PrivateRoute"
 import DetallesPublicacion from "./pages/DetallesPublicacion"
 import AboutUs from "./pages/AboutUs.jsx"
+import SupportUs from "./pages/SupportUs.jsx"
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
             <Route path="/change_user" element={<Change_user />} />
           </Route>
           <Route path="/about" element={<AboutUs />} />
+          <Route path="/support" element={<SupportUs />} />
         </Routes>
       </div>
       <Footer />
