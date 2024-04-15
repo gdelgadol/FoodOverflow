@@ -115,7 +115,7 @@ def create_recipe(request):
         jwt_token = decode_jwt(data.get("jwt"))
         
         user = Profile.objects.get(id = jwt_token['id'])
-        Recipe.objects.create_publication(title, ingredients, instructions, user)
+        Recipe.objects.create_recipe(title, ingredients, instructions, user)
         return JsonResponse({"message" : "¡Receta creada con éxito!", "type" : "SUCCESS"})
     except Exception as e:
         print(e)

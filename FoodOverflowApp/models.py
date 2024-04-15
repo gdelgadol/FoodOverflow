@@ -126,11 +126,11 @@ class PublicationComment(models.Model):
 
 #Recipe Model
 class RecipeManager(models.Manager):
-    def create_recipe(self, title, ingredients, instructions, profile_id):
+    def create_recipe(self, title, ingredients, description, profile_id):
         recipe = self.model(
             recipe_title = title,
             recipe_ingredients = ingredients,
-            recipe_instructions = instructions,
+            recipe_description = description,
             profile = profile_id
         )
         recipe.save(using = self.db)
