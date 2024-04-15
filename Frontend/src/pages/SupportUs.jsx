@@ -25,24 +25,24 @@ function SupportUs() {
                     con una donación</h1>
             </div>
             <div className='su-pagos-container'>
+                <div className='su-pago'>
                 <button className='su-pago-button'>
-                    <div className='su-pago'>
                     <img
                     alt="Logo de Paypal"
                     src={logo_paypal}
                     className='su-logo'
                     />
-                    </div>
                 </button>
+                </div>
+                <div className='su-pago'>
                 <button className='su-pago-button' onClick={mostrarQr}>
-                    <div className='su-pago'>
                     <img
                     alt="Logo de Nequi"
                     src={logo_nequi}
                     className='su-logo'
                     />
-                    </div>
                 </button>
+                </div>
             </div>
             {qrVisible && (
                 <div className="modal" onClick={ocultarQr}>

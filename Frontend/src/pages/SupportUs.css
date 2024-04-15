@@ -27,6 +27,7 @@
 .su-pagos-container {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     justify-content: space-between;
     gap: 200px;
 }
@@ -38,9 +39,6 @@
 .su-pago {
     display: flex;
     justify-content: center;
-    padding: 50px;
-    height: 200px;
-    width: 200px;
 }
 
 @media screen and (max-width: 900px) {
@@ -60,6 +58,7 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     border-radius: 20px;
+    padding: 50px;
 }
 
 .su-pago-button:hover {
