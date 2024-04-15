@@ -174,12 +174,11 @@ class RecipeVote(models.Model):
 
 ## Recipe's Comments
 class RecipeCommentManager(models.Manager):
-    def create_recipe_comment(self, profile_id, recipe_id, comment_body, comment_response_id):
+    def create_recipe_comment(self, profile_id, recipe_id, comment_body):
         recipe_comment = self.model(
             profile = profile_id,
             recipe = recipe_id,
-            comment_body = comment_body,
-            comment_response = comment_response_id
+            comment_body = comment_body
         )
         recipe_comment.save(using = self.db)
         return recipe_comment

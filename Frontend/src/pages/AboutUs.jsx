@@ -39,7 +39,7 @@ function AboutUs() {
                         className='au-member-image'
                         />
                         <span className='au-member-name'>Juan Ovalle</span>
-                        <h1 className='au-member-title'>Desarrollador Web</h1>
+                        <h1 className='au-member-title'>Desarrollador Frontend</h1>
                         <div className='au-member-social'>
                             <a href="https://github.com/JOvalleG">
                                 <img
@@ -64,7 +64,7 @@ function AboutUs() {
                         className='au-member-image'
                         />
                         <span className='au-member-name'>Gabriel Delgado</span>
-                        <h1 className='au-member-title'>Desarrollador Web</h1>
+                        <h1 className='au-member-title'>Desarrollador Backend</h1>
                         <div className='au-member-social'>
                             <a href="https://github.com/gdelgadol">
                                 <img
@@ -73,7 +73,7 @@ function AboutUs() {
                                 className='au-social-icon'
                                 />
                             </a>
-                            <a href="https://www.linkedin.com/">
+                            <a href="https://www.linkedin.com/in/gdelgadol">
                                 <img
                                 alt="Logo de Food Overflow"
                                 src={logo_linkedin}
@@ -98,7 +98,7 @@ function AboutUs() {
                                 className='au-social-icon'
                                 />
                             </a>
-                            <a href="https://www.linkedin.com/">
+                            <a href="https://www.linkedin.com/in/andres-camilo-ardila-diaz-13a1162a5/">
                                 <img
                                 alt="Logo de Food Overflow"
                                 src={logo_linkedin}
@@ -114,7 +114,7 @@ function AboutUs() {
                         className='au-member-image'
                         />
                         <span className='au-member-name'>Jhon Moreno</span>
-                        <h1 className='au-member-title'>Desarrollador Web</h1>
+                        <h1 className='au-member-title'>Desarrollador Backend</h1>
                         <div className='au-member-social'>
                             <a href="https://github.com/Jh0mpis">
                                 <img

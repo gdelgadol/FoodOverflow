@@ -265,7 +265,7 @@ def create_comment(request, id_comment):
         post_id = int(data.get("post_id"))
         content = data.get("content")
         jwt_decoded = decode_jwt(data.get("jwt"))
-        response = None
+        #response = None
 
         if Profile.objects.filter(pk = jwt_decoded["id"]).exists():
             profile = Profile.objects.get(pk = jwt_decoded["id"])
@@ -283,7 +283,7 @@ def create_comment(request, id_comment):
                     "message" : "La receta no se encuentra registrada.", 
                     "type" : "ERROR"
                     })
-            RecipeComment.objects.create_recipe_comment(profile, recipe, content, response)
+            RecipeComment.objects.create_recipe_comment(profile, recipe, content)
             return JsonResponse({"message" : "¡Comentario creado con éxito!", "type" : "SUCCESS"})
         
         elif id_comment == "publication":
@@ -294,7 +294,7 @@ def create_comment(request, id_comment):
                     "message" : "La publicación no se encuentra registrada.", 
                     "type" : "ERROR"
                     })
-            PublicationComment.objects.create_publication_comment(profile, publication, content, response)
+            PublicationComment.objects.create_publication_comment(profile, publication, content)
             return JsonResponse({"message" : "¡Comentario creado con éxito!", "type" : "SUCCESS"})
         
     except Exception as e:
