@@ -18,7 +18,7 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/forum/");
+        const response = await axios.get("http://127.0.0.1:8000/publications/");
         if (response.data.type === "SUCCESS") {
           setPosts(response.data.posts);
         } else {

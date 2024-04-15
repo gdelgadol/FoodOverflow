@@ -50,14 +50,22 @@ def get_publication(request):
         # Extracting relevant data from the comments
         comments_list = []
         for comment in publication_comments:
-            comment_data = {
+            if (comment.comment_response):
+                comment_data = {
+                    'comment_id': comment.publication_comment_id,
+                    'comment_content': comment.comment_body,
+                    'comment_user': comment.profile.username,  # Assuming user is related to the comment
+                    'comment_response': comment.comment_response.publication_comment_id
+                    # Add more fields if needed
+                }
+            else:
+                comment_data = {
                 'comment_id': comment.publication_comment_id,
                 'comment_content': comment.comment_body,
                 'comment_user': comment.profile.username,  # Assuming user is related to the comment
                 # Add more fields if needed
-            }
+                }
             comments_list.append(comment_data)
-        print(comments_list)
 
         num_comments = publication_comments.count()
 
@@ -188,14 +196,22 @@ def get_recipe(request):
         # Extracting relevant data from the comments
         comments_list = []
         for comment in recipe_comments:
-            comment_data = {
+            if (comment.comment_response):
+                comment_data = {
+                    'comment_id': comment.recipe_comment_id,
+                    'comment_content': comment.comment_body,
+                    'comment_user': comment.profile.username,  # Assuming user is related to the comment
+                    'comment_response': comment.comment_response.recipe_comment_id
+                    # Add more fields if needed
+                }
+            else:
+                comment_data = {
                 'comment_id': comment.recipe_comment_id,
                 'comment_content': comment.comment_body,
                 'comment_user': comment.profile.username,  # Assuming user is related to the comment
                 # Add more fields if needed
-            }
+                }
             comments_list.append(comment_data)
-        print(comments_list)
 
         num_comments = recipe_comments.count()
 
