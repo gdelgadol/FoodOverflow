@@ -22,7 +22,8 @@ urlpatterns = [
     ## votes
     path('vote/<str:id_vote>/', views.make_vote, name = "vote"), # Make a vote
     ## comment
-    path('comment/<str:id_comment>/', views.create_comment, name = "comment"),
+    path('comment/<str:id_comment>/', views.create_comment, name = "comment"), #Comment on a post
+    path('comment/<str:id_comment>/response/', views.create_comment_response, name = "response"), #Reply to a comment
     # User settings
     path('get_user/', views.get_user_data, name = "user_token"), # user's info in JWT Token
     path('delete_user/',views.delete_user, name = 'delete_user'), # delete_user path
