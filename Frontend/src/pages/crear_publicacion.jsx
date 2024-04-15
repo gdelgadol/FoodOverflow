@@ -70,7 +70,7 @@ function Crear_publicacion() {
                 {errMsg}
               </h1>
               <form onSubmit={handleSubmit}>
-                {/* <div className="input-group">
+                  <div className="input-group">
                   <label htmlFor="postType">¿Qué quieres publicar?</label>
                   <select
                     id="postType"
@@ -78,10 +78,11 @@ function Crear_publicacion() {
                     value={state.postType}
                     onChange={handleInput}
                   >
+                    <option value="">Seleccionar opción</option>
                     <option value="Receta">Receta</option>
                     <option value="Publicación">Pregunta</option>
                   </select>
-                </div> */}
+                </div>
                 <div className="input-group">
                   <label htmlFor="title">Título</label>
                   <input

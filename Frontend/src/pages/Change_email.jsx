@@ -78,7 +78,7 @@ function Change_email() {
             />
           </div>
           <p className="note">
-            Debe contener 8+ caracteres, incluyendo al menos 1 letra y 1 número.
+            Debe contener un formato de email válido.
           </p>
           <br></br>
           <button type="submit" className="register-button center-button">
