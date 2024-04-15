@@ -67,6 +67,10 @@
   display: flex;
 }
 
+.menu-info {
+  display: flex;
+}
+
 .spanHeader {
   font-weight: 550;
   font-size: 15px;
@@ -130,8 +134,16 @@
 /* Estilos para pantallas más pequeñas */
 @media screen and (max-width: 900px) {
   .search,
-  .menu {
+  .menu-info {
     display: none; 
+  }
+
+  .header {
+    justify-content: none;
+  }
+
+  .menu {
+    right: 0; 
   }
 
   .additional-content-for-small-screens {
@@ -154,9 +166,6 @@
 @media screen and (max-width: 900px) {
   .menu-toggle {
     display: block; 
-    position: absolute;
-    top: 20px;
-    right: 20px;
     z-index: 1200;
     cursor: pointer;
     background: none;
@@ -212,4 +221,37 @@
   .menu-dropdown button:hover {
     background-color: #f0f0f0;
   }
+}
+
+.menu-usuario {
+  position: absolute;
+  top: 100%;
+  right: 5%;
+  width: 156px; 
+  background-color: #fff; 
+  border: 1px solid #ccc; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+  z-index: 999;
+}
+
+.menu-button-user {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  text-align: left;
+  background-color: #ffffff;
+  color: #333333;
+  cursor: pointer;
+}
+
+.menu-button-user:hover {
+  background-color: #f0f0f0; /* Cambiar el color de fondo al pasar el ratón */
+}
+
+.separator-user-menu {
+  margin: 5px 0;
+  width: 100%;
+  height: 1px;
+  background-color: #0000005e; /* Color de la línea separadora */
 }

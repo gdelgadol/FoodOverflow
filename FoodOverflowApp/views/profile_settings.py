@@ -190,6 +190,7 @@ def confirm_email(request, user, to_email):
 
 #Update the email
 def email_confirmated(request, uidb64, token, email):
+    print(email)
     try:
         #decode the uid
         uid = force_str(urlsafe_base64_decode(uidb64))
