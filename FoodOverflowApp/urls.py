@@ -17,10 +17,12 @@ urlpatterns = [
     path('post/', views.get_publication, name= "get_publication"), # get the publication 
     ## Recipes
     path('recipes/', views.get_recipes, name = "get_publications"), # get only recipes
-    path('crear_recipe/', views.create_recipe, name= "crear_publicaion"), # create recipe path
+    path('crear_recipe/', views.create_recipe, name= "crear_recipe"), # create recipe path
     path('recipe/', views.get_recipe, name= "get_publication"), # get the recipe 
     ## votes
     path('vote/<str:id_vote>/', views.make_vote, name = "vote"), # Make a vote
+    ## comment
+    path('comment/<str:id_comment>/', views.create_comment, name = "comment"),
     # User settings
     path('get_user/', views.get_user_data, name = "user_token"), # user's info in JWT Token
     path('delete_user/',views.delete_user, name = 'delete_user'), # delete_user path

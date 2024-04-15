@@ -122,7 +122,7 @@ def create_recipe(request):
         # Catch all other exceptions
         return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
     
-def get_recipes(reqest):
+def get_recipes(request):
     try:
         recipes_query = Recipe.objects.order_by('recipe_creation_date').select_related('profile').all()
         posts = []
@@ -146,7 +146,7 @@ def get_recipes(reqest):
 
         return JsonResponse({"type": "SUCCESS", "posts": posts})
     except Publication.DoesNotExist:
-        return JsonResponse({"type": "ERROR", "message": "No se encontraron publicaciones"}, status=404)
+        return JsonResponse({"type": "ERROR", "message": "No se encontraron recetas"}, status=404)
     except Exception as e:
         return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
 
@@ -258,3 +258,46 @@ def make_vote(request, id_vote):
             "message" : "Hubo un error, inténtelo de nuevo",
             "type" : "ERROR"
             })
+    
+def create_comment(request, id_comment):
+    try:
+        data = json.loads(request.body)
+        post_id = int(data.get("post_id"))
+        content = data.get("content")
+        jwt_decoded = decode_jwt(data.get("jwt"))
+        response = None
+
+        if Profile.objects.filter(pk = jwt_decoded["id"]).exists():
+            profile = Profile.objects.get(pk = jwt_decoded["id"])
+        else:
+            return JsonResponse({
+                "message" : "El usuario no se encuentra registrado.", 
+                "type" : "ERROR"
+                })
+        
+        if id_comment == "recipe":
+            if Recipe.objects.filter(pk = post_id).exists():
+                recipe = Recipe.objects.get(pk = post_id)
+            else:
+                return JsonResponse({
+                    "message" : "La receta no se encuentra registrada.", 
+                    "type" : "ERROR"
+                    })
+            RecipeComment.objects.create_recipe_comment(profile, recipe, content, response)
+            return JsonResponse({"message" : "¡Comentario creado con éxito!", "type" : "SUCCESS"})
+        
+        elif id_comment == "publication":
+            if Publication.objects.filter(pk = post_id).exists():
+                publication = Publication.objects.get(pk = post_id)
+            else:
+                return JsonResponse({
+                    "message" : "La publicación no se encuentra registrada.", 
+                    "type" : "ERROR"
+                    })
+            PublicationComment.objects.create_publication_comment(profile, publication, content, response)
+            return JsonResponse({"message" : "¡Comentario creado con éxito!", "type" : "SUCCESS"})
+        
+    except Exception as e:
+        print(e)
+        # Catch all other exceptions
+        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
