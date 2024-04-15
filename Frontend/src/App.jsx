@@ -9,6 +9,7 @@ import Profile from "./pages/Profile"
 import Change_email from "./pages/Change_email"
 import Change_password from "./pages/Change_password"
 import Change_user from "./pages/Change_user"
+import Settings from "./pages/Settings"
 import './App.css'
 import {Routes, Route} from "react-router-dom";
 import Encabezado from "./components/Encabezado.jsx"
@@ -27,6 +28,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<Home />} />
           <Route path="/activate/:uid/:token" element={<Activate />} />
+          <Route path="/settings/:u_id/:token/:email" element={<Settings />} />
           <Route path="/recuperar_contrasena" element={<Rec_contrasena />} />
           <Route path="/restablecer_contrasena/:uid/:token/" element={<Restablecer_contrasena />} />
           <Route path="/post/:id" element={<DetallesPublicacion />}/>
