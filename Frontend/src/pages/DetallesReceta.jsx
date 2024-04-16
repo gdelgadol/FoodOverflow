@@ -3,10 +3,10 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import {HiArrowCircleDown, HiArrowCircleUp} from "react-icons/hi";
 import axios from "../api/axios.jsx";
-import './DetallesReceta.css';
 import { BiComment } from "react-icons/bi";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import './DetallesReceta.css';
 
 function DetallesReceta() {
     const { id } = useParams();
@@ -37,7 +37,7 @@ function DetallesReceta() {
             setTitle(res.data.title);
             setDescription(res.data.description);
             setNumComments(res.data.numComments);
-            setIngredients(res.data.ingredients);
+            setIngredients(res.data.ingredients.split("_"));
             setScore(res.data.score);
           } else {
             alert(res.data.message);
@@ -59,14 +59,16 @@ function DetallesReceta() {
                     <span className='dr-userName'>{author}</span>
                     <span className='dr-title'>{title}</span>
                     <div className="dr-description">{description}</div>
-                    <div className='dr-ingredients'>
-                        <h4>Ingredientes:</h4>
-                        <ul>
-                            {ingredients.map((ingredient, index) => (
-                                <li key={index}>{ingredient.name}: {ingredient.quantity}</li>
-                            ))}
-                        </ul>
-                    </div>
+                    {ingredients.length > 0 && (
+                        <div className='dr-ingredients'>
+                            <h4>Ingredientes:</h4>
+                            <ul>
+                                {ingredients.map((ingredient, index) => (
+                                    <li key={index}>{ingredient}</li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
                     <div className='dr-numComments'>
                         <BiComment />
                         {numComments}
