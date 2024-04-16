@@ -1,4 +1,3 @@
-// DetallesReceta.jsx
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import {HiArrowCircleDown, HiArrowCircleUp} from "react-icons/hi";
@@ -48,19 +47,19 @@ function DetallesReceta() {
     };
 
     return (
-        <div className='dr-container'>
-            <div className='dr-post'>
-                <div className='dr-score'>
+        <div className='dp-container'>
+            <div className='dp-post'>
+                <div className='dp-score'>
                     <HiArrowCircleDown size={30} />
                     {score}
                     <HiArrowCircleUp size={30} />
                 </div>
-                <div className='dr-contenido'>
-                    <span className='dr-userName'>{author}</span>
-                    <span className='dr-title'>{title}</span>
-                    <div className="dr-description">{description}</div>
+                <div className='dp-contenido'>
+                    <span className='dp-userName'>{author}</span>
+                    <span className='dp-title'>{title}</span>
+                    <div className="dp-description">{description}</div>
                     {ingredients.length > 0 && (
-                        <div className='dr-ingredients'>
+                        <div className='dp-ingredients'>
                             <h4>Ingredientes:</h4>
                             <ul>
                                 {ingredients.map((ingredient, index) => (
@@ -69,18 +68,18 @@ function DetallesReceta() {
                             </ul>
                         </div>
                     )}
-                    <div className='dr-numComments'>
+                    <div className='dp-numComments'>
                         <BiComment />
                         {numComments}
                     </div>
                 </div>
             </div>
-            <div className='dr-makeComment'>
+            <div className='dp-makeComment'>
                 <ReactQuill
                     theme="snow"
                     value={comment}
                     onChange={handleChange}
-                    className='dr-inputComment'
+                    className='dp-inputComment'
                     placeholder="Escribe un comentario..."
                     modules={{
                         toolbar: [
@@ -91,9 +90,9 @@ function DetallesReceta() {
                         ],
                     }}
                 />
-                <button className='dr-submitComment'>Comentar</button>
+                <button className='dp-submitComment'>Comentar</button>
             </div>
-            <div className='dr-comments'>
+            <div className='dp-comments'>
                 Comentarios
             </div>
         </div>
