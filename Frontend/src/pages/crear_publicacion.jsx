@@ -3,6 +3,9 @@ import axios from "axios";
 import "./crear_publicacion.css";
 import Cookies from "universal-cookie";
 import iconoImg from "../assets/logo.png";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
 
 import { Link, useNavigate } from "react-router-dom";
 
@@ -13,14 +16,24 @@ function Crear_publicacion() {
 
   const [errMsg, setErrMsg] = useState("");
   const errRef = useRef();
-  
+
+  const [content, setContent] = useState("");
+
   const [state, setState] = useState({
     title: "",
     content: "",
     postType: "", // Agregamos el estado para el tipo de publicación
     ingredients: [], // Estado para almacenar los ingredientes de la receta
   });
-  
+
+  const handleCommentInput = (value) => {
+    setContent(value);
+    setState({
+      ...state,
+      [content]: content,
+    });
+  };
+
   const handleInput = (event) => {
     setState({
       ...state,
@@ -56,19 +69,48 @@ function Crear_publicacion() {
   const handleSubmit = (event) => {
     event.preventDefault();
     // Validaciones necesarias para las publicaciones
-    crear_publicacion();
+    if (state.postType === "Receta") {
+      crear_receta();
+      //console.log(content)
+    } else {
+      crear_publicacion();
+    }
   };
-  
+
   const navigate = useNavigate();
-  
+
   const crear_publicacion = () => {
-    if (jwt) { 
+    if (jwt) {
       axios
         .post("http://127.0.0.1:8000/crear_publicacion/", {
           title: state.title,
-          content: state.content,
-          //postType: state.postType, 
-          //ingredients: state.ingredients, 
+          content: content,
+          jwt: jwt,
+        })
+        .then((res) => {
+          if (res.data.type === "SUCCESS") {
+            alert(res.data.message);
+            navigate("/");
+          } else {
+            alert(res.data.message);
+          }
+        });
+    } else {
+      alert("Usuario no ha iniciado sesión");
+    }
+  };
+
+  const crear_receta = () => {
+    if (jwt) {
+      //console.log(content)
+      const ingredientsString = state.ingredients
+        .map((ingredient) => `${ingredient.name}-${ingredient.quantity}`)
+        .join("-");
+      axios
+        .post("http://127.0.0.1:8000/crear_recipe/", {
+          title: state.title,
+          ingredients: ingredientsString,
+          instructions: content,
           jwt: jwt,
         })
         .then((res) => {
@@ -86,8 +128,8 @@ function Crear_publicacion() {
 
   return (
     <div className="register">
-      <div className="form-container"> 
-        <div className="publication-form"> 
+      <div className="form-container">
+        <div className="publication-form">
           <h1>Crear publicación</h1>
           <h1
             ref={errRef}
@@ -141,13 +183,21 @@ function Crear_publicacion() {
                       value={ingredient.quantity}
                       onChange={(e) => handleIngredientChange(index, e)}
                     />
-                    <button className="chao" type="button" onClick={() => handleRemoveIngredient(index)}>
+                    <button
+                      className="chao"
+                      type="button"
+                      onClick={() => handleRemoveIngredient(index)}
+                    >
                       Eliminar ingrediente
                     </button>
                   </div>
                 ))}
                 <br></br>
-                <button className="register-button center-button" type="button" onClick={handleAddIngredient}>
+                <button
+                  className="register-button center-button"
+                  type="button"
+                  onClick={handleAddIngredient}
+                >
                   Agregar otro ingrediente
                 </button>
               </div>
@@ -155,22 +205,29 @@ function Crear_publicacion() {
 
             <div className="input-group">
               <label htmlFor="content">
-                {state.postType === "Receta" ? "Descripción receta" : "Contenido"}
+                {state.postType === "Receta"
+                  ? "Descripción receta"
+                  : "Contenido"}
               </label>
-              <textarea
-                id="content"
-                name="content"
-                placeholder={
-                  state.postType === "Receta"
-                    ? "Describe la receta"
-                    : "Escribe el contenido de tu publicación"
-                }
-                value={state.content}
-                onChange={handleInput}
-                style={{ height: "150px" }}
-              />
+              <div className='dp-makeComment2'>
+            <ReactQuill
+                theme="snow"
+                value={content}
+                onChange={handleCommentInput}
+                className='dp-inputComment'
+                placeholder="Escribe el contenido de la receta"
+                modules={{
+                    toolbar: [
+                      [{ 'header': '1'}, {'header': '2'}],
+                      ['bold', 'italic'],
+                      ['link', 'image'],
+                      ['clean'],
+                    ],
+                }}
+            />
             </div>
-            
+            </div>
+
             <button type="submit" className="register-button center-button">
               Publicar
             </button>
@@ -182,3 +239,4 @@ function Crear_publicacion() {
 }
 
 export default Crear_publicacion;
+

@@ -7,18 +7,20 @@ import Cookies from 'universal-cookie';
 
 const Home = () => {
 
-  const [posts, setPosts] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [postsPerPage, setPostsPerPage] = useState(10) // Numero de post por pagina
-  const [filtro_1, setFiltro_1] = useState()
-  const [filtro_2, setFiltro_2] = useState()
-
-  const maxPage = posts.length / postsPerPage
+  const [posts, setPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(10); // Numero de post por pagina
+  const [filtro_1, setFiltro_1] = useState("Recientes");
+  const [filtro_2, setFiltro_2] = useState("Todas");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/forum/");
+        let url = "http://127.0.0.1:8000/forum/";
+        if (filtro_2 === "Recetas") {
+          url = "http://127.0.0.1:8000/recipes/";
+        }
+        const response = await axios.get(url);
         if (response.data.type === "SUCCESS") {
           setPosts(response.data.posts);
         } else {
@@ -30,27 +32,14 @@ const Home = () => {
     };
   
     fetchData();
-  }, []);
-  
+  }, [filtro_2]); // Se ejecuta nuevamente cuando el filtro_2 cambia
+
+  const maxPage = posts.length / postsPerPage;
+
   const lastPostIndex = currentPage * postsPerPage;
   const firstPostIndex = lastPostIndex - postsPerPage;
   const currentPosts = posts.slice(firstPostIndex, lastPostIndex);
 
-  // Consultar la cookie creada
-  /*const cookies = new Cookies();
-  const jwt = cookies.get("auth_token");
-
-  if(jwt){ 
-  // Si la cookie existe se hace una petición al back para devolver el username (Depende de qué necesita miramos qué retorna este post)
-    axios
-        .post("http://127.0.0.1:8000/user_token/", {
-          jwt: jwt,
-        })
-        .then((res) => {
-          const username = res.data.username;
-          console.log(username);
-        });
-    }*/
   return (
     <div className="posts-container">
       <div className="hm-filtro">
@@ -78,6 +67,8 @@ const Home = () => {
             description={publicacion.description}
             numComments={publicacion.numComments}
             score={publicacion.score}
+            // Mostrar la descripción solo si la publicación es una receta
+            //recipeDescription={filtro_2 === "Recetas" ? posts.descriptions : null}
           />
         ))
       }
@@ -89,4 +80,5 @@ const Home = () => {
     </div>
   );
 };
+
 export default Home;
