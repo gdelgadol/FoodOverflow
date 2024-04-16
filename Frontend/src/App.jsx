@@ -33,8 +33,8 @@ function App() {
           <Route path="/settings/:u_id/:token/:email" element={<Settings />} />
           <Route path="/recuperar_contrasena" element={<Rec_contrasena />} />
           <Route path="/restablecer_contrasena/:uid/:token/" element={<Restablecer_contrasena />} />
-          <Route path="/post/:id" element={<DetallesPublicacion />}/>
-          <Route path="/receta/:id" element={<DetallesReceta />}/>
+          <Route path="/publication/:id" element={<DetallesPublicacion />}/>
+          <Route path="/receta/:id" element={<DetallesPublicacion />}/>
           <Route element={<PrivateRoute />}>
             <Route path="/crear_publicacion" element={<Crear_publicacion />} />
             <Route path="/profile" element={<Profile />} />
