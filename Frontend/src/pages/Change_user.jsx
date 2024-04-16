@@ -97,7 +97,7 @@ function Change_user() {
         </form>
         <center>
           <p className="loginRegister">
-            ¿Deseas volver a los datos de usuario <Link to={"/profile"}>Perfil</Link>
+            ¿Deseas volver a los datos de usuario? <Link to={"/profile"}>Perfil</Link>
           </p>
         </center>
       </div>

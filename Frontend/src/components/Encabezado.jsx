@@ -50,7 +50,7 @@ function Encabezado() {
         <div className="menu-info">
         <Link to={"/about"}>
         <button className="menu-button">
-        <span className="spanHeader">Sobre nosótros</span>
+        <span className="spanHeader">Sobre nosotros</span>
         </button>
         </Link>
         <Link to={"/contact"}>
@@ -70,7 +70,7 @@ function Encabezado() {
           <>
             <Link to={"/crear_publicacion"}>
               <button className="menu-button2">
-                <strong>Crear</strong> 
+                <strong>Publicar</strong> 
               </button>
             </Link>
               <button className="menu-button3" onClick={toggleMenuUsuario}>
@@ -119,7 +119,7 @@ function Encabezado() {
           <Link to={"/About"}>
           <button className="menu-button">
             <center>
-            <strong>Sobre nosótros</strong>
+            <strong>Sobre nosotros</strong>
             </center>
           </button>
           </Link>
