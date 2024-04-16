@@ -203,16 +203,18 @@ dp-alert-cancel-close:focus {
 
 .dp-alert-cancel-buttons {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     width: 100%;
+    gap: 15px;
+    margin-top: 10px;
 }
 
 .dp-button-discard {
     width: 90px;
     height: 30px;
     border: none;
-    background-color: #c60000;
+    background-color: #ff0000;
     color: #ffffff;
     cursor: pointer;
     font-weight: 600;
