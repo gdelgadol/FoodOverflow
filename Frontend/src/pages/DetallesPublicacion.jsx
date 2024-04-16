@@ -17,15 +17,16 @@ function DetallesPublicacion() {
     const [score, setScore] = useState();
 	const [showPlaceholder, setShowPlaceholder] = useState(true);
     const [showButtons, setShowButtons] = useState(false);
-    const [comment, setComment] = useState('');
+    const [comment, setComment] = useState();
+	const [alertVisible, setAlertVisible] = useState(false);
+
+	const ocultarAlerta = () => {
+		setAlertVisible(false);
+	}
 
     const handleChangeComment = (event) => {
 		const comment = event.target.value
         setComment(comment);
-    };
-
-	const handleChange = (value) => {
-        setComment(value);
     };
 
 	const handleInputCommentClick = () => {
@@ -34,9 +35,12 @@ function DetallesPublicacion() {
 	}
 
 	const handleInputCommentCancel = () => {
-
-		setShowPlaceholder(true)
-        setShowButtons(false)
+		if (!comment) {
+			setShowPlaceholder(true)
+			setShowButtons(false)
+		} else {
+			setAlertVisible(true)
+		}
 	}
 
     useEffect(() => {
@@ -97,34 +101,24 @@ function DetallesPublicacion() {
 					</div>
 				)}
 			</div>
-
-			<ReactQuill
-                theme="snow"
-                value={comment}
-                onChange={handleChange}
-                className='dp-inputComment'
-                placeholder="Escribe un comentario..."
-                modules={{
-                    toolbar: [
-                      [{ 'header': '1'}, {'header': '2'}],
-                      ['bold', 'italic'],
-                      ['link', 'image'],
-                      ['clean'],
-                    ],
-                }}
-            />
-            <div className='dp-commentContent'>
-                <p>Contenido del comentario:</p>
-                <div dangerouslySetInnerHTML={{ __html: comment }} />
-            </div>
-			<div className='dp-hiddenComment'>
-                    {comment}
-            </div>
-
-
             <div className='dp-comments'>
                 Comentarios
             </div>
+			{alertVisible && (
+				<div className='dp-alert-cancel'>
+					<div className='dp-alert-cancel-content'>
+						<div className='dp-alert-cancel-content-title'>
+							<span className='dp-title'>¿Descartar comentario?</span>
+							<span className="close" onClick={ocultarAlerta}>&times;</span>
+						</div>
+						<div className='dp-description'>Tienes un comentario en progreso, ¿estás seguro de que quieres descartarlo?</div>
+					</div>
+					<div className='dp-alert-cancel-buttons'>
+                        <button className='dp-button-cancel' onClick={ocultarAlerta}>Cancelar</button>
+                        <button className='dp-button-discard' onClick={ocultarAlerta}>Descartar</button>
+                    </div>
+				</div>
+			)}
         </div>
     );
   }
