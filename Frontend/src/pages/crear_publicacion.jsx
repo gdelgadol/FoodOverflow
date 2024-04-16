@@ -127,9 +127,7 @@ function Crear_publicacion() {
   };
 
   return (
-    <div className="register">
       <div className="form-container">
-        <div className="publication-form">
           <h1>Crear publicación</h1>
           <h1
             ref={errRef}
@@ -232,9 +230,7 @@ function Crear_publicacion() {
               Publicar
             </button>
           </form>
-        </div>
       </div>
-    </div>
   );
 }
 
