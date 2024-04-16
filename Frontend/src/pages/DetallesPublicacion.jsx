@@ -15,12 +15,33 @@ function DetallesPublicacion() {
     const [numComments, setNumComments] = useState();
     const [comments, setComments] = useState();
     const [score, setScore] = useState();
+	const [showPlaceholder, setShowPlaceholder] = useState(true);
+    const [showButtons, setShowButtons] = useState(false);
+    const [comment, setComment] = useState();
+	const [alertVisible, setAlertVisible] = useState(false);
 
-    const [comment, setComment] = useState('');
+	const ocultarAlerta = () => {
+		setAlertVisible(false);
+	}
 
-    const handleChange = (value) => {
-        setComment(value);
+    const handleChangeComment = (event) => {
+		const comment = event.target.value
+        setComment(comment);
     };
+
+	const handleInputCommentClick = () => {
+		setShowPlaceholder(false)
+		setShowButtons(true)
+	}
+
+	const handleInputCommentCancel = () => {
+		if (!comment) {
+			setShowPlaceholder(true)
+			setShowButtons(false)
+		} else {
+			setAlertVisible(true)
+		}
+	}
 
     useEffect(() => {
         detallesPublicacion(id);
@@ -64,36 +85,41 @@ function DetallesPublicacion() {
                     </div>
                 </div>
             </div>
-            <div className='dp-makeComment'>
-            <ReactQuill
-                theme="snow"
-                value={comment}
-                onChange={handleChange}
-                className='dp-inputComment'
-                placeholder="Escribe un comentario..."
-                modules={{
-                    toolbar: [
-                      [{ 'header': '1'}, {'header': '2'}],
-                      ['bold', 'italic'],
-                      ['link', 'image'],
-                      ['clean'],
-                    ],
-                }}
-            />
-                <button className='dp-submitComment'>Comentar</button>
-            </div>
+			<div className='dp-makeComment'>
+				<input 
+					placeholder={showPlaceholder ? "Escribe un comentario..." : ""}
+					className='dp-input-comment'
+					type = 'text'
+					value={comment}
+					onChange={handleChangeComment}
+					onClick={handleInputCommentClick}
+				/>
+				{showButtons && (
+					<div className='dp-makeComment-buttons-cancel-comment'>
+						<button className='dp-button-cancel' onClick={handleInputCommentCancel}>Cancelar</button>
+						<button className='dp-button-comment'>Comentar</button>
+					</div>
+				)}
+			</div>
             <div className='dp-comments'>
                 Comentarios
             </div>
+			{alertVisible && (
+				<div className='dp-alert-cancel'>
+					<div className='dp-alert-cancel-content'>
+						<div className='dp-alert-cancel-content-title'>
+							<span className='dp-title'>¿Descartar comentario?</span>
+							<span className="close" onClick={ocultarAlerta}>&times;</span>
+						</div>
+						<div className='dp-description'>Tienes un comentario en progreso, ¿estás seguro de que quieres descartarlo?</div>
+					</div>
+					<div className='dp-alert-cancel-buttons'>
+                        <button className='dp-button-cancel' onClick={ocultarAlerta}>Cancelar</button>
+                        <button className='dp-button-discard' onClick={ocultarAlerta}>Descartar</button>
+                    </div>
+				</div>
+			)}
         </div>
     );
   }
   export default DetallesPublicacion;
-
-  /*            <textarea 
-                    className='dp-inputComment'
-                    value={comment}
-                    onChange={handleChange}
-                    placeholder="Escribe un comentario..."
-                    style={{resize: 'none', overflow: 'hidden'}}
-                />*/

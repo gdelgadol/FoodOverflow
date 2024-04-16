@@ -3,11 +3,15 @@ import {HiArrowCircleDown, HiArrowCircleUp} from "react-icons/hi";
 import { BiComment } from "react-icons/bi";
 import { Link } from 'react-router-dom';
 
-export default function Publicacion ({id_post, userName, title, description, numComments, score}) {
-
+export default function Publicacion ({id_post, userName, title, description, numComments, score, type}) {
+    if (type === 'publications'){
+        type = "publication"
+    } else {
+        type = "recipe"
+    }
     return (
         <div>
-            <Link to={`/post/${id_post}`} className='publicacion'>
+            <Link to={`/${type}/${id_post}`} className='publicacion'>
                 <div className='score'>
                     <HiArrowCircleDown size={30} />
                     {score}
