@@ -57,7 +57,6 @@ function DetallesReceta() {
                 <div className='dp-contenido'>
                     <span className='dp-userName'>{author}</span>
                     <span className='dp-title'>{title}</span>
-                    <div className="dp-description">{description}</div>
                     {ingredients.length > 0 && (
                         <div className='dp-ingredients'>
                             <h4>Ingredientes:</h4>
@@ -68,6 +67,7 @@ function DetallesReceta() {
                             </ul>
                         </div>
                     )}
+                    <div className="dp-description">{description}</div>
                     <div className='dp-numComments'>
                         <BiComment />
                         {numComments}
