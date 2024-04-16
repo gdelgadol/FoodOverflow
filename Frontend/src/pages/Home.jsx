@@ -10,49 +10,54 @@ const Home = () => {
   const [posts, setPosts] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
   const [postsPerPage, setPostsPerPage] = useState(10) // Numero de post por pagina
-  const [filtro_1, setFiltro_1] = useState()
-  const [filtro_2, setFiltro_2] = useState()
+  const [filtro_1, setFiltro_1] = useState("Recientes")
+  const [filtro_2, setFiltro_2] = useState("recipes")
+  const [isLoading, setIsLoading] = useState(false)
 
   const maxPage = posts.length / postsPerPage
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        //setIsLoading(true)
         const response = await axios.get("http://127.0.0.1:8000/publications/");
         if (response.data.type === "SUCCESS") {
-          setPosts(response.data.posts);
+          const sortedPosts = response.data.posts.sort((a, b) => a.id - b.id);
+          setPosts(sortedPosts);
         } else {
           alert(response.data.message);
         }
       } catch (error) {
         console.error("Error al obtener datos:", error);
+      } finally {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 0);
       }
     };
   
     fetchData();
-  }, []);
+  }, [filtro_2]);
+  
+  useEffect(() => {
+    // Ordenar las publicaciones según el filtro seleccionado por el usuario
+    if (filtro_1 === "Más votados") {
+      setPosts([...posts.sort((a, b) => b.score - a.score)]);
+    } else if (filtro_1 === "Recientes") {
+      setPosts([...posts.sort((a, b) => a.id - b.id)]);
+    }
+  }, [filtro_1]);
   
   const lastPostIndex = currentPage * postsPerPage;
   const firstPostIndex = lastPostIndex - postsPerPage;
   const currentPosts = posts.slice(firstPostIndex, lastPostIndex);
 
-  // Consultar la cookie creada
-  /*const cookies = new Cookies();
-  const jwt = cookies.get("auth_token");
-
-  if(jwt){ 
-  // Si la cookie existe se hace una petición al back para devolver el username (Depende de qué necesita miramos qué retorna este post)
-    axios
-        .post("http://127.0.0.1:8000/user_token/", {
-          jwt: jwt,
-        })
-        .then((res) => {
-          const username = res.data.username;
-          console.log(username);
-        });
-    }*/
   return (
     <div className="posts-container">
+      {isLoading && (
+        <div className="hm-modal">
+        </div>
+      )}
       <div className="hm-filtro">
         <div className="hm-filtro-container">
           Ordenar por
@@ -61,15 +66,15 @@ const Home = () => {
             <option value="Más votados">Más votados</option>
           </select>
           <select className="hm-filtro-select" onChange={(e) => setFiltro_2(e.target.value)}>
-            <option value="Todas">Todas</option>
-            <option value="Preguntas">Preguntas</option>
-            <option value="Recetas">Recetas</option>
+            <option value="recipes">Recetas</option>
+            <option value="publications">Publicaciones</option>
           </select>
         </div>
         <div className='hm-separator'></div>
       </div>
       {
-        currentPosts.map((publicacion, index) => (
+        currentPosts
+        .map((publicacion, index) => (
           <Publicacion
             key={index}
             id_post={publicacion.id}
