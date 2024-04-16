@@ -145,3 +145,11 @@
     margin: 5px;
   }
   
+
+  .dp-makeComment2{
+    display: flex;
+    width: 47vw;
+    border-radius: 10px;
+    flex-direction: column;
+    justify-content: flex-start;
+}

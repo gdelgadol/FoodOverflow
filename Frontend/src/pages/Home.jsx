@@ -20,7 +20,7 @@ const Home = () => {
     const fetchData = async () => {
       try {
         //setIsLoading(true)
-        const response = await axios.get("http://127.0.0.1:8000/publications/");
+        const response = await axios.get(`http://127.0.0.1:8000/${filtro_2}/`);
         if (response.data.type === "SUCCESS") {
           const sortedPosts = response.data.posts.sort((a, b) => a.id - b.id);
           setPosts(sortedPosts);
@@ -83,6 +83,8 @@ const Home = () => {
             description={publicacion.description}
             numComments={publicacion.numComments}
             score={publicacion.score}
+            // Mostrar la descripción solo si la publicación es una receta
+            //recipeDescription={filtro_2 === "Recetas" ? posts.descriptions : null}
           />
         ))
       }
@@ -94,4 +96,5 @@ const Home = () => {
     </div>
   );
 };
+
 export default Home;
