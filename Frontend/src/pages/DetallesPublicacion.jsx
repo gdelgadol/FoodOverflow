@@ -28,7 +28,7 @@ function DetallesPublicacion() {
 
     const detallesPublicacion = async (id) => {
         try {
-          const res = await axios.post("http://127.0.0.1:8000/post/", {
+          const res = await axios.post("http://127.0.0.1:8000/publication/", {
             publication_id: id
           });
           if (res.data.type === "SUCCESS") {

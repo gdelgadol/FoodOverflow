@@ -20,7 +20,7 @@ const Home = () => {
     const fetchData = async () => {
       try {
         //setIsLoading(true)
-        const response = await axios.get(`http://127.0.0.1:8000/${filtro_2}/`);
+        const response = await axios.get("http://127.0.0.1:8000/publications/");
         if (response.data.type === "SUCCESS") {
           const sortedPosts = response.data.posts.sort((a, b) => a.id - b.id);
           setPosts(sortedPosts);

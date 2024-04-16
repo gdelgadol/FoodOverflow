@@ -11,10 +11,9 @@ urlpatterns = [
     path('logout/', views.logout, name = "logout"), # Log out path
     # Forum
     ## Publication
-    path('forum/', views.get_publications, name = "get_forum_posts"), # get publications and recipes
-    path('publications/', views.get_publications, name = "get_publications"), # get only publications
+    path('publications/', views.get_publications, name = "get_publications"), # get publications
     path('crear_publicacion/', views.create_forum_publication, name= "crear_publicaion"), # create publication path
-    path('post/', views.get_publication, name= "get_publication"), # get the publication 
+    path('publication/', views.get_publication, name= "get_publication"), # get the publication 
     ## Recipes
     path('recipes/', views.get_recipes, name = "get_publications"), # get only recipes
     path('crear_recipe/', views.create_recipe, name= "crear_recipe"), # create recipe path
