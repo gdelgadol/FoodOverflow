@@ -104,8 +104,8 @@ function Crear_publicacion() {
     if (jwt) {
       //console.log(content)
       const ingredientsString = state.ingredients
-        .map((ingredient) => `${ingredient.name}-${ingredient.quantity}`)
-        .join("-");
+        .map((ingredient) => `${ingredient.name}: ${ingredient.quantity}`)
+        .join("_");
       axios
         .post("http://127.0.0.1:8000/crear_recipe/", {
           title: state.title,
