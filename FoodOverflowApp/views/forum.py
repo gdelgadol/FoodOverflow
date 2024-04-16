@@ -162,7 +162,7 @@ def get_recipes(request):
                 "userName": username,
                 "title": recipe.recipe_title,
                 "ingredients" : recipe.recipe_ingredients,
-                "descriptions": recipe.recipe_description,
+                "description": recipe.recipe_description,
                 "numComments": num_comments,
                 "score": score,
             }
