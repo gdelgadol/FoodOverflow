@@ -15,12 +15,29 @@ function DetallesPublicacion() {
     const [numComments, setNumComments] = useState();
     const [comments, setComments] = useState();
     const [score, setScore] = useState();
-
+	const [showPlaceholder, setShowPlaceholder] = useState(true);
+    const [showButtons, setShowButtons] = useState(false);
     const [comment, setComment] = useState('');
 
-    const handleChange = (value) => {
+    const handleChangeComment = (event) => {
+		const comment = event.target.value
+        setComment(comment);
+    };
+
+	const handleChange = (value) => {
         setComment(value);
     };
+
+	const handleInputCommentClick = () => {
+		setShowPlaceholder(false)
+		setShowButtons(true)
+	}
+
+	const handleInputCommentCancel = () => {
+
+		setShowPlaceholder(true)
+        setShowButtons(false)
+	}
 
     useEffect(() => {
         detallesPublicacion(id);
@@ -64,8 +81,24 @@ function DetallesPublicacion() {
                     </div>
                 </div>
             </div>
-            <div className='dp-makeComment'>
-            <ReactQuill
+			<div className='dp-makeComment'>
+				<input 
+					placeholder={showPlaceholder ? "Escribe un comentario..." : ""}
+					className='dp-input-comment'
+					type = 'text'
+					value={comment}
+					onChange={handleChangeComment}
+					onClick={handleInputCommentClick}
+				/>
+				{showButtons && (
+					<div className='dp-makeComment-buttons-cancel-comment'>
+						<button className='dp-button-cancel' onClick={handleInputCommentCancel}>Cancelar</button>
+						<button className='dp-button-comment'>Comentar</button>
+					</div>
+				)}
+			</div>
+
+			<ReactQuill
                 theme="snow"
                 value={comment}
                 onChange={handleChange}
@@ -80,8 +113,15 @@ function DetallesPublicacion() {
                     ],
                 }}
             />
-                <button className='dp-submitComment'>Comentar</button>
+            <div className='dp-commentContent'>
+                <p>Contenido del comentario:</p>
+                <div dangerouslySetInnerHTML={{ __html: comment }} />
             </div>
+			<div className='dp-hiddenComment'>
+                    {comment}
+            </div>
+
+
             <div className='dp-comments'>
                 Comentarios
             </div>
@@ -89,11 +129,3 @@ function DetallesPublicacion() {
     );
   }
   export default DetallesPublicacion;
-
-  /*            <textarea 
-                    className='dp-inputComment'
-                    value={comment}
-                    onChange={handleChange}
-                    placeholder="Escribe un comentario..."
-                    style={{resize: 'none', overflow: 'hidden'}}
-                />*/
