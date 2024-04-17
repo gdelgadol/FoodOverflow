@@ -13,9 +13,9 @@ export default function Publicacion ({id_post, userName, title, description, num
         <div>
             <Link to={`/${type}/${id_post}`} className='publicacion'>
                 <div className='score'>
-                    <HiArrowCircleDown size={30} />
-                    {score}
                     <HiArrowCircleUp size={30} />
+                    {score}
+                    <HiArrowCircleDown size={30} />
                 </div>
                 <div className='contenido'>
                     <span className='userName'>{userName}</span>

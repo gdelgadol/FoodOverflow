@@ -28,6 +28,14 @@ function DetallesPublicacion() {
 		setAlertVisible(false);
 	}
 
+  const handleUpVote = () => {
+    // Función para manejar el voto positivo
+  };  
+
+  const handleDownVote = () => {
+    // Función para manejar el voto negativo
+  };
+
     const handleChangeComment = (event) => {
 		const comment = event.target.value
         setComment(comment);
@@ -102,9 +110,13 @@ function DetallesPublicacion() {
         <div className='dp-container'>
             <div className='dp-post'>
                 <div className='dp-score'>
-                    <HiArrowCircleDown size={30} />
+                    <button className='vote-button' onClick={handleUpVote}>
+                        <HiArrowCircleUp size={30} />
+                    </button>
                     {score}
-                    <HiArrowCircleUp size={30} />
+                    <button className='vote-button' onClick={handleDownVote}>
+                        <HiArrowCircleDown size={30} />
+                    </button>
                 </div>
                 <div className='dp-contenido'>
                     <span className='dp-userName'>{author}</span>

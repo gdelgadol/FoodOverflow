@@ -255,3 +255,20 @@ dp-alert-cancel-close:focus {
 .dp-back-link:hover {
     color: #555;
 }
+
+.vote-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin: 0 10px;
+    transition: transform 0.2s;
+}
+
+.vote-button:focus {
+    outline: none;
+}
+
+.vote-button:hover {
+    color: #ff5c00; 
+    transform: scale(1.1); 
+}
