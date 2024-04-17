@@ -16,6 +16,7 @@ import Encabezado from "./components/Encabezado.jsx"
 import Footer from "./components/Footer.jsx"
 import PrivateRoute from "./utils/PrivateRoute"
 import DetallesPublicacion from "./pages/DetallesPublicacion"
+import DetallesReceta from "./pages/DetallesReceta"
 import AboutUs from "./pages/AboutUs.jsx"
 import SupportUs from "./pages/SupportUs.jsx"
 
@@ -32,7 +33,8 @@ function App() {
           <Route path="/settings/:u_id/:token/:email" element={<Settings />} />
           <Route path="/recuperar_contrasena" element={<Rec_contrasena />} />
           <Route path="/restablecer_contrasena/:uid/:token/" element={<Restablecer_contrasena />} />
-          <Route path="/post/:id" element={<DetallesPublicacion />}/>
+          <Route path="/publication/:id" element={<DetallesPublicacion />}/>
+          <Route path="/recipe/:id" element={<DetallesReceta />}/>
           <Route element={<PrivateRoute />}>
             <Route path="/crear_publicacion" element={<Crear_publicacion />} />
             <Route path="/profile" element={<Profile />} />

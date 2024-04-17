@@ -50,21 +50,26 @@ def get_publication(request):
         # Extracting relevant data from the comments
         comments_list = []
         for comment in publication_comments:
-            if (comment.comment_response):
-                comment_data = {
-                    'comment_id': comment.publication_comment_id,
-                    'comment_content': comment.comment_body,
-                    'comment_user': comment.profile.username,  # Assuming user is related to the comment
-                    'comment_response': comment.comment_response.publication_comment_id
-                    # Add more fields if needed
-                }
-            else:
-                comment_data = {
+            
+            comment_data = {
                 'comment_id': comment.publication_comment_id,
                 'comment_content': comment.comment_body,
-                'comment_user': comment.profile.username,  # Assuming user is related to the comment
+                'comment_user': comment.profile.username  # Assuming user is related to the comment
+                # Add more fields if needed
+            }
+            publication_comments_response = PublicationComment.objects.filter(publication=publication, comment_response_id = comment.publication_comment_id)
+            response_list = []
+            for response in publication_comments_response:
+                response_data = {
+                'response_id': response.publication_comment_id,
+                'response_content': response.comment_body,
+                'response_user': response.profile.username  # Assuming user is related to the comment
                 # Add more fields if needed
                 }
+                response_list.append(response_data)
+            
+            comment_data["response_list"] = response_list
+
             comments_list.append(comment_data)
 
         num_comments = publication_comments.count()
@@ -191,26 +196,31 @@ def get_recipe(request):
 
         recipe = Recipe.objects.select_related('profile').get(recipe_id = recipe_id)
         
-        recipe_comments = RecipeComment.objects.filter(recipe=recipe)
+        recipe_comments = RecipeComment.objects.filter(recipe=recipe, comment_response_id = None)
         
         # Extracting relevant data from the comments
         comments_list = []
         for comment in recipe_comments:
-            if (comment.comment_response):
-                comment_data = {
-                    'comment_id': comment.recipe_comment_id,
-                    'comment_content': comment.comment_body,
-                    'comment_user': comment.profile.username,  # Assuming user is related to the comment
-                    'comment_response': comment.comment_response.recipe_comment_id
-                    # Add more fields if needed
-                }
-            else:
-                comment_data = {
+            
+            comment_data = {
                 'comment_id': comment.recipe_comment_id,
                 'comment_content': comment.comment_body,
-                'comment_user': comment.profile.username,  # Assuming user is related to the comment
+                'comment_user': comment.profile.username  # Assuming user is related to the comment
+                # Add more fields if needed
+            }
+            recipe_comments_response = RecipeComment.objects.filter(recipe=recipe, comment_response_id = comment.recipe_comment_id)
+            response_list = []
+            for response in recipe_comments_response:
+                response_data = {
+                'response_id': response.recipe_comment_id,
+                'response_content': response.comment_body,
+                'response_user': response.profile.username  # Assuming user is related to the comment
                 # Add more fields if needed
                 }
+                response_list.append(response_data)
+            
+            comment_data["response_list"] = response_list
+
             comments_list.append(comment_data)
 
         num_comments = recipe_comments.count()

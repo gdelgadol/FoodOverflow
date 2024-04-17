@@ -83,8 +83,7 @@ const Home = () => {
             description={publicacion.description}
             numComments={publicacion.numComments}
             score={publicacion.score}
-            // Mostrar la descripción solo si la publicación es una receta
-            //recipeDescription={filtro_2 === "Recetas" ? posts.descriptions : null}
+            type={filtro_2}
           />
         ))
       }
