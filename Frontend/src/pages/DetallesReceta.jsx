@@ -7,7 +7,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './DetallesReceta.css';
 import Cookies from "universal-cookie";
-import Cookies from 'universal-cookie';
+
 
 function DetallesReceta() {
     const { id } = useParams();
@@ -23,8 +23,6 @@ function DetallesReceta() {
     const cookies = new Cookies();
     const jwt = cookies.get("auth_token");
 
-    const cookies = new Cookies();
-    const jwt = cookies.get("auth_token");
 
     const handleChange = (value) => {
         setComment(value);
