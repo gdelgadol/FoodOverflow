@@ -6,6 +6,7 @@ import { BiComment } from "react-icons/bi";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './DetallesReceta.css';
+import Cookies from "universal-cookie";
 import Cookies from 'universal-cookie';
 
 function DetallesReceta() {
@@ -19,6 +20,9 @@ function DetallesReceta() {
     const [voted, setVoted] = useState(false); // Estado para rastrear si el usuario ha votado
     const [lastVote, setLastVote] = useState(0); // Estado para rastrear el último voto emitido por el usuario
     const [comment, setComment] = useState('');
+    const cookies = new Cookies();
+    const jwt = cookies.get("auth_token");
+
     const cookies = new Cookies();
     const jwt = cookies.get("auth_token");
 
@@ -74,7 +78,8 @@ function DetallesReceta() {
     const obtenerDetallesReceta = async (id) => {
         try {
           const res = await axios.post("http://127.0.0.1:8000/recipe/", {
-            recipe_id: id
+            recipe_id: id,
+	    jwt : jwt
           });
           if (res.data.type === "SUCCESS") {
             setAuthor(res.data.username);
