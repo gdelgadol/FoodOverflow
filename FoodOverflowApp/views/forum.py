@@ -8,34 +8,6 @@ import json
 
 #------------------Publication controllers--------------------------#
 
-# View the main page publications
-def get_first_n_publications(request):
-    # get the Json Data, Email and Password
-    data = json.loads(request.body)
-    page = int(data.get("page"))
-    num_of_searchs = int(data.get("num_of_searchs"))
-    filter = data.get("filter")
-
-    start = (page-1)*num_of_searchs-1
-    end = page*num_of_searchs-1
-
-    publications_querries = Publication.objects.order_by(filter)[start : end]
-
-    publications = {}
-
-    count = 0
-    for publication_querrie in publications_querries:
-        username = Profile.objects.get(pk = publication_querrie.profile_id).username
-        publication = {'author' : username, 
-                       'title' : publication_querrie.publication_title,
-                       'content' : publication_querrie.publication_description,
-                       'id' : publication_querrie.publication_id}
-        publications['publication_'+str(count)] = publication
-        count+=1
-
-    print(publications)
-    return JsonResponse(publications)
-
 #View details of a specific publication
 def get_publication(request):
     try:
@@ -46,7 +18,17 @@ def get_publication(request):
         publication = Publication.objects.select_related('profile').get(publication_id = publication_id)
 
         publication_comments = PublicationComment.objects.filter(publication=publication)
-        
+	
+	vote_type = 0
+
+	# Extracting vote type
+	if (data.get("jwt")):
+	    jwt_decoded = decode_jwt(data.get("jwt"))
+
+	    profile = Profile.objects.get(id = jwt_decoded["id"])
+            
+	    if PublicationVote.objects.filter(publication = publication, profile = profile).exists():
+	        vote_type = PublicationVote.objects,get(publication = publication, profile = profile).vote_type
         # Extracting relevant data from the comments
         comments_list = []
         for comment in publication_comments:
@@ -86,7 +68,8 @@ def get_publication(request):
             'description' : publication.publication_description,
             "numComments": num_comments,
             "score": publication_score,
-            "publication_comments": comments_list
+            "publication_comments": comments_list,
+	    "vote_type" : vote_type
             }
         
         return JsonResponse(publication_json)
@@ -198,6 +181,17 @@ def get_recipe(request):
         
         recipe_comments = RecipeComment.objects.filter(recipe=recipe, comment_response_id = None)
         
+	vote_type = 0
+
+	# Extracting vote type
+	if(data.get("jwt")):
+	    jwt_decoded = decode_jwt(data.get("jwt"))
+
+	    profile = Profile.objects.filter(id = jwt_decoded["id"])
+
+	    if RecipeVote.objects.filter(recipe = recipe, profile = profile).exists():
+	        vote_type = RecipeVote.objects.get(recipe = recipe, profile = profile).vote_type
+
         # Extracting relevant data from the comments
         comments_list = []
         for comment in recipe_comments:
@@ -230,7 +224,7 @@ def get_recipe(request):
         if not recipe_score:
             recipe_score = 0
 
-        publication_json = {
+        recipe_json = {
             "type": "SUCCESS",
             'username' : recipe.profile.username,
             'title' : recipe.recipe_title,
@@ -238,10 +232,11 @@ def get_recipe(request):
             'description' : recipe.recipe_description,
             "numComments": num_comments,
             "score": recipe_score,
-            "recipe_comments": comments_list
+            "recipe_comments": comments_list,
+	    "vote_type" : vote_type
             }
         
-        return JsonResponse(publication_json)
+        return JsonResponse(recipe_json)
     except Exception as e:
         print(e)
         # Catch all other exceptions
