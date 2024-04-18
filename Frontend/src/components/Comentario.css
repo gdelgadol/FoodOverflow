@@ -40,3 +40,13 @@
     flex-direction: column;
     gap: 10px;
 }
+
+.commentario-reply-button {
+    cursor: pointer;
+    width: auto;
+    padding: 0;
+    color: orangered;
+    border: none;
+    outline: none;
+    font-weight: 600;
+}

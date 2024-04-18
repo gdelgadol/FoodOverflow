@@ -36,8 +36,12 @@ function DetallesPublicacion() {
   };
 
   const handleInputCommentClick = () => {
-    setShowPlaceholder(false);
-    setShowButtons(true);
+    jwt ? (
+      setShowPlaceholder(false),
+      setShowButtons(true)
+    )
+    : alert("Debes iniciar sesión para comentar")
+    
   };
 
   const discartComment = () => {
@@ -134,6 +138,7 @@ function DetallesPublicacion() {
         setComment("");
         setShowPlaceholder(true);
         setShowButtons(false);
+        window.location.reload();
       } else {
         alert(res.data.message);
       }
@@ -215,10 +220,13 @@ function DetallesPublicacion() {
       {comments.map((comment) => (
         <Comentario
           key={comment.comment_id}
+          post_id={id}
+          jwt={jwt}
           comment_id={comment.comment_id}
           comment_content={comment.comment_content}
           comment_user={comment.comment_user}
           response_list={comment.response_list}
+          type="publication"
         />
         ))
       }
