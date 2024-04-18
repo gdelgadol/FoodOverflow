@@ -26,11 +26,12 @@ def get_publication(request):
             jwt_decoded = decode_jwt(data.get("jwt"))
 
             profile = Profile.objects.get(id = jwt_decoded["id"])
-                
+            
             if PublicationVote.objects.filter(publication = publication, profile = profile).exists():
                 vote_type = PublicationVote.objects.get(publication = publication, profile = profile).vote_type
         # Extracting relevant data from the comments
         comments_list = []
+        publication_comments = PublicationComment.objects.filter(publication=publication, comment_response_id = None)
         for comment in publication_comments:
             
             comment_data = {
@@ -38,7 +39,7 @@ def get_publication(request):
                 'comment_content': comment.comment_body,
                 'comment_user': comment.profile.username  # Assuming user is related to the comment
                 # Add more fields if needed
-            }
+            } 
             publication_comments_response = PublicationComment.objects.filter(publication=publication, comment_response_id = comment.publication_comment_id)
             response_list = []
             for response in publication_comments_response:
@@ -77,7 +78,7 @@ def get_publication(request):
         print(e)
         # Catch all other exceptions
         return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
-
+    
 #View all publications made by a user
 def get_publications(request):
     try:
