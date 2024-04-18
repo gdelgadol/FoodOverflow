@@ -101,4 +101,4 @@ const UserPostsView = () => {
   );
 };
 
-export default Home;
+export default UserPostsView;
