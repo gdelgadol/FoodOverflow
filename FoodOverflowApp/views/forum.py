@@ -112,11 +112,13 @@ def create_forum_publication(request):
         data = json.loads(request.body)
         title = data.get("title")
         description = data.get("content")
+        tags_list = data.get("tags_list")
         jwt_token = decode_jwt(data.get("jwt"))
         
         username = jwt_token['username']
         user = Profile.objects.get(username = username)
-        Publication.objects.create_publication(title, description, user)
+        #Publication.objects.create_publication(title, description, user)
+        Publication.objects.create_publication_tags(title, description, user, tags_list)
         return JsonResponse({"message" : "¡Publicación creada con éxito!", "type" : "SUCCESS"})
     except Exception as e:
         print(e)
@@ -131,10 +133,12 @@ def create_recipe(request):
         title = data.get("title")
         ingredients = data.get("ingredients")
         instructions = data.get("instructions")
+        tags_list = data.get("tags_list")
         jwt_token = decode_jwt(data.get("jwt"))
         
         user = Profile.objects.get(id = jwt_token['id'])
-        Recipe.objects.create_recipe(title, ingredients, instructions, user)
+        #Recipe.objects.create_recipe(title, ingredients, instructions, user)
+        Recipe.objects.create_recipe_tags(title, ingredients, instructions, user, tags_list)
         return JsonResponse({"message" : "¡Receta creada con éxito!", "type" : "SUCCESS"})
     except Exception as e:
         print(e)
