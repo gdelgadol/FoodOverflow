@@ -1,12 +1,14 @@
-import { useParams } from 'react-router-dom';
 import { useEffect, useState } from "react";
-import {HiArrowCircleDown, HiArrowCircleUp} from "react-icons/hi";
+import { useParams } from 'react-router-dom';
+import { HiArrowCircleDown, HiArrowCircleUp } from "react-icons/hi";
+import { TbChefHatOff } from "react-icons/tb";
+import { TbChefHat } from "react-icons/tb";
 import axios from "../api/axios.jsx";
 import { BiComment } from "react-icons/bi";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './DetallesReceta.css';
-import Cookies from "universal-cookie";
+import Cookies from 'universal-cookie';
 
 function DetallesReceta() {
     const { id } = useParams();
@@ -16,8 +18,10 @@ function DetallesReceta() {
     const [numComments, setNumComments] = useState();
     const [ingredients, setIngredients] = useState([]);
     const [score, setScore] = useState();
-
+    const [voted, setVoted] = useState(false); 
+    const [lastVote, setLastVote] = useState(0);
     const [comment, setComment] = useState('');
+    const [voteStatus, setVoteStatus] = useState(0); 
 
     const cookies = new Cookies();
     const jwt = cookies.get("auth_token");
@@ -25,6 +29,50 @@ function DetallesReceta() {
     const handleChange = (value) => {
         setComment(value);
     };
+
+    const handleVote = async (voteType) => {
+        try {
+            // Determinar el voto a enviar al backend
+            const voteToSend = voted && voteType === lastVote ? 0 : voteType;
+            //console.log(voteToSend);
+            //console.log(voteType, lastVote, voted);
+            const response = await axios.post("http://127.0.0.1:8000/vote/recipe/", {
+                post_id: id,
+                jwt: jwt,
+                vote_type: voteToSend
+            });
+    
+            if (response.data.type === "SUCCESS") {
+                // Si el voto enviado es 0, el usuario está eliminando su voto
+                if (voteToSend === 0) {
+                    setVoted(false);
+                    setLastVote(0);
+                    setVoteStatus(0);
+                    setScore(score + (lastVote === 1 ? -1 : 1));
+                } else {
+                    setVoted(true);
+                    setLastVote(voteToSend);
+                    setVoteStatus(voteToSend);
+    
+                    let newScore = score;
+                    if (voteToSend === 1) {
+                        newScore = voted && lastVote !== 1 ? score + 1 : score + 1;
+                    } else if (voteToSend === -1) {
+                        newScore = voted && lastVote !== -1 ? score - 1 : score - 1;
+                    }
+    
+                    // Actualizar el estado local del puntaje
+                    setScore(newScore);
+                }
+            } else {
+                alert(response.data.message); 
+            }
+        } catch (error) {
+            console.error("Error al realizar la solicitud:", error);
+        }
+    };    
+    
+    
 
     useEffect(() => {
         obtenerDetallesReceta(id);
@@ -47,7 +95,7 @@ function DetallesReceta() {
             alert(res.data.message);
           }
         } catch (error) {
-          console.error("Error al realizar la solicitud:", error);
+            console.error("Error al realizar la solicitud:", error);
         }
     };
 
@@ -55,9 +103,13 @@ function DetallesReceta() {
         <div className='dp-container'>
             <div className='dp-post'>
                 <div className='dp-score'>
-                    <HiArrowCircleDown size={30} />
+                    <button className={`vote-button ${voted && lastVote === 1 ? 'voted' : ''} ${voteStatus === 1 ? 'user-voted' : ''}`} onClick={() => handleVote(1)}>
+                        <TbChefHat size={30} />
+                    </button>
                     {score}
-                    <HiArrowCircleUp size={30} />
+                    <button className={`vote-button ${voted && lastVote === -1 ? 'voted' : ''} ${voteStatus === -1 ? 'user-voted' : ''}`} onClick={() => handleVote(-1)}>
+                        <TbChefHatOff size={30} />
+                    </button>
                 </div>
                 <div className='dp-contenido'>
                     <span className='dp-userName'>{author}</span>
