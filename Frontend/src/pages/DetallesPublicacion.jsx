@@ -29,29 +29,30 @@ function DetallesPublicacion() {
 
     const handleVote = async (voteType) => {
         try {
+            // Determinar el voto a enviar al backend
             const voteToSend = voted && voteType === lastVote ? 0 : voteType;
+    
             const response = await axios.post("http://127.0.0.1:8000/vote/publication/", {
                 post_id: id,
                 jwt: jwt,
                 vote_type: voteToSend
             });
-
+    
             if (response.data.type === "SUCCESS") {
+                // Si el voto enviado es 0, el usuario está eliminando su voto
                 if (voteToSend === 0) {
                     setVoted(false);
                     setLastVote(0);
                     setVoteStatus(0);
-                    setScore(score - lastVote);
+                    // Si el voto eliminado era positivo, se resta 1 al score, si era negativo, se suma 1
+                    setScore(score - (lastVote === 1 ? 1 : (lastVote === -1 ? -1 : 0)));
                 } else {
+                    // Si el usuario ya había votado y ahora cambia su voto, se suma o resta 2 al score según corresponda
+                    const scoreChange = voted ? (voteToSend === 1 ? 2 : -2) : (voteToSend === 1 ? 1 : -1);
                     setVoted(true);
                     setLastVote(voteToSend);
                     setVoteStatus(voteToSend);
-
-                    let newScore = score + voteToSend;
-                    if (voted && lastVote !== 0) {
-                        newScore -= lastVote;
-                    }
-                    setScore(newScore);
+                    setScore(score + scoreChange);
                 }
             } else {
                 alert(response.data.message);
@@ -60,6 +61,7 @@ function DetallesPublicacion() {
             console.error("Error al realizar la solicitud:", error);
         }
     };
+    
 
     useEffect(() => {
         obtenerDetallesPublicacion(id);
