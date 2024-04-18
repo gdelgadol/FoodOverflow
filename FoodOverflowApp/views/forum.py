@@ -70,7 +70,8 @@ def get_publication(request):
             "numComments": num_comments,
             "score": publication_score,
             "publication_comments": comments_list,
-            "vote_type" : vote_type
+            "vote_type" : vote_type,
+            "tagsList": publication.publication_tags
             }
         
         return JsonResponse(publication_json)
@@ -98,6 +99,7 @@ def get_publications(request):
                 "description": publication.publication_description,
                 "numComments": num_comments,
                 "score": score,
+                "tagsList": publication.publication_tags
             }
             posts.append(post_data)
 
@@ -166,6 +168,7 @@ def get_recipes(request):
                 "description": recipe.recipe_description,
                 "numComments": num_comments,
                 "score": score,
+                "tagsList": recipe.recipe_tags
             }
             posts.append(post_data)
 
@@ -238,7 +241,8 @@ def get_recipe(request):
             "numComments": num_comments,
             "score": recipe_score,
             "recipe_comments": comments_list,
-            "vote_type" : vote_type
+            "vote_type" : vote_type,
+            "tagsList": recipe.recipe_tags
             }
         
         return JsonResponse(recipe_json)
@@ -474,7 +478,7 @@ def get_user_posts(request, identifier):
         if identifier == "recipe":
             recipes_query = Recipe.objects.filter(profile = profile).order_by("recipe_creation_date")
             
-            post = []
+            posts = []
             
             for recipe in recipes_query:
                 username = recipe.profile.username
@@ -490,6 +494,7 @@ def get_user_posts(request, identifier):
                     "description": recipe.recipe_description,
                     "numComments": num_comments,
                     "score": score,
+                    "tagsList": recipe.recipe_tags
                 }
                 posts.append(post_data)
         elif identifier == "publication":
@@ -510,6 +515,7 @@ def get_user_posts(request, identifier):
                     "description": publication.publication_description,
                     "numComments": num_comments,
                     "score": score,
+                    "tagsList": publication.publication_tags
                 }
                 posts.append(post_data)
         else:
