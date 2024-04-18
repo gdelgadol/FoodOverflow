@@ -34,7 +34,7 @@ function DetallesReceta() {
         try {
           const res = await axios.post("http://127.0.0.1:8000/recipe/", {
             recipe_id: id,
-	    jwt : jwt
+            jwt : jwt
           });
           if (res.data.type === "SUCCESS") {
             setAuthor(res.data.username);

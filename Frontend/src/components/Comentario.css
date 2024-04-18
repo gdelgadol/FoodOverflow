@@ -1,0 +1,42 @@
+.comentario {
+    display: flex;
+    flex-direction: column;
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    width: 100%;
+}
+
+.comentario-content {
+    display: flex;
+    margin: 10px;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: left;
+}
+
+.comentario-content-user {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.comentario-content-text {
+    font-size: 15px;
+    font-weight: 430;
+}
+
+.responses-button {
+    cursor: pointer;
+    width: auto;
+    padding: 0;
+    color: orangered;
+    border: none;
+    outline: none;
+    font-weight: 600;
+}
+
+.comentario-reply {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+}
