@@ -70,7 +70,8 @@ def get_publication(request):
             "numComments": num_comments,
             "score": publication_score,
             "publication_comments": comments_list,
-            "vote_type" : vote_type
+            "vote_type" : vote_type,
+            "tagsList": publication.publication_tags
             }
         
         return JsonResponse(publication_json)
@@ -98,6 +99,7 @@ def get_publications(request):
                 "description": publication.publication_description,
                 "numComments": num_comments,
                 "score": score,
+                "tagsList": publication.publication_tags
             }
             posts.append(post_data)
 
@@ -118,8 +120,11 @@ def create_forum_publication(request):
         
         username = jwt_token['username']
         user = Profile.objects.get(username = username)
-        #Publication.objects.create_publication(title, description, user)
-        Publication.objects.create_publication_tags(title, description, user, tags_list)
+        if not tags_list:
+            Publication.objects.create_publication(title, description, user)
+        else:
+            Publication.objects.create_publication_tags(title, description, user, tags_list)
+
         return JsonResponse({"message" : "¡Publicación creada con éxito!", "type" : "SUCCESS"})
     except Exception as e:
         print(e)
@@ -138,8 +143,12 @@ def create_recipe(request):
         jwt_token = decode_jwt(data.get("jwt"))
         
         user = Profile.objects.get(id = jwt_token['id'])
-        #Recipe.objects.create_recipe(title, ingredients, instructions, user)
-        Recipe.objects.create_recipe_tags(title, ingredients, instructions, user, tags_list)
+
+        if not tags_list:
+            Recipe.objects.create_recipe(title, ingredients, instructions, user)
+        else:
+            Recipe.objects.create_recipe_tags(title, ingredients, instructions, user, tags_list)
+
         return JsonResponse({"message" : "¡Receta creada con éxito!", "type" : "SUCCESS"})
     except Exception as e:
         print(e)
@@ -166,6 +175,7 @@ def get_recipes(request):
                 "description": recipe.recipe_description,
                 "numComments": num_comments,
                 "score": score,
+                "tagsList": recipe.recipe_tags
             }
             posts.append(post_data)
 
@@ -238,7 +248,8 @@ def get_recipe(request):
             "numComments": num_comments,
             "score": recipe_score,
             "recipe_comments": comments_list,
-            "vote_type" : vote_type
+            "vote_type" : vote_type,
+            "tagsList": recipe.recipe_tags
             }
         
         return JsonResponse(recipe_json)
@@ -474,7 +485,7 @@ def get_user_posts(request, identifier):
         if identifier == "recipe":
             recipes_query = Recipe.objects.filter(profile = profile).order_by("recipe_creation_date")
             
-            post = []
+            posts = []
             
             for recipe in recipes_query:
                 username = recipe.profile.username
@@ -490,6 +501,7 @@ def get_user_posts(request, identifier):
                     "description": recipe.recipe_description,
                     "numComments": num_comments,
                     "score": score,
+                    "tagsList": recipe.recipe_tags
                 }
                 posts.append(post_data)
         elif identifier == "publication":
@@ -510,6 +522,7 @@ def get_user_posts(request, identifier):
                     "description": publication.publication_description,
                     "numComments": num_comments,
                     "score": score,
+                    "tagsList": publication.publication_tags
                 }
                 posts.append(post_data)
         else:
