@@ -120,8 +120,11 @@ def create_forum_publication(request):
         
         username = jwt_token['username']
         user = Profile.objects.get(username = username)
-        #Publication.objects.create_publication(title, description, user)
-        Publication.objects.create_publication_tags(title, description, user, tags_list)
+        if not tags_list:
+            Publication.objects.create_publication(title, description, user)
+        else:
+            Publication.objects.create_publication_tags(title, description, user, tags_list)
+
         return JsonResponse({"message" : "¡Publicación creada con éxito!", "type" : "SUCCESS"})
     except Exception as e:
         print(e)
@@ -140,8 +143,12 @@ def create_recipe(request):
         jwt_token = decode_jwt(data.get("jwt"))
         
         user = Profile.objects.get(id = jwt_token['id'])
-        #Recipe.objects.create_recipe(title, ingredients, instructions, user)
-        Recipe.objects.create_recipe_tags(title, ingredients, instructions, user, tags_list)
+
+        if not tags_list:
+            Recipe.objects.create_recipe(title, ingredients, instructions, user)
+        else:
+            Recipe.objects.create_recipe_tags(title, ingredients, instructions, user, tags_list)
+
         return JsonResponse({"message" : "¡Receta creada con éxito!", "type" : "SUCCESS"})
     except Exception as e:
         print(e)
