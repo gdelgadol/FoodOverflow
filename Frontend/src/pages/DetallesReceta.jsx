@@ -80,7 +80,7 @@ function DetallesReceta() {
                     setLastVote(0);
                     setVoteStatus(0);
                     // Si el voto eliminado era positivo, se resta 1 al score, si era negativo, se suma 1
-                    setScore(score + (lastVote === 1 ? -1 : (lastVote === -1 ? 1 : 0)));
+                    setScore(score - (lastVote === 1 ? 1 : (lastVote === -1 ? -1 : 0)));
                 } else {
                     // Si el usuario ya había votado y ahora cambia su voto, se suma o resta 2 al score según corresponda
                     const scoreChange = voted ? (voteToSend === 1 ? 2 : -2) : (voteToSend === 1 ? 1 : -1);
@@ -90,14 +90,12 @@ function DetallesReceta() {
                     setScore(score + scoreChange);
                 }
             } else {
-                alert(response.data.message); 
+                alert(response.data.message);
             }
         } catch (error) {
             console.error("Error al realizar la solicitud:", error);
         }
     };
-    
-    
     
 
     useEffect(() => {
@@ -118,6 +116,10 @@ function DetallesReceta() {
             setIngredients(res.data.ingredients.split("_"));
             setScore(res.data.score);
             setComments(res.data.recipe_comments);
+            setLastVote(res.data.vote_type > 0 ? 1 : (res.data.vote_type < 0 ? -1 : 0));
+            setVoteStatus(res.data.vote_type);
+            const userHasVoted = res.data.vote_type !== 0;
+            setVoted(userHasVoted);
           } else {
             alert(res.data.message);
           }
