@@ -2,8 +2,8 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { HiArrowCircleDown, HiArrowCircleUp } from "react-icons/hi";
 import axios from "../api/axios.jsx";
-import "./DetallesPublicacion.css";
 import { BiComment } from "react-icons/bi";
+import "./DetallesPublicacion.css";
 import Cookies from "universal-cookie";
 import Comentario from "../components/Comentario";
 
@@ -17,8 +17,11 @@ function DetallesPublicacion() {
   const [score, setScore] = useState();
   const [showPlaceholder, setShowPlaceholder] = useState(true);
   const [showButtons, setShowButtons] = useState(false);
-  const [comment, setComment] = useState();
   const [alertVisible, setAlertVisible] = useState(false);
+  const [voted, setVoted] = useState(false);
+  const [lastVote, setLastVote] = useState(0);
+  const [comment, setComment] = useState('');
+  const [voteStatus, setVoteStatus] = useState(0);
 
   const cookies = new Cookies();
   const jwt = cookies.get("auth_token");
@@ -53,11 +56,45 @@ function DetallesPublicacion() {
     }
   };
 
+  const handleVote = async (voteType) => {
+    try {
+        const voteToSend = voted && voteType === lastVote ? 0 : voteType;
+        const response = await axios.post("http://127.0.0.1:8000/vote/publication/", {
+            post_id: id,
+            jwt: jwt,
+            vote_type: voteToSend
+        });
+
+        if (response.data.type === "SUCCESS") {
+            if (voteToSend === 0) {
+                setVoted(false);
+                setLastVote(0);
+                setVoteStatus(0);
+                setScore(score - lastVote);
+            } else {
+                setVoted(true);
+                setLastVote(voteToSend);
+                setVoteStatus(voteToSend);
+
+                let newScore = score + voteToSend;
+                if (voted && lastVote !== 0) {
+                    newScore -= lastVote;
+                }
+                setScore(newScore);
+            }
+        } else {
+            alert(response.data.message);
+        }
+    } catch (error) {
+        console.error("Error al realizar la solicitud:", error);
+    }
+};
+
   useEffect(() => {
-    detallesPublicacion(id);
+    obtenerDetallesPublicacion(id);
   }, []);
 
-  const detallesPublicacion = async (id) => {
+  const obtenerDetallesPublicacion = async (id) => {
     try {
       const res = await axios.post("http://127.0.0.1:8000/publication/", {
         publication_id: id,
@@ -70,6 +107,10 @@ function DetallesPublicacion() {
         setNumComments(res.data.numComments);
         setComments(res.data.publication_comments);
         setScore(res.data.score);
+        setLastVote(res.data.vote_type > 0 ? 1 : (res.data.vote_type < 0 ? -1 : 0));
+        setVoteStatus(res.data.vote_type);
+        const userHasVoted = res.data.vote_type !== 0;
+        setVoted(userHasVoted);
       } else {
         alert(res.data.message);
       }
@@ -105,9 +146,13 @@ function DetallesPublicacion() {
     <div className="dp-container">
       <div className="dp-post">
         <div className="dp-score">
-          <HiArrowCircleDown size={30} />
+          <button className={`vote-button ${voted && lastVote === 1 ? 'voted' : ''} ${voteStatus === 1 ? 'user-voted' : ''}`} onClick={() => handleVote(1)}>
+            <HiArrowCircleUp size={30} />
+          </button>
           {score}
-          <HiArrowCircleUp size={30} />
+          <button className={`vote-button ${voted && lastVote === -1 ? 'voted' : ''} ${voteStatus === -1 ? 'user-voted' : ''}`} onClick={() => handleVote(-1)}>
+            <HiArrowCircleDown size={30} />
+          </button>
         </div>
         <div className="dp-contenido">
           <span className="dp-userName">{author}</span>
