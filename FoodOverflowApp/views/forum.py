@@ -19,16 +19,16 @@ def get_publication(request):
 
         publication_comments = PublicationComment.objects.filter(publication=publication)
 	
-	vote_type = 0
+        vote_type = 0
 
-	# Extracting vote type
-	if (data.get("jwt")):
-	    jwt_decoded = decode_jwt(data.get("jwt"))
+	    # Extracting vote type
+        if (data.get("jwt")):
+            jwt_decoded = decode_jwt(data.get("jwt"))
 
-	    profile = Profile.objects.get(id = jwt_decoded["id"])
-            
-	    if PublicationVote.objects.filter(publication = publication, profile = profile).exists():
-	        vote_type = PublicationVote.objects,get(publication = publication, profile = profile).vote_type
+            profile = Profile.objects.get(id = jwt_decoded["id"])
+                
+            if PublicationVote.objects.filter(publication = publication, profile = profile).exists():
+                vote_type = PublicationVote.objects.get(publication = publication, profile = profile).vote_type
         # Extracting relevant data from the comments
         comments_list = []
         for comment in publication_comments:
@@ -69,7 +69,7 @@ def get_publication(request):
             "numComments": num_comments,
             "score": publication_score,
             "publication_comments": comments_list,
-	    "vote_type" : vote_type
+            "vote_type" : vote_type
             }
         
         return JsonResponse(publication_json)
@@ -181,16 +181,16 @@ def get_recipe(request):
         
         recipe_comments = RecipeComment.objects.filter(recipe=recipe, comment_response_id = None)
         
-	vote_type = 0
+        vote_type = 0
 
-	# Extracting vote type
-	if(data.get("jwt")):
-	    jwt_decoded = decode_jwt(data.get("jwt"))
+        # Extracting vote type
+        if(data.get("jwt")):
+            jwt_decoded = decode_jwt(data.get("jwt"))
 
-	    profile = Profile.objects.filter(id = jwt_decoded["id"])
+            profile = Profile.objects.get(id = jwt_decoded["id"])
 
-	    if RecipeVote.objects.filter(recipe = recipe, profile = profile).exists():
-	        vote_type = RecipeVote.objects.get(recipe = recipe, profile = profile).vote_type
+            if RecipeVote.objects.filter(recipe = recipe, profile = profile).exists():
+                vote_type = RecipeVote.objects.get(recipe = recipe, profile = profile).vote_type
 
         # Extracting relevant data from the comments
         comments_list = []
@@ -233,7 +233,7 @@ def get_recipe(request):
             "numComments": num_comments,
             "score": recipe_score,
             "recipe_comments": comments_list,
-	    "vote_type" : vote_type
+            "vote_type" : vote_type
             }
         
         return JsonResponse(recipe_json)
@@ -267,7 +267,7 @@ def make_vote(request, id_vote):
                     "message" : "La receta no se encuentra registrada.", 
                     "type" : "ERROR"
                     })
-            if vote_type == 0 and RecipeVote.objects.filter(recipe = recipe, profile = profile):
+            if vote_type == 0 and RecipeVote.objects.filter(recipe = recipe, profile = profile).exists():
                 vote = RecipeVote.objects.get(recipe = recipe, profile = profile)
                 vote.delete()
                 return JsonResponse({
@@ -284,6 +284,11 @@ def make_vote(request, id_vote):
                 return JsonResponse({
                     "message" : "Voto registrado con éxito.",
                     "type" : "SUCCESS"
+                    })
+            else: 
+                return JsonResponse({
+                    "message" : "Hubo un error, inténtelo de nuevo", 
+                    "type" : "ERROR"
                     })
         elif id_vote == "publication":
             if Publication.objects.filter(pk = post_id).exists():
@@ -310,6 +315,11 @@ def make_vote(request, id_vote):
                 return JsonResponse({
                     "message" : "Voto registrado con éxito.",
                     "type" : "SUCCESS"
+                    })
+            else: 
+                return JsonResponse({
+                    "message" : "Hubo un error, inténtelo de nuevo", 
+                    "type" : "ERROR"
                     })
         else:
             return JsonResponse({

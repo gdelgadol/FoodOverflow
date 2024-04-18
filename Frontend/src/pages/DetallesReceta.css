@@ -272,3 +272,10 @@ dp-alert-cancel-close:focus {
     color: #ff5c00; 
     transform: scale(1.1); 
 }
+
+.user-voted {
+    background-color: #ffc107; 
+    color: #000; 
+    border-radius: 6px;
+    border-color: #ffc107; 
+}
