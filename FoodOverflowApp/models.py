@@ -65,6 +65,16 @@ class PublicationManager(models.Manager):
         publication.save(using=self.db)
         return publication
 
+    def create_publication_tags(self, title, description, user_id, tags):
+        publication = self.model(
+            publication_title = title,
+            publication_description = description,
+            profile = user_id,
+            publication_tags = tags
+        )
+        publication.save(using=self.db)
+        return publication
+
 class Publication(models.Model):
     publication_id = models.BigAutoField(primary_key=True)
     publication_title = models.CharField(max_length=100)
@@ -141,6 +151,17 @@ class RecipeManager(models.Manager):
             recipe_ingredients = ingredients,
             recipe_description = description,
             profile = profile_id
+        )
+        recipe.save(using = self.db)
+        return recipe
+    
+    def create_recipe_tags(self, title, ingredients, description, profile_id, tags):
+        recipe = self.model(
+            recipe_title = title,
+            recipe_ingredients = ingredients,
+            recipe_description = description,
+            profile = profile_id,
+            recipe_tags = tags
         )
         recipe.save(using = self.db)
         return recipe
