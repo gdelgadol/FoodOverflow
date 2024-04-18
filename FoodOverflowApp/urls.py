@@ -30,5 +30,6 @@ urlpatterns = [
     path('update_email/', views.update_email, name = "update_email"), # Change email
     path('update_username/', views.update_username, name = "update_username"), # Change username
     path('settings/<uidb64>/<token>/<str:email>', views.email_confirmated, name='confirmated'), #Confirm new email
+    path('user/<str:identifier>', views.get_user_posts, name = "users_posts"), # Users Posts
 ]
 
