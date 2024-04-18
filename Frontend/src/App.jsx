@@ -39,7 +39,7 @@ function App() {
           <Route element={<PrivateRoute />}>
             <Route path="/crear_publicacion" element={<Crear_publicacion />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/profile/posts" element={<UserPostsView />} />
+            <Route path="/profile/posts" element={<UserPostView />} />
             <Route path="/change_email" element={<Change_email />} />
             <Route path="/change_password" element={<Change_password />} />
             <Route path="/change_user" element={<Change_user />} />

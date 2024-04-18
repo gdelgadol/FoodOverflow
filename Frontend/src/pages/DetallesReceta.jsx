@@ -66,8 +66,7 @@ function DetallesReceta() {
         try {
             // Determinar el voto a enviar al backend
             const voteToSend = voted && voteType === lastVote ? 0 : voteType;
-            //console.log(voteToSend);
-            //console.log(voteType, lastVote, voted);
+    
             const response = await axios.post("http://127.0.0.1:8000/vote/recipe/", {
                 post_id: id,
                 jwt: jwt,
@@ -80,30 +79,23 @@ function DetallesReceta() {
                     setVoted(false);
                     setLastVote(0);
                     setVoteStatus(0);
-                    setScore(score + (lastVote === 1 ? -1 : 1));
+                    // Si el voto eliminado era positivo, se resta 1 al score, si era negativo, se suma 1
+                    setScore(score - (lastVote === 1 ? 1 : (lastVote === -1 ? -1 : 0)));
                 } else {
+                    // Si el usuario ya había votado y ahora cambia su voto, se suma o resta 2 al score según corresponda
+                    const scoreChange = voted ? (voteToSend === 1 ? 2 : -2) : (voteToSend === 1 ? 1 : -1);
                     setVoted(true);
                     setLastVote(voteToSend);
                     setVoteStatus(voteToSend);
-    
-                    let newScore = score;
-                    if (voteToSend === 1) {
-                        newScore = voted && lastVote !== 1 ? score + 1 : score + 1;
-                    } else if (voteToSend === -1) {
-                        newScore = voted && lastVote !== -1 ? score - 1 : score - 1;
-                    }
-    
-                    // Actualizar el estado local del puntaje
-                    setScore(newScore);
+                    setScore(score + scoreChange);
                 }
             } else {
-                alert(response.data.message); 
+                alert(response.data.message);
             }
         } catch (error) {
             console.error("Error al realizar la solicitud:", error);
         }
-    };    
-    
+    };
     
 
     useEffect(() => {
@@ -124,6 +116,10 @@ function DetallesReceta() {
             setIngredients(res.data.ingredients.split("_"));
             setScore(res.data.score);
             setComments(res.data.recipe_comments);
+            setLastVote(res.data.vote_type > 0 ? 1 : (res.data.vote_type < 0 ? -1 : 0));
+            setVoteStatus(res.data.vote_type);
+            const userHasVoted = res.data.vote_type !== 0;
+            setVoted(userHasVoted);
           } else {
             alert(res.data.message);
           }

@@ -254,13 +254,13 @@ def make_vote(request, id_vote):
         data = json.loads(request.body)
         post_id = int(data.get("post_id"))
         vote_type = int(data.get("vote_type"))
-	if data.get("jwt"):
-        	jwt_decoded = decode_jwt(data.get("jwt"))
-	else:
-		return JsonResponse({
-			"message": "El usuario no ha iniciado sesión.",
-			"type" : "ERROR"
-			})
+        if data.get("jwt"):
+            jwt_decoded = decode_jwt(data.get("jwt"))
+        else:
+            return JsonResponse({
+                "message": "El usuario no ha iniciado sesión.",
+                "type" : "ERROR"
+                })
 
         if Profile.objects.filter(pk = jwt_decoded["id"]).exists():
             profile = Profile.objects.get(pk = jwt_decoded["id"])
@@ -479,7 +479,7 @@ def get_user_posts(request, identifier):
             for recipe in recipes_query:
                 username = recipe.profile.username
                 num_comments = RecipeComment.objects.filter(recipe = recipe.recipe_id).count()
-                score = RecipeVote.objects.filter(recipe = recipe.recipe_id).aggregate(Sum('vote_>
+                score = RecipeVote.objects.filter(recipe = recipe.recipe_id).aggregate(Sum('vote_type'))['vote_type__sum']
                 if not score:
                     score = 0
                 post_data = {
@@ -499,8 +499,8 @@ def get_user_posts(request, identifier):
             
             for publication in publications_query:
                 username = publication.profile.username
-                num_comments = PublicationComment.objects.filter(publication = publication.public>
-                score = PublicationVote.objects.filter(publication = publication.publication_id).>
+                num_comments = PublicationComment.objects.filter(publication = publication.publication_id).count()
+                score = PublicationVote.objects.filter(publication = publication.publication_id).aggregate(Sum('vote_type'))['vote_type__sum']
                 if not score:
                     score = 0
                 post_data = {
