@@ -220,3 +220,20 @@ dp-alert-cancel-close:focus {
     font-weight: 600;
     border-radius: 10px;
 }
+
+.vote-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin: 0 10px;
+    transition: transform 0.2s;
+}
+
+.vote-button:focus {
+    outline: none;
+}
+
+.vote-button:hover {
+    color: #ff5c00; 
+    transform: scale(1.1); 
+}

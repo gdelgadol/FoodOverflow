@@ -40,7 +40,7 @@ function Encabezado() {
           alt="Icono de la página"
           style={{ width: "37px", height: "43px" }}
         />
-        <div className="logo">Food Overflow</div>
+        <div className="logo">FoodOverflow</div>
       </div>
       </Link>
       <div className="search">
