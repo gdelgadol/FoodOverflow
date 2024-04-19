@@ -3,7 +3,7 @@ import "./Comentario.css";
 import axios from "../api/axios.jsx";
 import Cookies from "universal-cookie";
 
-export default function Comentario({ post_id, comment_id, comment_content, comment_user, response_list, type }) {
+export default function Comentario({ reload, setReload, post_id, comment_id, comment_content, comment_user, response_list, type }) {
     const [showResponses, setShowResponses] = useState(false);
     const [inputReply, setInputReply] = useState(false);
     const [response, setResponse] = useState('');
@@ -31,7 +31,7 @@ export default function Comentario({ post_id, comment_id, comment_content, comme
                 alert(res.data.message)
                 setResponse('')
                 setInputReply(false)
-                window.location.reload()
+                setReload(!reload);
             } else {
                 alert(res.data.message)
             }

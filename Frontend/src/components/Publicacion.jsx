@@ -21,7 +21,7 @@ export default function Publicacion ({id_post, userName, title, description, num
                 <div className='contenido'>
                     <span className='userName'>{userName}</span>
                     <span className='title'>{title}</span>
-                    <div className="description">{description}</div>
+                    <div className="description" dangerouslySetInnerHTML={{ __html: description }}></div>
                     <div className='comments'>
                         <BiComment />
                         {numComments}

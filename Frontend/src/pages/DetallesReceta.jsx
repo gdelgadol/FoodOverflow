@@ -24,6 +24,7 @@ function DetallesReceta() {
     const [showButtons, setShowButtons] = useState(false);
     const [alertVisible, setAlertVisible] = useState(false);
     const [comments, setComments] = useState([]);
+    const [reload, setReload] = useState(false)
 
     const cookies = new Cookies();
     const jwt = cookies.get("auth_token");
@@ -101,7 +102,7 @@ function DetallesReceta() {
 
     useEffect(() => {
         obtenerDetallesReceta(id);
-    }, []);
+    }, [reload]);
 
     const obtenerDetallesReceta = async (id) => {
         try {
@@ -144,6 +145,7 @@ function DetallesReceta() {
             setComment("");
             setShowPlaceholder(true);
             setShowButtons(false);
+            setReload(!reload);
           } else {
             alert(res.data.message);
           }
@@ -178,7 +180,7 @@ function DetallesReceta() {
                             </ul>
                         </div>
                     )}
-                    <div className="dp-description">{description}</div>
+                    <div className="dp-description" dangerouslySetInnerHTML={{ __html: description }}></div>
                     <div className='dp-numComments'>
                         <BiComment />
                         {numComments}
@@ -238,6 +240,8 @@ function DetallesReceta() {
             {comments.map((comment) => (
                 <Comentario
                     key={comment.comment_id}
+                    reload={reload}
+                    setReload={setReload}
                     post_id={id}
                     jwt={jwt}
                     comment_id={comment.comment_id}
