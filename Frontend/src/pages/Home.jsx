@@ -22,7 +22,7 @@ const Home = () => {
         //setIsLoading(true)
         const response = await axios.get(`http://127.0.0.1:8000/${filtro_2}/`);
         if (response.data.type === "SUCCESS") {
-          const sortedPosts = response.data.posts.sort((a, b) => a.id - b.id);
+          const sortedPosts = response.data.posts.sort((a, b) => b.id - a.id );
           setPosts(sortedPosts);
         } else {
           alert(response.data.message);
@@ -44,7 +44,7 @@ const Home = () => {
     if (filtro_1 === "Más votados") {
       setPosts([...posts.sort((a, b) => b.score - a.score)]);
     } else if (filtro_1 === "Recientes") {
-      setPosts([...posts.sort((a, b) => a.id - b.id)]);
+      setPosts([...posts.sort((a, b) => b.id - a.id)]);
     }
   }, [filtro_1]);
   

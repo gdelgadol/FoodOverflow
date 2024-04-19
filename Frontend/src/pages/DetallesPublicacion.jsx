@@ -22,6 +22,7 @@ function DetallesPublicacion() {
   const [lastVote, setLastVote] = useState(0);
   const [comment, setComment] = useState('');
   const [voteStatus, setVoteStatus] = useState(0);
+  const [reload, setReload] = useState(false)
 
   const cookies = new Cookies();
   const jwt = cookies.get("auth_token");
@@ -98,7 +99,7 @@ function DetallesPublicacion() {
 
   useEffect(() => {
     obtenerDetallesPublicacion(id);
-  }, []);
+  }, [reload]);
 
   const obtenerDetallesPublicacion = async (id) => {
     try {
@@ -140,7 +141,7 @@ function DetallesPublicacion() {
         setComment("");
         setShowPlaceholder(true);
         setShowButtons(false);
-        window.location.reload();
+        setReload(!reload);
       } else {
         alert(res.data.message);
       }
@@ -164,7 +165,7 @@ function DetallesPublicacion() {
         <div className="dp-contenido">
           <span className="dp-userName">{author}</span>
           <span className="dp-title">{title}</span>
-          <div className="dp-description">{description}</div>
+          <div className="dp-description" dangerouslySetInnerHTML={{ __html: description }}></div>
           <div className="dp-numComments">
             <BiComment />
             {numComments}
@@ -222,6 +223,8 @@ function DetallesPublicacion() {
       {comments.map((comment) => (
         <Comentario
           key={comment.comment_id}
+          reload={reload}
+          setReload={setReload}
           post_id={id}
           jwt={jwt}
           comment_id={comment.comment_id}
