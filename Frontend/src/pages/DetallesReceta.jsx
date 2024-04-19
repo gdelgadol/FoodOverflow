@@ -79,6 +79,7 @@ function DetallesReceta() {
                     setVoted(false);
                     setLastVote(0);
                     setVoteStatus(0);
+                    //cookies.remove("auth_token");
                     // Si el voto eliminado era positivo, se resta 1 al score, si era negativo, se suma 1
                     setScore(score - (lastVote === 1 ? 1 : (lastVote === -1 ? -1 : 0)));
                 } else {
@@ -143,7 +144,6 @@ function DetallesReceta() {
             setComment("");
             setShowPlaceholder(true);
             setShowButtons(false);
-            window.location.reload();
           } else {
             alert(res.data.message);
           }
@@ -151,6 +151,7 @@ function DetallesReceta() {
           console.error("Error al realizar la solicitud:", error);
         }
     };
+
 
     return (
         <div className='dp-container'>
