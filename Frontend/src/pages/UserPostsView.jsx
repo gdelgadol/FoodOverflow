@@ -2,7 +2,7 @@ import Publicacion from "../components/Publicacion";
 import Paginacion from "../components/Paginacion";
 import { useEffect, useState } from "react";
 import axios from "../api/axios.jsx";
-import "./UserPostsView.css"
+import "./Home.css"
 import Cookies from 'universal-cookie';
 
 const UserPostsView = () => {

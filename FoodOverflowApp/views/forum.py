@@ -15,7 +15,13 @@ def get_publication(request):
         data = json.loads(request.body)
         publication_id = int(data.get("publication_id"))
 
-        publication = Publication.objects.select_related('profile').get(publication_id = publication_id)
+        if Publication.objects.select_related('profile').filter(publication_id = publication_id).exists():
+            publication = Publication.objects.select_related('profile').get(publication_id = publication_id)
+        else:
+            return JsonResponse({
+                "message" : "La publicación que estás intentando ver no existe.", 
+                "type" : "ERROR"
+                })
 
         publication_comments = PublicationComment.objects.filter(publication=publication)
 	
@@ -25,10 +31,15 @@ def get_publication(request):
         if (data.get("jwt")):
             jwt_decoded = decode_jwt(data.get("jwt"))
 
-            profile = Profile.objects.get(id = jwt_decoded["id"])
+            if not jwt_decoded:
+                return JsonResponse({"message" : "Hubo un error, intenta iniciar sesión nuevamente.", "type" : "ERROR"})
+
+            if Profile.objects.filter(id = jwt_decoded["id"]).exists():
+                profile = Profile.objects.get(id = jwt_decoded["id"])
             
-            if PublicationVote.objects.filter(publication = publication, profile = profile).exists():
-                vote_type = PublicationVote.objects.get(publication = publication, profile = profile).vote_type
+                if PublicationVote.objects.filter(publication = publication, profile = profile).exists():
+                    vote_type = PublicationVote.objects.get(publication = publication, profile = profile).vote_type
+
         # Extracting relevant data from the comments
         comments_list = []
         publication_comments = PublicationComment.objects.filter(publication=publication, comment_response_id = None)
@@ -116,8 +127,17 @@ def create_forum_publication(request):
         title = data.get("title")
         description = data.get("content")
         tags_list = data.get("tags_list")
-        jwt_token = decode_jwt(data.get("jwt"))
+
         
+        if data.get("jwt"):
+            jwt_token = decode_jwt(data.get("jwt"))
+        else:
+            return JsonResponse({"message" : "Debes iniciar sesión para crear una publicación.", "type" : "ERROR"})
+
+        if not jwt_token:
+            print(jwt_token)
+            return JsonResponse({"message" : "Hubo un error, intenta iniciar sesión nuevamente.", "type" : "ERROR"})
+
         username = jwt_token['username']
         user = Profile.objects.get(username = username)
         if not tags_list:
@@ -140,8 +160,15 @@ def create_recipe(request):
         ingredients = data.get("ingredients")
         instructions = data.get("instructions")
         tags_list = data.get("tags_list")
-        jwt_token = decode_jwt(data.get("jwt"))
         
+        if data.get("jwt"):
+            jwt_token = decode_jwt(data.get("jwt"))
+        else:
+            return JsonResponse({"message" : "Debes iniciar sesión para crear una publicación.", "type" : "ERROR"})
+
+        if not jwt_token:
+            return JsonResponse({"message" : "Hubo un error, intenta iniciar sesión nuevamente.", "type" : "ERROR"})
+
         user = Profile.objects.get(id = jwt_token['id'])
 
         if not tags_list:
@@ -180,7 +207,7 @@ def get_recipes(request):
             posts.append(post_data)
 
         return JsonResponse({"type": "SUCCESS", "posts": posts})
-    except Publication.DoesNotExist:
+    except Recipe.DoesNotExist:
         return JsonResponse({"type": "ERROR", "message": "No se encontraron recetas"}, status=404)
     except Exception as e:
         return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
@@ -199,13 +226,17 @@ def get_recipe(request):
         vote_type = 0
 
         # Extracting vote type
-        if(data.get("jwt")):
+        if (data.get("jwt")):
             jwt_decoded = decode_jwt(data.get("jwt"))
 
-            profile = Profile.objects.get(id = jwt_decoded["id"])
+            if not jwt_decoded:
+                return JsonResponse({"message" : "Hubo un error, intenta iniciar sesión nuevamente.", "type" : "ERROR"})
 
-            if RecipeVote.objects.filter(recipe = recipe, profile = profile).exists():
-                vote_type = RecipeVote.objects.get(recipe = recipe, profile = profile).vote_type
+            if Profile.objects.filter(id = jwt_decoded["id"]).exists():
+                profile = Profile.objects.get(id = jwt_decoded["id"])
+            
+                if RecipeVote.objects.filter(recipe = recipe, profile = profile).exists():
+                    vote_type = RecipeVote.objects.get(recipe = recipe, profile = profile).vote_type
 
         # Extracting relevant data from the comments
         comments_list = []
@@ -265,6 +296,7 @@ def make_vote(request, id_vote):
         data = json.loads(request.body)
         post_id = int(data.get("post_id"))
         vote_type = int(data.get("vote_type"))
+
         if data.get("jwt"):
             jwt_decoded = decode_jwt(data.get("jwt"))
         else:
@@ -479,10 +511,10 @@ def get_user_posts(request, identifier):
         else:
             return JsonResponse({
                 "type" : "ERROR",
-                "message" : "El usuario se encuentra registrado."
+                "message" : "El usuario no se encuentra registrado."
             })
         
-        if identifier == "recipe":
+        if identifier == "recipes":
             recipes_query = Recipe.objects.filter(profile = profile).order_by("recipe_creation_date")
             
             posts = []
@@ -504,7 +536,7 @@ def get_user_posts(request, identifier):
                     "tagsList": recipe.recipe_tags
                 }
                 posts.append(post_data)
-        elif identifier == "publication":
+        elif identifier == "publications":
             publications_query = Publication.objects.filter(profile = profile).order_by("publication_creation_date")
             
             posts = []
