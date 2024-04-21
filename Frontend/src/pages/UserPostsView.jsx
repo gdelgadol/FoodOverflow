@@ -50,6 +50,8 @@ const UserPostsView = () => {
       setPosts([...posts.sort((a, b) => b.score - a.score)]);
     } else if (filtro_1 === "Recientes") {
       setPosts([...posts.sort((a, b) => a.id - b.id)]);
+    }else if (filtro_1 === "Más interacción") {
+      setPosts([...posts.sort((a, b) => b.numComments - a.numComments)]);
     }
   }, [filtro_1]);
   
@@ -69,6 +71,7 @@ const UserPostsView = () => {
           <select className="hm-filtro-select" onChange={(e) => setFiltro_1(e.target.value)}>
             <option value="Recientes">Recientes</option>
             <option value="Más votados">Más votados</option>
+            <option value="Más interacción">Más interacción</option>
           </select>
           <select className="hm-filtro-select" onChange={(e) => setFiltro_2(e.target.value)}>
             <option value="recipes">Recetas</option>
