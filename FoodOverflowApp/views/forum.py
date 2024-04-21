@@ -43,6 +43,7 @@ def get_publication(request):
         # Extracting relevant data from the comments
         comments_list = []
         publication_comments = PublicationComment.objects.filter(publication=publication, comment_response_id = None)
+        num_comments = publication_comments.count()
         for comment in publication_comments:
             
             comment_data = {
@@ -61,12 +62,13 @@ def get_publication(request):
                 # Add more fields if needed
                 }
                 response_list.append(response_data)
+                num_comments += 1
             
             comment_data["response_list"] = response_list
 
             comments_list.append(comment_data)
 
-        num_comments = publication_comments.count()
+        
 
         publication_score = PublicationVote.objects.filter(publication = publication.publication_id).aggregate(Sum('vote_type'))['vote_type__sum']
 
@@ -239,6 +241,7 @@ def get_recipe(request):
                     vote_type = RecipeVote.objects.get(recipe = recipe, profile = profile).vote_type
 
         # Extracting relevant data from the comments
+        num_comments = recipe_comments.count()
         comments_list = []
         for comment in recipe_comments:
             
@@ -258,12 +261,13 @@ def get_recipe(request):
                 # Add more fields if needed
                 }
                 response_list.append(response_data)
+                num_comments += 1
             
             comment_data["response_list"] = response_list
 
             comments_list.append(comment_data)
 
-        num_comments = recipe_comments.count()
+        
 
         recipe_score = RecipeVote.objects.filter(recipe = recipe.recipe_id).aggregate(Sum('vote_type'))['vote_type__sum']
 
