@@ -10,6 +10,7 @@ function Encabezado() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuUsuarioOpen, setMenuUsuarioOpen] = useState(false);
+  const urlFront =  import.meta.env.VITE_FRONT_URL;
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -22,7 +23,7 @@ function Encabezado() {
   const handleLogout = () => {
     // Eliminar el token JWT
     cookies.remove('auth_token');
-    window.location.href = "http://localhost:5173/Login";
+    window.location.href = `${urlFront}/Login`;
   };
 
   return (

@@ -10,6 +10,7 @@ export default function Comentario({ reload, setReload, post_id, comment_id, com
 
     const cookies = new Cookies();
     const jwt = cookies.get("auth_token");
+    const url =  import.meta.env.VITE_API_URL;
 
     const toggleResponses = () => {
         setShowResponses(!showResponses);
@@ -21,7 +22,7 @@ export default function Comentario({ reload, setReload, post_id, comment_id, com
 
     const sendResponse = async () => {
         try {
-            const res = await axios.post(`http://127.0.0.1:8000/comment/${type}/response/`, {
+            const res = await axios.post(`${url}/comment/${type}/response/`, {
                 post_id: post_id,
                 comment_id: comment_id,
                 content: response,

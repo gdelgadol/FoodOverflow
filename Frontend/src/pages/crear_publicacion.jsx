@@ -16,6 +16,7 @@ function Crear_publicacion() {
 
   const [errMsg, setErrMsg] = useState("");
   const errRef = useRef();
+  const url =  import.meta.env.VITE_API_URL;
 
   const [content, setContent] = useState("");
 
@@ -82,7 +83,7 @@ function Crear_publicacion() {
   const crear_publicacion = () => {
     if (jwt) {
       axios
-        .post("http://127.0.0.1:8000/crear_publicacion/", {
+        .post(`${url}/crear_publicacion/`, {
           title: state.title,
           content: content,
           jwt: jwt,
@@ -107,7 +108,7 @@ function Crear_publicacion() {
         .map((ingredient) => `${ingredient.name}: ${ingredient.quantity}`)
         .join("_");
       axios
-        .post("http://127.0.0.1:8000/crear_recipe/", {
+        .post(`${url}/crear_recipe/`, {
           title: state.title,
           ingredients: ingredientsString,
           instructions: content,

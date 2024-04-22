@@ -5,10 +5,11 @@ import { useNavigate } from "react-router-dom";
 function Activate() {
   const { uid, token } = useParams(); // Obtener los parámetros de la URL
   const navigate = useNavigate();
+  const url =  import.meta.env.VITE_API_URL;
 
   const activate = () => {
     axios
-      .post(`http://127.0.0.1:8000/activate/${uid}/${token}`, {
+      .post(`${url}/activate/${uid}/${token}`, {
       })
       .then((res) => {
           navigate("/login");

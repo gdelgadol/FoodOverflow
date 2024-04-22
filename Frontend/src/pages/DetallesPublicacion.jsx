@@ -23,6 +23,7 @@ function DetallesPublicacion() {
   const [comment, setComment] = useState('');
   const [voteStatus, setVoteStatus] = useState(0);
   const [reload, setReload] = useState(false)
+  const url =  import.meta.env.VITE_API_URL;
 
   const cookies = new Cookies();
   const jwt = cookies.get("auth_token");
@@ -66,7 +67,7 @@ function DetallesPublicacion() {
         // Determinar el voto a enviar al backend
         const voteToSend = voted && voteType === lastVote ? 0 : voteType;
 
-        const response = await axios.post("http://127.0.0.1:8000/vote/publication/", {
+        const response = await axios.post(`${url}/vote/publication/`, {
             post_id: id,
             jwt: jwt,
             vote_type: voteToSend
@@ -103,7 +104,7 @@ function DetallesPublicacion() {
 
   const obtenerDetallesPublicacion = async (id) => {
     try {
-      const res = await axios.post("http://127.0.0.1:8000/publication/", {
+      const res = await axios.post(`${url}/publication/`, {
         publication_id: id,
         jwt: jwt,
       });
@@ -129,7 +130,7 @@ function DetallesPublicacion() {
   const submitComment = async () => {
     try {
       const res = await axios.post(
-        "http://127.0.0.1:8000/comment/publication/",
+        `${url}/comment/publication/`,
         {
           post_id: id,
           content: comment,

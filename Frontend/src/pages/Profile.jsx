@@ -7,6 +7,8 @@ import { TbChefHat } from "react-icons/tb";
 import { MdOutlineDelete } from "react-icons/md";
 
 function AccountDetails() {
+    const url =  import.meta.env.VITE_API_URL;
+    const urlFront =  import.meta.env.VITE_FRONT_URL;
     const cookies = new Cookies();
     const jwt = cookies.get("auth_token");
     const [userInfo, setUserInfo] = useState({
@@ -20,7 +22,7 @@ function AccountDetails() {
       const jwt = cookies.get("auth_token");
 
       axios
-        .post("http://127.0.0.1:8000/get_user/", {
+        .post(`${url}/get_user/`, {
           jwt: jwt, 
         })
         .then((res) => {
@@ -62,7 +64,7 @@ function AccountDetails() {
           return;
         }
         axios
-          .post("http://127.0.0.1:8000/delete_user/", {
+          .post(`${url}/delete_user/`, {
             jwt: jwt, 
             password: confirmPassword,
           })
@@ -70,7 +72,7 @@ function AccountDetails() {
             if (res.data.type === "SUCCESS") {
               alert(res.data.message);
               cookies.remove("auth_token");
-              window.location.href = "http://localhost:5173/login";
+              window.location.href = `${urlFront}/login`;
             } else {
               alert(res.data.message);
             }

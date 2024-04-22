@@ -7,9 +7,10 @@ import { useNavigate } from "react-router-dom";
 function Settings() {
   const { u_id, token, email } = useParams(); // Obtener los parámetros de la URL
   const navigate = useNavigate();
+  const url =  import.meta.env.VITE_API_URL;
 
   const sendActivationEmail = () => {
-    axios.post(`http://127.0.0.1:8000/settings/${u_id}/${token}/${email}`)
+    axios.post(`${url}/settings/${u_id}/${token}/${email}`)
       .then((res) => {
         //console.log("Correo de activación enviado:", res.data);
         navigate("/login");

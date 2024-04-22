@@ -11,6 +11,8 @@ function Change_email() {
     password: "",
     newEmail: "",
   });
+  const url =  import.meta.env.VITE_API_URL;
+  const urlFront =  import.meta.env.VITE_FRONT_URL;
 
   const handleInput = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,7 +24,7 @@ function Change_email() {
     const jwt = cookies.get("auth_token");
 
     axios
-      .post("http://127.0.0.1:8000/update_email/", {
+      .post(`${url}/update_email/`, {
         jwt: jwt,
         password: formData.password,
         new_email: formData.newEmail,
@@ -32,7 +34,7 @@ function Change_email() {
           alert(res.data.message + " Inicia sesión nuevamente");
           //sendActivationEmail(formData.newEmail);
           cookies.remove("auth_token");
-          window.location.href = "http://localhost:5173/login";
+          window.location.href = `${urlFront}/login`;
         } else {
           alert(res.data.message);
         }

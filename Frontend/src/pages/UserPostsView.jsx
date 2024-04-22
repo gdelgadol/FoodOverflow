@@ -13,6 +13,7 @@ const UserPostsView = () => {
   const [filtro_1, setFiltro_1] = useState("Recientes")
   const [filtro_2, setFiltro_2] = useState("recipes")
   const [isLoading, setIsLoading] = useState(false)
+  const url =  import.meta.env.VITE_API_URL;
 
   const cookies = new Cookies();
   const jwt = cookies.get("auth_token");
@@ -23,7 +24,7 @@ const UserPostsView = () => {
     const fetchData = async () => {
       try {
         //setIsLoading(true)
-        const response = await axios.post(`http://127.0.0.1:8000/user/${filtro_2}/`, {
+        const response = await axios.post(`${url}/user/${filtro_2}/`, {
 		jwt : jwt
 	});
         if (response.data.type === "SUCCESS") {
