@@ -16,6 +16,7 @@ function Register() {
     check_password: "",
     username: "",
   });
+  const url =  import.meta.env.VITE_API_URL;
 
   const handleInput = (event) => {
     setState({
@@ -56,7 +57,7 @@ function Register() {
 
   const register = () => {
     axios
-      .post("http://127.0.0.1:8000/signup/", {
+      .post(`${url}/signup/`, {
         email: state.email,
         username: state.username,
         password: state.password,

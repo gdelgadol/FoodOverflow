@@ -25,6 +25,7 @@ function DetallesReceta() {
     const [alertVisible, setAlertVisible] = useState(false);
     const [comments, setComments] = useState([]);
     const [reload, setReload] = useState(false)
+    const url =  import.meta.env.VITE_API_URL;
 
     const cookies = new Cookies();
     const jwt = cookies.get("auth_token");
@@ -68,7 +69,7 @@ function DetallesReceta() {
             // Determinar el voto a enviar al backend
             const voteToSend = voted && voteType === lastVote ? 0 : voteType;
     
-            const response = await axios.post("http://127.0.0.1:8000/vote/recipe/", {
+            const response = await axios.post(`${url}/vote/recipe/`, {
                 post_id: id,
                 jwt: jwt,
                 vote_type: voteToSend
@@ -106,7 +107,7 @@ function DetallesReceta() {
 
     const obtenerDetallesReceta = async (id) => {
         try {
-          const res = await axios.post("http://127.0.0.1:8000/recipe/", {
+          const res = await axios.post(`${url}/recipe/`, {
             recipe_id: id,
             jwt : jwt
           });
@@ -133,7 +134,7 @@ function DetallesReceta() {
     const submitComment = async () => {
         try {
           const res = await axios.post(
-            "http://127.0.0.1:8000/comment/recipe/",
+            `${url}/comment/recipe/`,
             {
               post_id: id,
               content: comment,

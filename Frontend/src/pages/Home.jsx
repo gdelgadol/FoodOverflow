@@ -13,6 +13,7 @@ const Home = () => {
   const [filtro_1, setFiltro_1] = useState("Recientes")
   const [filtro_2, setFiltro_2] = useState("recipes")
   const [isLoading, setIsLoading] = useState(false)
+  const url =  import.meta.env.VITE_API_URL;
 
   const maxPage = posts.length / postsPerPage
 
@@ -20,7 +21,7 @@ const Home = () => {
     const fetchData = async () => {
       try {
         //setIsLoading(true)
-        const response = await axios.get(`http://127.0.0.1:8000/${filtro_2}/`);
+        const response = await axios.get(`${url}/${filtro_2}/`);
         if (response.data.type === "SUCCESS") {
           const sortedPosts = response.data.posts.sort((a, b) => b.id - a.id );
           setPosts(sortedPosts);

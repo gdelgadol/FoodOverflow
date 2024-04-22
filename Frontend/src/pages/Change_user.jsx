@@ -24,9 +24,11 @@ function Change_user() {
 
     const cookies = new Cookies();
     const jwt = cookies.get("auth_token");
+    const url =  import.meta.env.VITE_API_URL;
+    const urlFront =  import.meta.env.VITE_FRONT_URL;
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/update_username/", {
+      const response = await axios.post(`${url}/update_username/`, {
         jwt: jwt,
         password: formData.currentPassword,
         new_username: formData.newUsername
@@ -35,7 +37,7 @@ function Change_user() {
       if (response.data.type === "SUCCESS") {
         alert(response.data.message + " Inicia sesión nuevamente");
         cookies.remove("auth_token");
-        window.location.href = "http://localhost:5173/login";
+        window.location.href = `${urlFront}/login`;
       } else {
         alert(response.data.message);
       }

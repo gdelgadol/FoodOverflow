@@ -11,6 +11,7 @@ const Rec_contrasena = () => {
   const errRef = useRef();
   const labelUserRef = useRef();
   const labelPwdRef = useRef();
+  const url =  import.meta.env.VITE_API_URL;
 
   const [state, setState] = useState({
     email: "",
@@ -67,7 +68,7 @@ const Rec_contrasena = () => {
   const navigate = useNavigate();
   const reset = () => {
     axios
-      .post("http://127.0.0.1:8000/password_reset/", {
+      .post(`${url}/password_reset/`, {
         email: state.email,
       })
       .then((res) => {

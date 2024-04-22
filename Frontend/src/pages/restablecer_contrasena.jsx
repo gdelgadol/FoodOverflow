@@ -12,6 +12,7 @@ function Restablecer_contrasena() {
   const [errMsg, setErrMsg] = useState("");
   const errRef = useRef();
   const { uid, token } = useParams();
+  const url =  import.meta.env.VITE_API_URL;
 
   const [state, setState] = useState({
     password: "",
@@ -57,7 +58,7 @@ function Restablecer_contrasena() {
 
   const resetPass = () => {
     axios
-      .post(`http://127.0.0.1:8000/restablecer_contrasena/${uid}/${token}`, {
+      .post(`${url}/restablecer_contrasena/${uid}/${token}`, {
         password: state.password,
       })
       .then((res) => {
@@ -65,6 +66,7 @@ function Restablecer_contrasena() {
           alert("¡Contraseña restablecida con exito! Puedes volver a iniciar sesión.");
           navigate("/login");
         } else {
+          alert("No se pudo restablecer tu contraseña. Por favor intentalo de nuevo.");
         }
       });
   };

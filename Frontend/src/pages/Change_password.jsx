@@ -15,6 +15,8 @@ function Change_password() {
 
   const [errMsg, setErrMsg] = useState("");
   const errRef = useRef();
+  const url =  import.meta.env.VITE_API_URL;
+  const urlFront =  import.meta.env.VITE_FRONT_URL;
 
   const handleInput = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -31,7 +33,7 @@ function Change_password() {
     const jwt = cookies.get("auth_token");
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/update_password/", {
+      const response = await axios.post(`${url}/update_password/`, {
         jwt: jwt,
         password: formData.currentPassword,
         new_password: formData.newPassword,
@@ -41,7 +43,7 @@ function Change_password() {
       if (response.data.type === "SUCCESS") {
         alert(response.data.message + " Inicia sesión nuevamente" );
         cookies.remove("auth_token");
-        window.location.href = "http://localhost:5173/login";
+        window.location.href = `${urlFront}/login`;
       } else {
         alert(response.data.message);
       }
