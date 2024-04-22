@@ -6,12 +6,20 @@ import Restablecer_contrasena from "./pages/restablecer_contrasena"
 import Activate from "./pages/Activate"
 import Crear_publicacion from "./pages/crear_publicacion"
 import Profile from "./pages/Profile"
+import Change_email from "./pages/Change_email"
+import Change_password from "./pages/Change_password"
+import Change_user from "./pages/Change_user"
+import Settings from "./pages/Settings"
 import './App.css'
 import {Routes, Route} from "react-router-dom";
 import Encabezado from "./components/Encabezado.jsx"
 import Footer from "./components/Footer.jsx"
 import PrivateRoute from "./utils/PrivateRoute"
 import DetallesPublicacion from "./pages/DetallesPublicacion"
+import DetallesReceta from "./pages/DetallesReceta"
+import AboutUs from "./pages/AboutUs.jsx"
+import SupportUs from "./pages/SupportUs.jsx"
+import UserPostView from "./pages/UserPostsView"
 
 function App() {
   return (
@@ -23,13 +31,21 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<Home />} />
           <Route path="/activate/:uid/:token" element={<Activate />} />
+          <Route path="/settings/:u_id/:token/:email" element={<Settings />} />
           <Route path="/recuperar_contrasena" element={<Rec_contrasena />} />
           <Route path="/restablecer_contrasena/:uid/:token/" element={<Restablecer_contrasena />} />
-          <Route path="/post/:id" element={<DetallesPublicacion />}/>
+          <Route path="/publication/:id" element={<DetallesPublicacion />}/>
+          <Route path="/recipe/:id" element={<DetallesReceta />}/>
           <Route element={<PrivateRoute />}>
             <Route path="/crear_publicacion" element={<Crear_publicacion />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/mis-publicaciones" element={<UserPostView />} />
+            <Route path="/change_email" element={<Change_email />} />
+            <Route path="/change_password" element={<Change_password />} />
+            <Route path="/change_user" element={<Change_user />} />
           </Route>
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/support" element={<SupportUs />} />
         </Routes>
       </div>
       <Footer />

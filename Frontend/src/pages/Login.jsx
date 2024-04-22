@@ -10,6 +10,7 @@ import { Link, useNavigate } from "react-router-dom";
 const Login = () => {
 
   // Initialize cookies
+  const url =  import.meta.env.VITE_API_URL;
 
   const login_cookie = new Cookies(null, {path: "/"});
 
@@ -91,7 +92,7 @@ const Login = () => {
   const navigate = useNavigate();
   const login = () => {
     axios
-      .post("http://127.0.0.1:8000/login/", {
+      .post(`${url}/login/`, {
         email: state.email,
         password: state.password,
       })

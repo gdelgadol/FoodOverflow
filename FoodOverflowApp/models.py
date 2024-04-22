@@ -65,6 +65,16 @@ class PublicationManager(models.Manager):
         publication.save(using=self.db)
         return publication
 
+    def create_publication_tags(self, title, description, user_id, tags):
+        publication = self.model(
+            publication_title = title,
+            publication_description = description,
+            profile = user_id,
+            publication_tags = tags
+        )
+        publication.save(using=self.db)
+        return publication
+
 class Publication(models.Model):
     publication_id = models.BigAutoField(primary_key=True)
     publication_title = models.CharField(max_length=100)
@@ -101,7 +111,16 @@ class PublicationVote(models.Model):
 
 ## Publication's Comments
 class PublicationCommentManager(models.Manager):
-    def create_publication_comment(self, profile_id, publication_id, comment_body, comment_response_id):
+    def create_publication_comment(self, profile_id, publication_id, comment_body):
+        publication_comment = self.model(
+            profile = profile_id,
+            publication = publication_id,
+            comment_body = comment_body
+        )
+        publication_comment.save(using = self.db)
+        return publication_comment
+    
+    def create_publication_comment_response(self, profile_id, publication_id, comment_body, comment_response_id):
         publication_comment = self.model(
             profile = profile_id,
             publication = publication_id,
@@ -126,12 +145,23 @@ class PublicationComment(models.Model):
 
 #Recipe Model
 class RecipeManager(models.Manager):
-    def create_recipe(self, title, ingredients, instructions, profile_id):
+    def create_recipe(self, title, ingredients, description, profile_id):
         recipe = self.model(
             recipe_title = title,
             recipe_ingredients = ingredients,
-            recipe_instructions = instructions,
+            recipe_description = description,
             profile = profile_id
+        )
+        recipe.save(using = self.db)
+        return recipe
+    
+    def create_recipe_tags(self, title, ingredients, description, profile_id, tags):
+        recipe = self.model(
+            recipe_title = title,
+            recipe_ingredients = ingredients,
+            recipe_description = description,
+            profile = profile_id,
+            recipe_tags = tags
         )
         recipe.save(using = self.db)
         return recipe
@@ -174,7 +204,16 @@ class RecipeVote(models.Model):
 
 ## Recipe's Comments
 class RecipeCommentManager(models.Manager):
-    def create_recipe_comment(self, profile_id, recipe_id, comment_body, comment_response_id):
+    def create_recipe_comment(self, profile_id, recipe_id, comment_body):
+        recipe_comment = self.model(
+            profile = profile_id,
+            recipe = recipe_id,
+            comment_body = comment_body
+        )
+        recipe_comment.save(using = self.db)
+        return recipe_comment
+
+    def create_recipe_comment_response(self, profile_id, recipe_id, comment_body, comment_response_id):
         recipe_comment = self.model(
             profile = profile_id,
             recipe = recipe_id,

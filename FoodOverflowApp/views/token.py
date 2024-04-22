@@ -7,16 +7,19 @@ from ..models import Profile
 
 # Decode the JWT token
 def decode_jwt(token):
-    #get the secret key
-    secret = config('SECRET_JWT_KEY')
-    #get the encode algorithm
-    algorithm = config('JWT_ALGORITHM')
-    #Decode the token
-    response = jwt.decode(token, secret, algorithms = [algorithm])
+    try:
+        #get the secret key
+        secret = config('SECRET_JWT_KEY')
+        #get the encode algorithm
+        algorithm = config('JWT_ALGORITHM')
+        #Decode the token
+        response = jwt.decode(token, secret, algorithms = [algorithm])
 
-    profile = Profile.objects.get(username = response["username"])
-    # return a dict with the decoded data
-    return {'username' : profile.username, 'email' : profile.email, 'id': profile.id}
+        profile = Profile.objects.get(username = response["username"])
+        # return a dict with the decoded data
+        return {'username' : profile.username, 'email' : profile.email, 'id': profile.id}
+    except:
+        return None
 
 
 # return the information encoded in the front token

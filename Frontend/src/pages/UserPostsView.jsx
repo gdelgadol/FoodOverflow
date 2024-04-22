@@ -5,7 +5,7 @@ import axios from "../api/axios.jsx";
 import "./Home.css"
 import Cookies from 'universal-cookie';
 
-const Home = () => {
+const UserPostsView = () => {
 
   const [posts, setPosts] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
@@ -15,15 +15,20 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false)
   const url =  import.meta.env.VITE_API_URL;
 
+  const cookies = new Cookies();
+  const jwt = cookies.get("auth_token");
+
   const maxPage = posts.length / postsPerPage
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         //setIsLoading(true)
-        const response = await axios.get(`${url}/${filtro_2}/`);
+        const response = await axios.post(`${url}/user/${filtro_2}/`, {
+		jwt : jwt
+	});
         if (response.data.type === "SUCCESS") {
-          const sortedPosts = response.data.posts.sort((a, b) => b.id - a.id );
+          const sortedPosts = response.data.posts.sort((a, b) => a.id - b.id);
           setPosts(sortedPosts);
         } else {
           alert(response.data.message);
@@ -45,7 +50,7 @@ const Home = () => {
     if (filtro_1 === "Más votados") {
       setPosts([...posts.sort((a, b) => b.score - a.score)]);
     } else if (filtro_1 === "Recientes") {
-      setPosts([...posts.sort((a, b) => b.id - a.id)]);
+      setPosts([...posts.sort((a, b) => a.id - b.id)]);
     }else if (filtro_1 === "Más interacción") {
       setPosts([...posts.sort((a, b) => b.numComments - a.numComments)]);
     }
@@ -100,4 +105,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default UserPostsView;

@@ -203,22 +203,57 @@ dp-alert-cancel-close:focus {
 
 .dp-alert-cancel-buttons {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     width: 100%;
-    gap: 15px;
-    margin-top: 10px;
 }
 
 .dp-button-discard {
     width: 90px;
     height: 30px;
     border: none;
-    background-color: #ff0000;
+    background-color: #c60000;
     color: #ffffff;
     cursor: pointer;
     font-weight: 600;
     border-radius: 10px;
+}
+
+.dp-ingredients {
+    line-height: 1.5em;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.dp-ingredient {
+    margin-left: 20px;
+}
+
+.dp-instructions {
+    font-weight: 500;
+}
+
+.dp-instructions p {
+    margin-left: 20px;
+}
+
+.dp-separator {
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.dp-back-link {
+    text-decoration: none;
+    color: #000;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.dp-back-link:hover {
+    color: #555;
 }
 
 .vote-button {
@@ -236,4 +271,11 @@ dp-alert-cancel-close:focus {
 .vote-button:hover {
     color: #ff5c00; 
     transform: scale(1.1); 
+}
+
+.user-voted {
+    background-color: #ffc107; 
+    color: #000; 
+    border-radius: 6px;
+    border-color: #ffc107; 
 }

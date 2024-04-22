@@ -11,16 +11,18 @@ urlpatterns = [
     path('logout/', views.logout, name = "logout"), # Log out path
     # Forum
     ## Publication
-    path('forum/', views.get_publications, name = "get_forum_posts"), # get publications and recipes
-    path('publications/', views.get_publications, name = "get_publications"), # get only publications
+    path('publications/', views.get_publications, name = "get_publications"), # get publications
     path('crear_publicacion/', views.create_forum_publication, name= "crear_publicaion"), # create publication path
-    path('post/', views.get_publication, name= "get_publication"), # get the publication 
+    path('publication/', views.get_publication, name= "get_publication"), # get the publication 
     ## Recipes
     path('recipes/', views.get_recipes, name = "get_publications"), # get only recipes
-    path('crear_recipe/', views.create_recipe, name= "crear_publicaion"), # create recipe path
+    path('crear_recipe/', views.create_recipe, name= "crear_recipe"), # create recipe path
     path('recipe/', views.get_recipe, name= "get_publication"), # get the recipe 
     ## votes
     path('vote/<str:id_vote>/', views.make_vote, name = "vote"), # Make a vote
+    ## comment
+    path('comment/<str:id_comment>/', views.create_comment, name = "comment"), #Comment on a post
+    path('comment/<str:id_comment>/response/', views.create_comment_response, name = "response"), #Reply to a comment
     # User settings
     path('get_user/', views.get_user_data, name = "user_token"), # user's info in JWT Token
     path('delete_user/',views.delete_user, name = 'delete_user'), # delete_user path
@@ -28,5 +30,6 @@ urlpatterns = [
     path('update_email/', views.update_email, name = "update_email"), # Change email
     path('update_username/', views.update_username, name = "update_username"), # Change username
     path('settings/<uidb64>/<token>/<str:email>', views.email_confirmated, name='confirmated'), #Confirm new email
+    path('user/<str:identifier>/', views.get_user_posts, name = "users_posts"), # Users Posts
 ]
 

@@ -9,20 +9,31 @@ function Encabezado() {
   const jwt = cookies.get("auth_token");
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuUsuarioOpen, setMenuUsuarioOpen] = useState(false);
+  const urlFront =  import.meta.env.VITE_FRONT_URL;
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
+  const toggleMenuUsuario = () => {
+    setMenuUsuarioOpen(!menuUsuarioOpen);
+  };
+
   const handleLogout = () => {
     // Eliminar el token JWT
     cookies.remove('auth_token');
-    window.location.href = "http://localhost:5173/Login";
+    window.location.href = `${urlFront}/Login`;
   };
 
   return (
     <div className="header">
       {/* Contenido para tamaños de pantalla más grandes */}
+      <button className="menu-toggle" onClick={toggleMenu}>
+        <div></div>
+        <div></div>
+        <div></div>
+      </button>
       <Link to={"/"}>
       <div className="icon-header">
         <img
@@ -30,54 +41,51 @@ function Encabezado() {
           alt="Icono de la página"
           style={{ width: "37px", height: "43px" }}
         />
-        <div className="logo">Food Overflow</div>
+        <div className="logo">FoodOverflow</div>
       </div>
       </Link>
       <div className="search">
         <input type="text" placeholder="Buscar" />
       </div>
       <div className="menu">
-        <Link to={"/About"}>
+        <div className="menu-info">
+        <Link to={"/about"}>
         <button className="menu-button">
-        <span className="spanHeader">Sobre nosótros</span>
+        <span className="spanHeader">Sobre nosotros</span>
         </button>
         </Link>
-        <Link to={"/Contact"}>
+        <Link to={"/contact"}>
         <button className="menu-button">
           <span className="spanHeader">Contáctenos</span>
         </button>
         </Link>
-        <Link to={"/Apoyanos"}>
+        <Link to={"/support"}>
         <button className="menu-button">
           <span className="spanHeader">Apóyanos</span>
         </button>
         </Link>
         <div className="separator"></div>
+        </div>
         {/* Botones para tamaños de pantalla más pequeños */}
         {jwt ? (
           <>
             <Link to={"/crear_publicacion"}>
               <button className="menu-button2">
-                <strong>Crear</strong> 
+                <strong>Publicar</strong> 
               </button>
             </Link>
-            <Link to={"/Profile"}>
-              <button className="menu-button3">
+              <button className="menu-button3" onClick={toggleMenuUsuario}>
                 <strong>Usuario</strong>
               </button>
-            </Link>
-            <button className="menu-button2" onClick={handleLogout}>
-              <strong>Cerrar sesión</strong>
-            </button>
           </>
         ) : (
           <>
-            <Link to={"/Login"}>
+            <Link to={"/login"}>
               <button className="menu-button2">
                 <strong>Iniciar sesión</strong> 
               </button>
             </Link>
-            <Link to={"/Register"}>
+            <Link to={"/register"}>
               <button className="menu-button3">
                 <strong>Registrarse</strong>
               </button>
@@ -85,56 +93,34 @@ function Encabezado() {
           </>
         )}
       </div>
-
-      {/* Hamburguesa */}
-      <button className="menu-toggle" onClick={toggleMenu}>
-        <div></div>
-        <div></div>
-        <div></div>
-      </button>
+      
+      {/* Menú de usuario */}
+      {menuUsuarioOpen && (
+        <div className="menu-usuario">
+          <Link to={"/profile"}>
+          <button className="menu-button-user" onClick={toggleMenuUsuario}>
+            <span className="spanHeader">Configuración de la cuenta</span>
+          </button>
+          </Link>
+          <Link to={"/mis-publicaciones"}>
+          <button className="menu-button-user" onClick={toggleMenuUsuario}>
+            <span className="spanHeader">Mis publicaciones</span>
+          </button>
+          </Link>
+          <div className="separator-user-menu"></div>
+          <button className="menu-button-user" onClick={handleLogout}>
+            <span className="spanHeader">Cerrar sesión</span>
+          </button>
+        </div>
+      )}
 
       {/* Tamaños de pantalla más pequeños */}
       {menuOpen && (
         <div className="menu-dropdown">
-            {jwt ? (
-            <>
-              <Link to={"/crear_publicacion"}>
-                <button className="menu-button2">
-                  <center>
-                  <strong>Crear</strong>
-                  </center>
-                </button>
-              </Link>
-              <Link to={"/Home"}>
-                <button className="menu-button3">
-                  <center>
-                  <strong>Usuario</strong>
-                  </center>
-                </button>
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link to={"/"}>
-                <button className="menu-button2">
-                  <center>
-                  <strong>Iniciar sesión</strong> 
-                  </center>
-                </button>
-              </Link>
-              <Link to={"/Register"}>
-                <button className="menu-button3">
-                  <center>
-                  <strong>Registrarse</strong>
-                  </center>
-                </button>
-              </Link>
-            </>
-          )}
           <Link to={"/About"}>
           <button className="menu-button">
             <center>
-            <strong>Sobre nosótros</strong>
+            <strong>Sobre nosotros</strong>
             </center>
           </button>
           </Link>
