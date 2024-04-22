@@ -89,7 +89,7 @@ function AboutUs() {
                         className='au-member-image'
                         />
                         <span className='au-member-name'>Andres Ardila</span>
-                        <h1 className='au-member-title'>Desarrollador Web</h1>
+                        <h1 className='au-member-title'>Desarrollador Frontend</h1>
                         <div className='au-member-social'>
                             <a href="https://github.com/AndresArdila05">
                                 <img

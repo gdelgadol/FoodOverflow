@@ -1,6 +1,7 @@
 import './Publicacion.css';
 import {HiArrowCircleDown, HiArrowCircleUp} from "react-icons/hi";
-import { LuChefHat } from "react-icons/lu";
+import { LuChefHat  } from "react-icons/lu";
+import { GiCook, GiDespair, GiCookingGlove } from "react-icons/gi";
 import { BiComment } from "react-icons/bi";
 import { Link } from 'react-router-dom';
 
@@ -14,7 +15,15 @@ export default function Publicacion ({id_post, userName, title, description, num
         <div>
             <Link to={`/${type}/${id_post}`} className='publicacion'>
                 <div className='score'>
-                <LuChefHat size={30} />
+                {score > 0 &&
+                    <GiCook size={30} />
+                }
+                {score < 0 &&
+                    <GiDespair size={30} />
+                }
+                {score == 0 &&
+                    <GiCookingGlove size={30}/>
+                }
                     {score}
                     
                 </div>

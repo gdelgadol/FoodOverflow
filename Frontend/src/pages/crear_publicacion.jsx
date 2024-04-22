@@ -128,29 +128,31 @@ function Crear_publicacion() {
   };
 
   return (
-      <div className="form-container">
-          <h1>Crear publicación</h1>
-          <h1
-            ref={errRef}
-            className={errMsg ? "errmsg li-h1-error " : "offscreen"}
-            aria-live="assertive"
+    <div className="form-container">
+      <h1>Crear publicación</h1>
+      <h1
+        ref={errRef}
+        className={errMsg ? "errmsg li-h1-error " : "offscreen"}
+        aria-live="assertive"
+      >
+        {errMsg}
+      </h1>
+      <form onSubmit={handleSubmit}>
+        <div className="input-group">
+          <label htmlFor="postType">¿Qué quieres publicar?</label>
+          <select
+            id="postType"
+            name="postType"
+            value={state.postType}
+            onChange={handleInput}
           >
-            {errMsg}
-          </h1>
-          <form onSubmit={handleSubmit}>
-            <div className="input-group">
-              <label htmlFor="postType">¿Qué quieres publicar?</label>
-              <select
-                id="postType"
-                name="postType"
-                value={state.postType}
-                onChange={handleInput}
-              >
-                <option value="">Seleccionar opción</option>
-                <option value="Receta">Receta</option>
-                <option value="Publicación">Pregunta</option>
-              </select>
-            </div>
+            <option value="">Seleccionar opción</option>
+            <option value="Receta">Receta</option>
+            <option value="Publicación">Pregunta</option>
+          </select>
+        </div>
+        {state.postType && ( // Renderiza los formularios solo si se ha seleccionado una opción
+          <>
             <div className="input-group">
               <label htmlFor="title">Título</label>
               <input
@@ -162,7 +164,6 @@ function Crear_publicacion() {
                 onChange={handleInput}
               />
             </div>
-
             {state.postType === "Receta" && (
               <div className="input-group">
                 <label htmlFor="postType">Ingredientes</label>
@@ -191,7 +192,7 @@ function Crear_publicacion() {
                     </button>
                   </div>
                 ))}
-                <br></br>
+                <br />
                 <button
                   className="register-button center-button"
                   type="button"
@@ -201,7 +202,6 @@ function Crear_publicacion() {
                 </button>
               </div>
             )}
-
             <div className="input-group">
               <label htmlFor="content">
                 {state.postType === "Receta"
@@ -209,29 +209,32 @@ function Crear_publicacion() {
                   : "Contenido"}
               </label>
               <div className='dp-makeComment2'>
-            <ReactQuill
-                theme="snow"
-                value={content}
-                onChange={handleCommentInput}
-                className='dp-inputComment'
-                placeholder="Escribe el contenido de la receta"
-                modules={{
+                <ReactQuill
+                  theme="snow"
+                  value={content}
+                  onChange={handleCommentInput}
+                  className='dp-inputComment'
+                  placeholder="Escribe el contenido de la receta"
+                  modules={{
                     toolbar: [
                       [{ 'header': '1'}, {'header': '2'}],
                       ['bold', 'italic'],
                       ['link', 'image'],
                       ['clean'],
                     ],
-                }}
-            />
+                  }}
+                />
+              </div>
             </div>
-            </div>
-
-            <button type="submit" className="register-button center-button">
-              Publicar
-            </button>
-          </form>
-      </div>
+          </>
+        )}
+        {state.postType && ( // Renderiza el botón de publicar solo si se ha seleccionado una opción
+          <button type="submit" className="register-button center-button">
+            Publicar
+          </button>
+        )}
+      </form>
+    </div>
   );
 }
 
