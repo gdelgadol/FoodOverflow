@@ -11,6 +11,7 @@ const Login = () => {
 
   // Initialize cookies
   const url =  import.meta.env.VITE_API_URL;
+  const urlFront =  import.meta.env.VITE_FRONT_URL;
 
   const login_cookie = new Cookies(null, {path: "/"});
 
@@ -104,7 +105,7 @@ const Login = () => {
           login_cookie.set("auth_token", jwt_token);
 
           alert("Inicio exitoso!");
-          window.location.href = "http://localhost:5173/";
+          window.location.href = `${urlFront}/`;
         } else {
           setErrMsg(res.data.message);
         }
