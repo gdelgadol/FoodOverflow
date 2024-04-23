@@ -23,6 +23,7 @@ class UserManager(BaseUserManager):
             email
         )
         user.is_admin = True
+        user.active = True
         user.save(using = self._db)
         return user
 

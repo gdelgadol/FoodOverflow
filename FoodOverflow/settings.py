@@ -87,20 +87,21 @@ WSGI_APPLICATION = "FoodOverflow.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-'''DATABASES = {
-    "default": {
-        "ENGINE": config('DB_ENGINE'),
-        "NAME": config('DB_NAME'),
-        "USER": config('DB_USER'),
-        "PASSWORD": config('DB_PASSWORD'),
-        "HOST": config('DB_HOST'),
-        "PORT": config('DB_PORT'),
+try:
+    DATABASES = {
+        "default": dj_database_url.parse(config('DB_URL'))
     }
-}'''
-
-DATABASES = {
-    "default": dj_database_url.parse(config('DB_URL'))
-}
+except:
+    DATABASES = {
+        "default": {
+            "ENGINE": config('DB_ENGINE'),
+            "NAME": config('DB_NAME'),
+            "USER": config('DB_USER'),
+            "PASSWORD": config('DB_PASSWORD'),
+            "HOST": config('DB_HOST'),
+            "PORT": config('DB_PORT'),
+        }
+    }
 
 
 # Password validation
