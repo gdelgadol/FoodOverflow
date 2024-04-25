@@ -1,5 +1,79 @@
 {% autoescape off %}  
-Hola {{ user }},  
-Para restablecer tu contraseña ingresa al siguiente enlace,  
-http://{{ domain }}{% url 'restablecer' uidb64=uid token=token %} 
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+
+        @font-face {
+            font-family: 'Inter';
+            src: url('./assets/fonts/Inter-VariableFont_slnt,wght.ttf') format('truetype');
+        }
+        
+          * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff; 
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            background-color: #ff5c00; /* Fondo blanco */
+            border-radius: 10px; /* Borde redondeado */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+            border: 5px solid #ff5c00; /* Borde naranja */
+        }
+        .logo {
+            margin-bottom: 20px;
+        }
+        .message {
+            background-color: #ffffff; /* Fondo blanco */
+            color: #000000; /* Texto negro */
+            padding: 20px;
+            border-radius: 10px;
+            
+        }
+        .activation-link {
+            display: inline-block;
+            background-color: #ff5c00; /* Fondo naranja */
+            color: #ffffff; /* Texto blanco */
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .activation-link:hover {
+            background-color: #ff7830; /* Cambio de color al pasar el mouse */
+        }
+
+        a:visited {
+            color: white; 
+        }
+
+        a {
+            color:white    
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="message">
+            <img class="logo" src="https://github.com/AndresArdila05/FoodOverflow/blob/foro/Frontend/src/assets/logo.png?raw=true" alt="Logo de Food Overflow" width="60">
+            <h2>Hola {{ user }}</h2>
+            <p>Para restablecer tu contraseña, ingresa al siguiente enlace:</p>
+            <a class="activation-link" href="http://{{ domain }}{% url 'restablecer' uidb64=uid token=token %}" style="color: white;">Restablecer contraseña</a>
+        </div>
+    </div>
+</body>
+</html>
+
 {% endautoescape %}
