@@ -4,6 +4,7 @@ import { LuChefHat  } from "react-icons/lu";
 import { GiCook, GiDespair, GiCookingGlove } from "react-icons/gi";
 import { BiComment } from "react-icons/bi";
 import { Link } from 'react-router-dom';
+import { GiShrug } from "react-icons/gi";
 
 export default function Publicacion ({id_post, userName, title, description, numComments, score, type}) {
     if (type === 'publications'){
@@ -22,7 +23,7 @@ export default function Publicacion ({id_post, userName, title, description, num
                     <GiDespair size={30} />
                 }
                 {score == 0 &&
-                    <GiCookingGlove size={30}/>
+                    <GiShrug size={30}/>
                 }
                     {score}
                     
