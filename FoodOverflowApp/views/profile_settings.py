@@ -6,8 +6,9 @@ from django.contrib.auth.hashers import check_password
 from django.http import JsonResponse
 from ..views.token import decode_jwt
 from decouple import config
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 import json
 
 #Delete user Account
@@ -184,8 +185,19 @@ def confirm_email(request, user, to_email):
             "protocol": "https" if request.is_secure() else "http",
         },
     )
+
+    plain_message = strip_tags(message)
+
+
     #Send email
-    email = EmailMessage(mail_subject, message, to=[to_email])
+    email = EmailMultiAlternatives(
+        subject = mail_subject,
+        body = plain_message, 
+        from_email = None,
+        to=[to_email]
+        )
+    
+    email.attach_alternative(message, "text/html")
     email.send()
 
 #Update the email
