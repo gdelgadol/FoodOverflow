@@ -7,6 +7,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+
+        @font-face {
+            font-family: 'Inter';
+            src: url('./assets/fonts/Inter-VariableFont_slnt,wght.ttf') format('truetype');
+        }
+        
+          * {
+            font-family: 'Inter', sans-serif;
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -18,42 +28,54 @@
             margin: 0 auto;
             padding: 20px;
             text-align: center;
+            background-color: #ff5c00; /* Fondo blanco */
+            border-radius: 10px; /* Borde redondeado */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
+            border: 5px solid #ff5c00; /* Borde naranja */
         }
         .logo {
             margin-bottom: 20px;
         }
         .message {
-            background-color: #ff5c00; 
-            color: #ffffff;
+            background-color: #ffffff; /* Fondo blanco */
+            color: #000000; /* Texto negro */
             padding: 20px;
             border-radius: 10px;
+            
         }
         .activation-link {
             display: inline-block;
-            margin-top: 20px;
-            background-color: #ffffff; 
-            color: #ff5c00; 
+            background-color: #ff5c00; /* Fondo naranja */
+            color: #ffffff; /* Texto blanco */
             padding: 10px 20px;
             text-decoration: none;
             border-radius: 5px;
         }
         .activation-link:hover {
-            background-color: #ff5c00; 
-            color: #ffffff; 
+            background-color: #ff7830; /* Cambio de color al pasar el mouse */
+        }
+
+        a:visited {
+            color: white; 
+        }
+
+        a {
+            color:white    
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <img class="logo" src="cumoverflow.png" alt="Logo de Food Overflow" width="150">
         <div class="message">
-            <h2>Hola {{ user }},</h2>
+            <img class="logo" src="https://github.com/AndresArdila05/FoodOverflow/blob/foro/Frontend/src/assets/logo.png?raw=true" alt="Logo de Food Overflow" width="60">
+            <h2>Hola {{ user }}</h2>
             <p>¡Gracias por unirte a Food Overflow!</p>
             <p>Para activar tu cuenta, simplemente haz clic en el siguiente enlace:</p>
-            <a class="activation-link" href="http://{{ domain }}{% url 'activate' uidb64=uid token=token %}">Activar cuenta</a>
+            <a class="activation-link" href="http://{{ domain }}{% url 'activate' uidb64=uid token=token %}" style="color: white;">Activar cuenta</a>
         </div>
     </div>
 </body>
 </html>
+
 
 {% endautoescape %}
