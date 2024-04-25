@@ -3,7 +3,8 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.encoding import force_bytes, force_str
 from django.template.loader import render_to_string
 from ..tokens import account_activation_token
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
+from django.utils.html import strip_tags
 from django.db import IntegrityError
 from ..models import Profile
 import json
@@ -65,16 +66,26 @@ def activate_email(request, user, to_email):
     # Define the email message
     message = render_to_string(
         "email_templates/activation.html",
-        {
+        context = {
             "user": user.username,
             "domain": config("FRONT_HOST"),
             "uid": urlsafe_base64_encode(force_bytes(user.pk)),
             "token": account_activation_token.make_token(user),
             "protocol": "https" if request.is_secure() else "http",
-        },
+        }
     )
+
+    plain_message = strip_tags(message)
+
     #Send email
-    email = EmailMessage(mail_subject, message, to=[to_email])
+    email = EmailMultiAlternatives(
+        subject = mail_subject,
+        body = plain_message, 
+        from_email = None,
+        to=[to_email]
+        )
+    
+    email.attach_alternative(message, "text/html")
     email.send()
 
 # Activation function

@@ -1,22 +1,12 @@
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.contrib.auth.hashers import make_password
-from django.utils.datastructures import MultiValueDictKeyError
-from django.shortcuts import render, redirect
-from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_str
 from django.template.loader import render_to_string
 from ..tokens import account_activation_token
-from django.http import HttpResponseNotFound
-from smtplib import SMTPRecipientsRefused
-from django.core.mail import EmailMessage
-from django.shortcuts import redirect
-from django.db import IntegrityError
-from django.contrib import messages
+from django.core.mail import EmailMultiAlternatives
+from django.utils.html import strip_tags
 from ..models import Profile
 import json
 from decouple import config
-from django.urls import reverse
-from django.shortcuts import redirect
 from django.http import JsonResponse
 
 # Create and send reset link to email if user exists
@@ -56,6 +46,7 @@ def reset(request, uidb64, token):
 
 def send_email(request, user, to_email):
     mail_subject = "Restablece tu contraseña de FoodOverflow"
+
     message = render_to_string(
         "email_templates/pass_reset.html",
         {
@@ -66,5 +57,17 @@ def send_email(request, user, to_email):
             "protocol": "https" if request.is_secure() else "http",
         },
     )
-    email = EmailMessage(mail_subject, message, to=[to_email])
+
+    plain_message = strip_tags(message)
+
+
+    #Send email
+    email = EmailMultiAlternatives(
+        subject = mail_subject,
+        body = plain_message, 
+        from_email = None,
+        to=[to_email]
+        )
+    
+    email.attach_alternative(message, "text/html")
     email.send()
