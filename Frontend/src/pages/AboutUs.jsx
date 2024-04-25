@@ -19,14 +19,11 @@ function AboutUs() {
             <div className='au-vision-mision'>
                 <div className='au-vision-mision-container'>
                     <span className='au-vision-mision-title'>Visión</span>
-                    <h1 className='au-vision-mision-text'>En los siguientes 5 años, Food Overflow será una de las principales plataformas que conectan a la comunidad
-                    gastronómica para que compartan recetas, aprendan nuevas técnicas, descubran sabores y celebren el amor
-                    por la comida con solidaridad, respeto y colaboración.</h1>
+                    <h1 className='au-vision-mision-text'>Para el 2029, Food Overflow será una de las principales plataformas que conectan a la comunidad gastronómica para que compartan recetas, aprendan nuevas técnicas, descubran sabores y celebren el amor por la comida con solidaridad, respeto y colaboración.</h1>
                 </div>
                 <div className='au-vision-mision-container'>
                     <span className='au-vision-mision-title'>Misión</span>
-                    <h1 className='au-vision-mision-text'>Unificar el amplio conocimiento gastronómico en un foro donde todos los interesados, desde cocineros expertos
-                    hasta cocineros en casa, puedan compartir ideas, resolver dudas y adentrarse en el mundo de la comida.</h1>
+                    <h1 className='au-vision-mision-text'>Unificar recetas y conocimiento gastronómico en un foro en línea, comisariado por la comunidad mediante sus votos y comentarios. El foro es un espacio donde todos los interesados, desde cocineros expertos hasta cocineros casuales, puedan compartir ideas, resolver dudas y adentrarse en el mundo de la comida.</h1>
                 </div>
             </div>
             <div className='au-team-container'>
