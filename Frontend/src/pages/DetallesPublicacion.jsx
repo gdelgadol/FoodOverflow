@@ -155,11 +155,19 @@ function DetallesPublicacion() {
     <div className="dp-container">
       <div className="dp-post">
         <div className="dp-score">
-          <button className={`vote-button ${voted && lastVote === 1 ? 'voted' : ''} ${voteStatus === 1 ? 'user-voted' : ''}`} onClick={() => handleVote(1)}>
+          <button
+            className={`vote-button ${voted && lastVote === 1 ? 'voted' : ''} ${voteStatus === 1 ? 'user-voted' : ''}`}
+            onClick={() => handleVote(1)}
+            title="Estás de acuerdo en que es información útil, relevante o correcta"
+          >
             <HiArrowCircleUp size={30} />
           </button>
           {score}
-          <button className={`vote-button ${voted && lastVote === -1 ? 'voted' : ''} ${voteStatus === -1 ? 'user-voted' : ''}`} onClick={() => handleVote(-1)}>
+          <button
+            className={`vote-button ${voted && lastVote === -1 ? 'voted' : ''} ${voteStatus === -1 ? 'user-voted' : ''}`}
+            onClick={() => handleVote(-1)}
+            title="Consideras que la información no es útil, relevante o correcta"
+          >
             <HiArrowCircleDown size={30} />
           </button>
         </div>

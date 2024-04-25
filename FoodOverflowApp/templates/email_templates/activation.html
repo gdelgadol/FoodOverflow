@@ -1,5 +1,59 @@
 {% autoescape off %}
-Hola {{ user }},
-Para activar tu cuenta accede al siguiente enlace,
-http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff; 
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .logo {
+            margin-bottom: 20px;
+        }
+        .message {
+            background-color: #ff5c00; 
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .activation-link {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #ffffff; 
+            color: #ff5c00; 
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .activation-link:hover {
+            background-color: #ff5c00; 
+            color: #ffffff; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img class="logo" src="cumoverflow.png" alt="Logo de Food Overflow" width="150">
+        <div class="message">
+            <h2>Hola {{ user }},</h2>
+            <p>¡Gracias por unirte a Food Overflow!</p>
+            <p>Para activar tu cuenta, simplemente haz clic en el siguiente enlace:</p>
+            <a class="activation-link" href="http://{{ domain }}{% url 'activate' uidb64=uid token=token %}">Activar cuenta</a>
+        </div>
+    </div>
+</body>
+</html>
+
 {% endautoescape %}
