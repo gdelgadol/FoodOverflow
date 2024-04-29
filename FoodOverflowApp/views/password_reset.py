@@ -36,38 +36,42 @@ def reset(request, uidb64, token):
         user = Profile.objects.get(id=uid)
     except (TypeError, ValueError, OverflowError, Profile.DoesNotExist):
         user = None
+
     if user is not None and account_activation_token.check_token(user, token):
         user.set_password(new_password)
         user.save()
-        return JsonResponse({"message":"Contraseña reseteada"})
+        return JsonResponse({"message":"Contraseña reseteada."})
     else:
         return JsonResponse({"message":"Link no es válido"})
 
 
 def send_email(request, user, to_email):
-    mail_subject = "Restablece tu contraseña de FoodOverflow"
+    try:
+        mail_subject = "Restablece tu contraseña de FoodOverflow"
 
-    message = render_to_string(
-        "email_templates/pass_reset.html",
-        {
-            "user": user.username,
-            "domain": config('FRONT_HOST'),
-            "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-            "token": account_activation_token.make_token(user),
-            "protocol": "https" if request.is_secure() else "http",
-        },
-    )
-
-    plain_message = strip_tags(message)
-
-
-    #Send email
-    email = EmailMultiAlternatives(
-        subject = mail_subject,
-        body = plain_message, 
-        from_email = None,
-        to=[to_email]
+        message = render_to_string(
+            "email_templates/pass_reset.html",
+            {
+                "user": user.username,
+                "domain": config('FRONT_HOST'),
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                "token": account_activation_token.make_token(user),
+                "protocol": "https" if request.is_secure() else "http",
+            },
         )
-    
-    email.attach_alternative(message, "text/html")
-    email.send()
+
+        plain_message = strip_tags(message)
+
+
+        #Send email
+        email = EmailMultiAlternatives(
+            subject = mail_subject,
+            body = plain_message, 
+            from_email = None,
+            to=[to_email]
+            )
+        
+        email.attach_alternative(message, "text/html")
+        email.send()
+    except Exception as e:
+        return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
