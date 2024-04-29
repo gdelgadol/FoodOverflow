@@ -171,34 +171,37 @@ def update_email(request):
 
 #Send email function
 def confirm_email(request, user, to_email):
-    # Define the email subject
-    mail_subject = "Confirma tu correo de FoodOverflow para realizar el cambio"
-    # Define the email message
-    message = render_to_string(
-        "email_templates/confirm_email.html",
-        {
-            "user": user.username,
-            "domain": config("FRONT_HOST"),
-            "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-            "token": account_activation_token.make_token(user),
-            "email": to_email,
-            "protocol": "https" if request.is_secure() else "http",
-        },
-    )
-
-    plain_message = strip_tags(message)
-
-
-    #Send email
-    email = EmailMultiAlternatives(
-        subject = mail_subject,
-        body = plain_message, 
-        from_email = None,
-        to=[to_email]
+    try:
+        # Define the email subject
+        mail_subject = "Confirma tu correo de FoodOverflow para realizar el cambio"
+        # Define the email message
+        message = render_to_string(
+            "email_templates/confirm_email.html",
+            {
+                "user": user.username,
+                "domain": config("FRONT_HOST"),
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                "token": account_activation_token.make_token(user),
+                "email": to_email,
+                "protocol": "https" if request.is_secure() else "http",
+            },
         )
-    
-    email.attach_alternative(message, "text/html")
-    email.send()
+
+        plain_message = strip_tags(message)
+
+
+        #Send email
+        email = EmailMultiAlternatives(
+            subject = mail_subject,
+            body = plain_message, 
+            from_email = None,
+            to=[to_email]
+            )
+        
+        email.attach_alternative(message, "text/html")
+        email.send()
+    except Exception as e:
+        return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
 
 #Update the email
 def email_confirmated(request, uidb64, token, email):
@@ -216,8 +219,12 @@ def email_confirmated(request, uidb64, token, email):
         })
     
     #Verify token
-    if account_activation_token.check_token(user, token):
-        print(user.email, email)
+    if user.email == email:
+        return JsonResponse({
+            'type' : 'SUCCESS',
+            'message' : 'El correo electrónico ha sido actualizado previamente.'
+        })
+    elif account_activation_token.check_token(user, token):
         user.email = email
         user.save()
         # Email updated Successfully

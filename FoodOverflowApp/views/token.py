@@ -3,6 +3,7 @@ import jwt
 from decouple import config
 from django.http import JsonResponse
 from ..models import Profile
+from ..models import Publication, Recipe, PublicationComment, RecipeComment, PublicationVote, RecipeVote
 
 
 # Decode the JWT token
@@ -34,5 +35,22 @@ def get_user_data(request):
     #get profile
     profile = Profile.objects.get(username = decoded["username"])
 
+    profile_publications = Publication.objects.filter(profile = profile).count()
+    commented_publications = PublicationComment.objects.filter(profile = profile).count()
+    voted_publications = PublicationVote.objects.filter(profile = profile).count()
+    profile_recipes = Recipe.objects.filter(profile = profile).count()
+    commented_recipes = RecipeComment.objects.filter(profile = profile).count()
+    voted_recipes = RecipeVote.objects.filter(profile = profile).count()
+    saved_posts = 0
+
     #return desired data
-    return JsonResponse({'username' : profile.username, 'email' : profile.email, 'id': profile.id})
+    return JsonResponse({'username' : profile.username, 
+                         'email' : profile.email, 
+                         'id': profile.id, 
+                         'profile_publications' : profile_publications,
+                         'commented_publications' : commented_publications,
+                         'voted_publications' : voted_publications,
+                         'profile_recipes' : profile_recipes,
+                         'commented_recipes'  : commented_recipes ,
+                         'voted_recipes' : voted_recipes,
+                         'saved_posts' : saved_posts})

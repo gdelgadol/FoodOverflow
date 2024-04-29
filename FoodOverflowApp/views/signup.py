@@ -61,32 +61,35 @@ def signup(request):
 
 # send email function
 def activate_email(request, user, to_email):
-    # Define the email subject
-    mail_subject = "Activa tu cuenta de FoodOverflow"
-    # Define the email message
-    message = render_to_string(
-        "email_templates/activation.html",
-        context = {
-            "user": user.username,
-            "domain": config("FRONT_HOST"),
-            "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-            "token": account_activation_token.make_token(user),
-            "protocol": "https" if request.is_secure() else "http",
-        }
-    )
-
-    plain_message = strip_tags(message)
-
-    #Send email
-    email = EmailMultiAlternatives(
-        subject = mail_subject,
-        body = plain_message, 
-        from_email = None,
-        to=[to_email]
+    try:
+        # Define the email subject
+        mail_subject = "Activa tu cuenta de FoodOverflow"
+        # Define the email message
+        message = render_to_string(
+            "email_templates/activation.html",
+            context = {
+                "user": user.username,
+                "domain": config("FRONT_HOST"),
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                "token": account_activation_token.make_token(user),
+                "protocol": "https" if request.is_secure() else "http",
+            }
         )
-    
-    email.attach_alternative(message, "text/html")
-    email.send()
+
+        plain_message = strip_tags(message)
+
+        #Send email
+        email = EmailMultiAlternatives(
+            subject = mail_subject,
+            body = plain_message, 
+            from_email = None,
+            to=[to_email]
+            )
+        
+        email.attach_alternative(message, "text/html")
+        email.send()
+    except Exception as e:
+        return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
 
 # Activation function
 def activate(request, uidb64, token):
@@ -98,7 +101,11 @@ def activate(request, uidb64, token):
     except (TypeError, ValueError, OverflowError, Profile.DoesNotExist):
         user = None
     # if user exists check the sended token
-    if user is not None and account_activation_token.check_token(user, token):
+    if user.active: #if user is currently activated
+        return JsonResponse(
+            {"message": "El usuario ha sido activado previamente con éxito", "type": "SUCCESS"}
+        )
+    elif user is not None and account_activation_token.check_token(user, token):
         # Activate User account
         user.active = True
         user.save()

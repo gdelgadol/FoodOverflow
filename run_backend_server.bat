@@ -1,4 +1,4 @@
-pip install -r requirements.txt
+pip install -q -r requirements.txt
 python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
