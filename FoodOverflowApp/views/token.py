@@ -2,8 +2,8 @@ import json
 import jwt
 from decouple import config
 from django.http import JsonResponse
-from ..models import Profile
-from ..models import Publication, Recipe, PublicationComment, RecipeComment, PublicationVote, RecipeVote
+from ..models import Profile, Avatar
+from ..models import Publication, Recipe, PublicationComment, RecipeComment, PublicationVote, RecipeVote, SavedPost
 
 
 # Decode the JWT token
@@ -19,38 +19,57 @@ def decode_jwt(token):
         profile = Profile.objects.get(username = response["username"])
         # return a dict with the decoded data
         return {'username' : profile.username, 'email' : profile.email, 'id': profile.id}
-    except:
+    except Exception as e:
+        print(str(e))
         return None
 
 
 # return the information encoded in the front token
-def get_user_data(request):
-    #get the Json token
-    data = json.loads(request.body)
-    token = data.get("jwt")
+def get_user_data(request, identifier):
+    try:
+        profile_info = {}
 
-    #Decode the jwt
-    decoded = decode_jwt(token)
+        if identifier == "profile":
+            #get the Json token
+            data = json.loads(request.body)
+            if not data.get("jwt"):
+                return JsonResponse({"type" : "ERROR", "message" : "Ha ocurrido un error, intentalo de nuevo."})
+            token = data.get("jwt")
 
-    #get profile
-    profile = Profile.objects.get(username = decoded["username"])
+            #Decode the jwt
+            decoded = decode_jwt(token)
 
-    profile_publications = Publication.objects.filter(profile = profile).count()
-    commented_publications = PublicationComment.objects.filter(profile = profile).count()
-    voted_publications = PublicationVote.objects.filter(profile = profile).count()
-    profile_recipes = Recipe.objects.filter(profile = profile).count()
-    commented_recipes = RecipeComment.objects.filter(profile = profile).count()
-    voted_recipes = RecipeVote.objects.filter(profile = profile).count()
-    saved_posts = 0
+            #get profile
+            if Profile.objects.filter(username = decoded["username"]).exists():
+                profile = Profile.objects.get(username = decoded["username"])
+                profile_info['email'] = profile.email 
+                profile_info['id'] = profile.id
+            else: 
+                return JsonResponse({"type" : "ERROR", "message" : "El usuario que estás intentando buscar no existe."})
 
-    #return desired data
-    return JsonResponse({'username' : profile.username, 
-                         'email' : profile.email, 
-                         'id': profile.id, 
-                         'profile_publications' : profile_publications,
-                         'commented_publications' : commented_publications,
-                         'voted_publications' : voted_publications,
-                         'profile_recipes' : profile_recipes,
-                         'commented_recipes'  : commented_recipes ,
-                         'voted_recipes' : voted_recipes,
-                         'saved_posts' : saved_posts})
+        else:
+            if Profile.objects.filter(username = identifier).exists():
+                profile = Profile.objects.get(username = identifier)
+            else: 
+                return JsonResponse({"type" : "ERROR", "message" : "El usuario que estás intentando buscar no existe."})
+
+        if profile.avatar_id:
+            profile_info["avatar"] = Avatar.objects.get(avatar_id = profile.avatar_id.avatar_id).avatar_url
+        else:
+            profile_info["avatar"] = ""
+            
+        profile_info["username"] = profile.username
+        profile_info["description"] = profile.description                            
+        profile_info["profile_publications"] = Publication.objects.filter(profile = profile).count()
+        profile_info["commented_publications"] = PublicationComment.objects.filter(profile = profile).count()
+        profile_info["voted_publications"] = PublicationVote.objects.filter(profile = profile).count()
+        profile_info["profile_recipes"] = Recipe.objects.filter(profile = profile).count()
+        profile_info["commented_recipes"] = RecipeComment.objects.filter(profile = profile).count()
+        profile_info["voted_recipes"] = RecipeVote.objects.filter(profile = profile).count()
+        profile_info["saved_posts"] = SavedPost.objects.filter(profile = profile).count()
+
+        #return desired data
+        return JsonResponse(profile_info)
+    except Exception as e:
+        print(str(e))
+        return JsonResponse({"type" : "ERROR", "message" : "Ha ocurrido un error, intentalo de nuevo."})

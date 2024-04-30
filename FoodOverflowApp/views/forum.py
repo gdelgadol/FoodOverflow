@@ -120,6 +120,7 @@ def get_publications(request):
     except Publication.DoesNotExist:
         return JsonResponse({"type": "ERROR", "message": "No se encontraron publicaciones"}, status=404)
     except Exception as e:
+        print(e)
         return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
 
 #Create a publication
@@ -572,6 +573,7 @@ def get_user_posts(request, identifier):
                 "posts" : posts
             })
     except Exception as e:
+        print(e)
         return JsonResponse({
             "type" : "ERROR",
             "message" : str(e)

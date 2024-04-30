@@ -61,15 +61,12 @@ def login(request):
                 }
             )
     # If the backend response fails return error
-    except MultiValueDictKeyError:
-        user_email = False
-        user_password = False
-        return JsonResponse(
-            {
-                "message": "Ha surgido un error. Intenta de nuevo.",
-                "type": "ERROR",
-            }
-        )
+    except Exception as e:
+        print(str(e))
+        return JsonResponse({
+                'type' : 'ERROR', 
+                'message' : 'Ha ocurrido un error, intenta nuevamente.'
+                })
 
 # Log out function
 def logout(request):
@@ -79,20 +76,24 @@ def logout(request):
 
 # Get the user data
 def create_token(request):
-    # If user does not logged in then return Error
-    if not request.user.is_authenticated:
-        return JsonResponse({'type' : 'ERROR' , 'message' : 'El usuario no ha iniciado sesión.'})
-    
-    # If user is logged in then return user's data
-    payload = {
-        'is_authenticated' : request.user.is_authenticated,
-        'username' : request.user.username,
-    }
+    try:
+        # If user does not logged in then return Error
+        if not request.user.is_authenticated:
+            return JsonResponse({'type' : 'ERROR' , 'message' : 'El usuario no ha iniciado sesión.'})
+        
+        # If user is logged in then return user's data
+        payload = {
+            'is_authenticated' : request.user.is_authenticated,
+            'username' : request.user.username,
+        }
 
-    #Encode the user's info
-    secret = config('SECRET_JWT_KEY')
-    algorithm = config('JWT_ALGORITHM')
-    token = jwt.encode(payload, secret, algorithm = algorithm)
+        #Encode the user's info
+        secret = config('SECRET_JWT_KEY')
+        algorithm = config('JWT_ALGORITHM')
+        token = jwt.encode(payload, secret, algorithm = algorithm)
 
-    #return token
-    return token
+        #return token
+        return token
+    except Exception as e:
+        print(str(e))
+        return None

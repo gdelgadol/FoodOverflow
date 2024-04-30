@@ -13,161 +13,189 @@ import json
 
 #Delete user Account
 def delete_user(request):
-    #get frontend data
-    data = json.loads(request.body)
-    jwt_token_decoded = decode_jwt(data.get('jwt'))
-    user_password = data.get('password')
+    try:
+        #get frontend data
+        data = json.loads(request.body)
+        jwt_token_decoded = decode_jwt(data.get('jwt'))
+        user_password = data.get('password')
 
-    #Check if user exists
-    if Profile.objects.filter(username = jwt_token_decoded['username']).exists():
+        #Check if user exists
+        if Profile.objects.filter(username = jwt_token_decoded['username']).exists():
 
-        #get user model field
-        user = Profile.objects.get(username = jwt_token_decoded['username'])
+            #get user model field
+            user = Profile.objects.get(username = jwt_token_decoded['username'])
 
-        #Check the ingresed password
-        if check_password(user_password, user.password):
-            #Delete the user
-            user.delete()
-            return JsonResponse({
-                'type' : 'SUCCESS', 
-                'message' : 'El usuario ha sido eliminado con éxito.'
-                })
+            #Check the ingresed password
+            if check_password(user_password, user.password):
+                #Delete the user
+                user.delete()
+                return JsonResponse({
+                    'type' : 'SUCCESS', 
+                    'message' : 'El usuario ha sido eliminado con éxito.'
+                    })
+            else:
+                # wrong password
+                return JsonResponse({
+                    'type' : 'ERROR', 
+                    'message' : 'La contraseña ingresada es incorrecta.'
+                    })
         else:
-            # wrong password
+            #Catch some error
             return JsonResponse({
                 'type' : 'ERROR', 
-                'message' : 'La contraseña ingresada es incorrecta.'
+                'message' : 'Ha ocurrido un error, intenta nuevamente.'
                 })
-    else:
-        #Catch some error
+    except Exception as e:
+        print(str(e))
         return JsonResponse({
-            'type' : 'ERROR', 
-            'message' : 'Ha ocurrido un error, intenta nuevamente.'
-            })
+                'type' : 'ERROR', 
+                'message' : 'Ha ocurrido un error, intenta nuevamente.'
+                })
 
 #Update username
 def update_username(request):
-    #get frontend data
-    data = json.loads(request.body)
-    jwt_token_decoded = decode_jwt(data.get('jwt'))
-    user_password = data.get('password')
-    user_new_username = data.get('new_username')
+    try:
+        #get frontend data
+        data = json.loads(request.body)
+        jwt_token_decoded = decode_jwt(data.get('jwt'))
+        user_password = data.get('password')
+        user_new_username = data.get('new_username')
 
-    #Check if user exists
-    if Profile.objects.filter(username = jwt_token_decoded['username']).exists():
+        #Check if user exists
+        if Profile.objects.filter(username = jwt_token_decoded['username']).exists():
 
-        #get user model field
-        user = Profile.objects.get(username = jwt_token_decoded['username'])
+            #get user model field
+            user = Profile.objects.get(username = jwt_token_decoded['username'])
 
-        #Check the ingresed password
-        if check_password(user_password, user.password):
-            
-            #Check if the neu username is available
-            if Profile.objects.filter(username = user_new_username).exists():
+            #Check the ingresed password
+            if check_password(user_password, user.password):
+                
+                #Check if the neu username is available
+                if Profile.objects.filter(username = user_new_username).exists():
+                    return JsonResponse({
+                        'type' : 'ERROR',
+                        'message' : f'El nombre de usuario {user_new_username} no está disponible.'
+                    })
+                #Update the new data
+                user.username = user_new_username
+                user.save()
                 return JsonResponse({
-                    'type' : 'ERROR',
-                    'message' : f'El nombre de usuario {user_new_username} no está disponible.'
-                })
-            #Update the new data
-            user.username = user_new_username
-            user.save()
-            return JsonResponse({
-                'type' : 'SUCCESS', 
-                'message' : 'El nombre de usuario ha sido cambiado con éxito.'
-                })
+                    'type' : 'SUCCESS', 
+                    'message' : 'El nombre de usuario ha sido cambiado con éxito.'
+                    })
+            else:
+                # wrong password
+                return JsonResponse({
+                    'type' : 'ERROR', 
+                    'message' : 'La contraseña ingresada es incorrecta.'
+                    })
         else:
-            # wrong password
+            #Catch some error
             return JsonResponse({
                 'type' : 'ERROR', 
-                'message' : 'La contraseña ingresada es incorrecta.'
+                'message' : 'Ha ocurrido un error, intenta nuevamente.'
                 })
-    else:
-        #Catch some error
+    except Exception as e:
+        print(str(e))
         return JsonResponse({
-            'type' : 'ERROR', 
-            'message' : 'Ha ocurrido un error, intenta nuevamente.'
-            })
+                'type' : 'ERROR', 
+                'message' : 'Ha ocurrido un error, intenta nuevamente.'
+                })
 
 #Update user account
 def update_password(request):
-    #get frontend data
-    data = json.loads(request.body)
-    jwt_token_decoded = decode_jwt(data.get('jwt'))
-    user_password = data.get('password')
-    user_new_password = data.get('new_password')
-    user_check_new_password = data.get('new_password_confirm')
+    try:
+        #get frontend data
+        data = json.loads(request.body)
+        jwt_token_decoded = decode_jwt(data.get('jwt'))
+        user_password = data.get('password')
+        user_new_password = data.get('new_password')
+        user_check_new_password = data.get('new_password_confirm')
 
-    # Check if the new password are the same
-    if user_new_password != user_check_new_password:
-        return JsonResponse({
-            'type' : 'ERROR', 
-            'message' : 'Las contraseñas no coinciden.'
-        })
-
-    #Check if user exists
-    if Profile.objects.filter(username = jwt_token_decoded['username']).exists():
-
-        #get user model field
-        user = Profile.objects.get(username = jwt_token_decoded['username'])
-
-        #Check the ingresed password
-        if check_password(user_password, user.password):
-            #Update the new data
-            user.set_password(user_new_password)
-            user.save()
-            return JsonResponse({
-                'type' : 'SUCCESS', 
-                'message' : 'La contraseña ha sido actualizada con éxito.'
-                })
-        else:
-            # wrong password
+        # Check if the new password are the same
+        if user_new_password != user_check_new_password:
             return JsonResponse({
                 'type' : 'ERROR', 
-                'message' : 'La contraseña ingresada es incorrecta.'
-                })
-    else:
-        #Catch some error
-        return JsonResponse({
-            'type' : 'ERROR', 
-            'message' : 'Ha ocurrido un error, intenta nuevamente.'
+                'message' : 'Las contraseñas no coinciden.'
             })
+
+        #Check if user exists
+        if Profile.objects.filter(username = jwt_token_decoded['username']).exists():
+
+            #get user model field
+            user = Profile.objects.get(username = jwt_token_decoded['username'])
+
+            #Check the ingresed password
+            if check_password(user_password, user.password):
+                #Update the new data
+                user.set_password(user_new_password)
+                user.save()
+                return JsonResponse({
+                    'type' : 'SUCCESS', 
+                    'message' : 'La contraseña ha sido actualizada con éxito.'
+                    })
+            else:
+                # wrong password
+                return JsonResponse({
+                    'type' : 'ERROR', 
+                    'message' : 'La contraseña ingresada es incorrecta.'
+                    })
+        else:
+            #Catch some error
+            return JsonResponse({
+                'type' : 'ERROR', 
+                'message' : 'Ha ocurrido un error, intenta nuevamente.'
+                })
+    except Exception as e:
+        print(str(e))
+        return JsonResponse({
+                'type' : 'ERROR', 
+                'message' : 'Ha ocurrido un error, intenta nuevamente.'
+                })
 
 #update user email
 def update_email(request):
-    #get frontend data
-    data = json.loads(request.body)
-    jwt_token_decoded = decode_jwt(data.get('jwt'))
-    user_password = data.get('password')
-    user_new_email = data.get('new_email')
+    try:
+        #get frontend data
+        data = json.loads(request.body)
+        jwt_token_decoded = decode_jwt(data.get('jwt'))
+        user_password = data.get('password')
+        user_new_email = data.get('new_email')
 
-    #Check if user exists
-    if Profile.objects.filter(username = jwt_token_decoded['username']).exists():
+        #Check if user exists
+        if Profile.objects.filter(username = jwt_token_decoded['username']).exists():
 
-        #get user model field
-        user = Profile.objects.get(username = jwt_token_decoded['username'])
+            #get user model field
+            user = Profile.objects.get(username = jwt_token_decoded['username'])
 
-        #Check the ingresed password
-        if check_password(user_password, user.password):
+            #Check the ingresed password
+            if check_password(user_password, user.password):
 
-            #Send email for confirmate email
-            confirm_email(request, user, user_new_email)
-            
-            return JsonResponse({
-                'type' : 'SUCCESS', 
-                'message' : 'Por favor, confirma tu cuenta de correo electrónico para poder realizar el cambio.'
-                })
+                #Send email for confirmate email
+                confirm_email(request, user, user_new_email)
+                
+                return JsonResponse({
+                    'type' : 'SUCCESS', 
+                    'message' : 'Por favor, confirma tu cuenta de correo electrónico para poder realizar el cambio.'
+                    })
+            else:
+                # wrong password
+                return JsonResponse({
+                    'type' : 'ERROR', 
+                    'message' : 'La contraseña ingresada es incorrecta.'
+                    })
         else:
-            # wrong password
+            #Catch some error
             return JsonResponse({
                 'type' : 'ERROR', 
-                'message' : 'La contraseña ingresada es incorrecta.'
+                'message' : 'Ha ocurrido un error, intenta nuevamente.'
                 })
-    else:
-        #Catch some error
+    except Exception as e:
+        print(str(e))
         return JsonResponse({
-            'type' : 'ERROR', 
-            'message' : 'Ha ocurrido un error, intenta nuevamente.'
-            })
+                'type' : 'ERROR', 
+                'message' : 'Ha ocurrido un error, intenta nuevamente.'
+                })
 
 #Send email function
 def confirm_email(request, user, to_email):
@@ -218,22 +246,26 @@ def email_confirmated(request, uidb64, token, email):
             'message' : 'Algo ha salido mal. Por favor intentalo de nuevo.'
         })
     
-    #Verify token
-    if user.email == email:
-        return JsonResponse({
-            'type' : 'SUCCESS',
-            'message' : 'El correo electrónico ha sido actualizado previamente.'
-        })
-    elif account_activation_token.check_token(user, token):
-        user.email = email
-        user.save()
-        # Email updated Successfully
-        return JsonResponse({
-            'type' : 'SUCCESS',
-            'message' : 'El correo electrónico ha sido actualizado con éxito.'
-        })
-    else:
-        return JsonResponse({
-            'type' : 'ERROR',
-            'message' : 'Algo ha salido mal. Por favor intentalo de nuevo.'
-        })
+    try:
+        #Verify token
+        if user.email == email:
+            return JsonResponse({
+                'type' : 'SUCCESS',
+                'message' : 'El correo electrónico ha sido actualizado previamente.'
+            })
+        elif account_activation_token.check_token(user, token):
+            user.email = email
+            user.save()
+            # Email updated Successfully
+            return JsonResponse({
+                'type' : 'SUCCESS',
+                'message' : 'El correo electrónico ha sido actualizado con éxito.'
+            })
+        else:
+            return JsonResponse({
+                'type' : 'ERROR',
+                'message' : 'Algo ha salido mal. Por favor intentalo de nuevo.'
+            })
+    except Exception as e:
+        print(str(e))
+        return JsonResponse({"message" : "Ha ocurrido un error intentalo nuevamente.", "type" : "Error"})
