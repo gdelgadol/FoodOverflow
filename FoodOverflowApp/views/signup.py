@@ -54,10 +54,10 @@ def signup(request):
                 )
         except IntegrityError:
             # If user already exists return error
-            return JsonResponse({"message": "El usuario ya existe", "type": "ERROR"})
-    except MultiValueDictKeyError:
-        user_name = False
-        user_email = False
+            return JsonResponse({"message": "El usuario que intentas registrar ya existe.", "type": "ERROR"})
+    except Exception as e:
+        print(str(e))
+        return JsonResponse({"message": "Ha ocurrido un error, intentalo de nuevo.", "type": "ERROR"})
 
 # send email function
 def activate_email(request, user, to_email):
@@ -89,6 +89,7 @@ def activate_email(request, user, to_email):
         email.attach_alternative(message, "text/html")
         email.send()
     except Exception as e:
+        print(str(e))
         return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
 
 # Activation function
@@ -101,31 +102,37 @@ def activate(request, uidb64, token):
     except (TypeError, ValueError, OverflowError, Profile.DoesNotExist):
         user = None
     # if user exists check the sended token
-    if user.active: #if user is currently activated
-        return JsonResponse(
-            {"message": "El usuario ha sido activado previamente con éxito", "type": "SUCCESS"}
-        )
-    elif user is not None and account_activation_token.check_token(user, token):
-        # Activate User account
-        user.active = True
-        user.save()
-        #return success message
-        return JsonResponse(
-            {"message": "El usuario ha sido activado con éxito", "type": "SUCCESS"}
-        )
-    else:
-        # if user does not exists or it is not activated
-        if not user.active:
-            # delete the account
-            user.delete()
+    try:
+        if user.active: #if user is currently activated
+            return JsonResponse(
+                {"message": "El usuario ha sido activado previamente con éxito", "type": "SUCCESS"}
+            )
+        elif user is not None and account_activation_token.check_token(user, token):
+            # Activate User account
+            user.active = True
+            user.save()
+            #return success message
+            return JsonResponse(
+                {"message": "El usuario ha sido activado con éxito", "type": "SUCCESS"}
+            )
+        else:
+            # if user does not exists or it is not activated
+            if not user.active:
+                # delete the account
+                user.delete()
+                # return error message
+                return JsonResponse(
+                    {
+                        "message": "El usuario no ha podido ser activado, intenta el registro nuevamente.",
+                        "type": "ERROR",
+                    }
+                )
             # return error message
             return JsonResponse(
-                {
-                    "message": "El usuario no ha podido ser activado, intente el registro nuevamente.",
-                    "type": "ERROR",
-                }
+                {"message": "El usuario no ha podido ser activado, intenta nuevamente.", "type": "ERROR"}
             )
-        # return error message
+    except Exception as e:
+        print(str(e))
         return JsonResponse(
-            {"message": "El usuario no ha podido ser activado, intente nuevamente.", "type": "ERROR"}
-        )
+                {"message": "Ha ocurrido un error, intenta nuevamente.", "type": "ERROR"}
+            )

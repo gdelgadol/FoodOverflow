@@ -22,8 +22,14 @@ def password_reset(request):
             return JsonResponse({"message": "Correo enviado", "type": "SUCCESS"})
         else:
             return JsonResponse({"message": "El usuario no existe", "type": "ERROR"})
-    except:
+    except Exception as e:
+        print(str(e))
         user_email=False
+        return JsonResponse({
+                'type' : 'ERROR', 
+                'message' : 'Ha ocurrido un error, intenta nuevamente.'
+                })
+        
 
 
 # If link is valid send reset form and check if form is valid for the user
@@ -37,12 +43,19 @@ def reset(request, uidb64, token):
     except (TypeError, ValueError, OverflowError, Profile.DoesNotExist):
         user = None
 
-    if user is not None and account_activation_token.check_token(user, token):
-        user.set_password(new_password)
-        user.save()
-        return JsonResponse({"message":"Contraseña reseteada."})
-    else:
-        return JsonResponse({"message":"Link no es válido"})
+    try:
+        if user is not None and account_activation_token.check_token(user, token):
+            user.set_password(new_password)
+            user.save()
+            return JsonResponse({"message":"Contraseña reseteada."})
+        else:
+            return JsonResponse({"message":"Link no es válido"})
+    except Exception as e:
+        print(str(e))
+        return JsonResponse({
+                'type' : 'ERROR', 
+                'message' : 'Ha ocurrido un error, intenta nuevamente.'
+                })
 
 
 def send_email(request, user, to_email):
@@ -74,4 +87,5 @@ def send_email(request, user, to_email):
         email.attach_alternative(message, "text/html")
         email.send()
     except Exception as e:
+        print(e)
         return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)

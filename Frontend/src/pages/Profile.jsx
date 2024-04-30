@@ -22,7 +22,7 @@ function AccountDetails() {
       const jwt = cookies.get("auth_token");
 
       axios
-        .post(`${url}/get_user/`, {
+        .post(`${url}/get_user/profile`, {
           jwt: jwt, 
         })
         .then((res) => {
