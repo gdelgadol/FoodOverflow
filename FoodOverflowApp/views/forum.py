@@ -117,8 +117,6 @@ def get_publications(request):
             posts.append(post_data)
 
         return JsonResponse({"type": "SUCCESS", "posts": posts})
-    except Publication.DoesNotExist:
-        return JsonResponse({"type": "ERROR", "message": "No se encontraron publicaciones"}, status=404)
     except Exception as e:
         print(e)
         return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
