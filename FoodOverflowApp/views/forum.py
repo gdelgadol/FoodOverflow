@@ -1,6 +1,6 @@
 from ..models import Publication, PublicationComment, PublicationVote
 from ..models import Recipe, RecipeComment, RecipeVote
-from ..models import Profile
+from ..models import Profile, Avatar
 from django.http import JsonResponse
 from ..views.token import decode_jwt
 from django.db.models import Sum
@@ -68,16 +68,20 @@ def get_publication(request):
 
             comments_list.append(comment_data)
 
-        
-
         publication_score = PublicationVote.objects.filter(publication = publication.publication_id).aggregate(Sum('vote_type'))['vote_type__sum']
 
         if not publication_score:
             publication_score = 0
 
+        if publication.profile.avatar_id:
+            profile_avatar = Avatar.objects.get(avatar_id = publication.profile.avatar_id.avatar_id).avatar_url
+        else:
+            profile_avatar = ""
+            
         publication_json = {
             "type": "SUCCESS",
             'username' : publication.profile.username,
+            'profile_avatar' : profile_avatar,
             'title' : publication.publication_title,
             'description' : publication.publication_description,
             "numComments": num_comments,
@@ -105,9 +109,16 @@ def get_publications(request):
             score = PublicationVote.objects.filter(publication = publication.publication_id).aggregate(Sum('vote_type'))['vote_type__sum']
             if not score:
                 score = 0
+
+            if publication.profile.avatar_id:
+                profile_avatar = Avatar.objects.get(avatar_id = publication.profile.avatar_id.avatar_id).avatar_url
+            else:
+                profile_avatar = ""
+
             post_data = {
                 "id": publication.publication_id,
                 "userName": username,
+                "profile_avatar" : profile_avatar,
                 "title": publication.publication_title,
                 "description": publication.publication_description,
                 "numComments": num_comments,
@@ -195,9 +206,16 @@ def get_recipes(request):
             score = RecipeVote.objects.filter(recipe = recipe.recipe_id).aggregate(Sum('vote_type'))['vote_type__sum']
             if not score:
                 score = 0
+
+            if recipe.profile.avatar_id:
+                profile_avatar = Avatar.objects.get(avatar_id = recipe.profile.avatar_id.avatar_id).avatar_url
+            else:
+                profile_avatar = ""
+
             post_data = {
                 "id": recipe.recipe_id,
                 "userName": username,
+                "profile_avatar" : profile_avatar,
                 "title": recipe.recipe_title,
                 "ingredients" : recipe.recipe_ingredients,
                 "description": recipe.recipe_description,
@@ -242,6 +260,7 @@ def get_recipe(request):
         # Extracting relevant data from the comments
         num_comments = recipe_comments.count()
         comments_list = []
+
         for comment in recipe_comments:
             
             comment_data = {
@@ -266,16 +285,20 @@ def get_recipe(request):
 
             comments_list.append(comment_data)
 
-        
-
         recipe_score = RecipeVote.objects.filter(recipe = recipe.recipe_id).aggregate(Sum('vote_type'))['vote_type__sum']
 
         if not recipe_score:
             recipe_score = 0
 
+        if recipe.profile.avatar_id:
+            profile_avatar = Avatar.objects.get(avatar_id = recipe.profile.avatar_id.avatar_id).avatar_url
+        else:
+            profile_avatar = ""
+
         recipe_json = {
             "type": "SUCCESS",
             'username' : recipe.profile.username,
+            'profile_avatar' : profile_avatar,
             'title' : recipe.recipe_title,
             'ingredients' : recipe.recipe_ingredients,
             'description' : recipe.recipe_description,
@@ -497,33 +520,47 @@ def create_comment_response(request, id_comment):
         return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
 
 #get user's publication
-def get_user_posts(request, identifier):
+def get_user_posts(request, user_identifier, identifier):
     try:
         data = json.loads(request.body)
         
-        if data.get("jwt"):
-            jwt_decoded = decode_jwt(data.get("jwt"))
+        if user_identifier == "Profile":
+            if data.get("jwt"):
+                jwt_decoded = decode_jwt(data.get("jwt"))
+            else:
+                return JsonResponse({
+                    "type" : "ERROR",
+                    "message" : "El usuario no ha iniciado sesión."
+                })
+            
+            if Profile.objects.filter(id = jwt_decoded["id"]).exists():
+                profile = Profile.objects.get(id = jwt_decoded["id"])
+            else:
+                return JsonResponse({
+                    "type" : "ERROR",
+                    "message" : "El usuario no se encuentra registrado."
+                })
         else:
-            return JsonResponse({
-                "type" : "ERROR",
-                "message" : "El usuario no ha iniciado sesión."
-            })
-        
-        if Profile.objects.filter(id = jwt_decoded["id"]).exists():
-            profile = Profile.objects.get(id = jwt_decoded["id"])
-        else:
-            return JsonResponse({
-                "type" : "ERROR",
-                "message" : "El usuario no se encuentra registrado."
-            })
+            if Profile.objects.filter(username = user_identifier).exists():
+                profile = Profile.objects.get(username = user_identifier)
+            else:
+                return JsonResponse({
+                    "type" : "ERROR",
+                    "message" : "El usuario no se encuentra registrado."
+                })
         
         if identifier == "recipes":
             recipes_query = Recipe.objects.filter(profile = profile).order_by("recipe_creation_date")
-            
             posts = []
+
+            username = profile.username
+
+            if profile.avatar_id:
+                profile_avatar = Avatar.objects.get(avatar_id = profile.avatar_id.avatar_id).avatar_url
+            else:
+                profile_avatar = ""
             
             for recipe in recipes_query:
-                username = recipe.profile.username
                 num_comments = RecipeComment.objects.filter(recipe = recipe.recipe_id).count()
                 score = RecipeVote.objects.filter(recipe = recipe.recipe_id).aggregate(Sum('vote_type'))['vote_type__sum']
                 if not score:
@@ -531,6 +568,7 @@ def get_user_posts(request, identifier):
                 post_data = {
                     "id": recipe.recipe_id,
                     "userName": username,
+                    "profile_avatar" : profile_avatar,
                     "title": recipe.recipe_title,
                     "ingredients" : recipe.recipe_ingredients,
                     "description": recipe.recipe_description,
@@ -541,11 +579,16 @@ def get_user_posts(request, identifier):
                 posts.append(post_data)
         elif identifier == "publications":
             publications_query = Publication.objects.filter(profile = profile).order_by("publication_creation_date")
-            
             posts = []
+
+            username = profile.username
+
+            if profile.avatar_id:
+                profile_avatar = Avatar.objects.get(avatar_id = profile.avatar_id.avatar_id).avatar_url
+            else:
+                profile_avatar = ""
             
             for publication in publications_query:
-                username = publication.profile.username
                 num_comments = PublicationComment.objects.filter(publication = publication.publication_id).count()
                 score = PublicationVote.objects.filter(publication = publication.publication_id).aggregate(Sum('vote_type'))['vote_type__sum']
                 if not score:
@@ -553,6 +596,7 @@ def get_user_posts(request, identifier):
                 post_data = {
                     "id": publication.publication_id,
                     "userName": username,
+                    "profile_avatar" : profile_avatar,
                     "title": publication.publication_title,
                     "description": publication.publication_description,
                     "numComments": num_comments,

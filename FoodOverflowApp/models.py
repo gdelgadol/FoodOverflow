@@ -14,7 +14,7 @@ class AvatarManager(models.Manager):
 
 class Avatar(models.Model):
     avatar_id = models.BigAutoField(primary_key=True)
-    avatar_url = models.TextField(default = "")
+    avatar_url = models.TextField(default = "", unique = True)
 
     on_delete = models.CASCADE
     objects = AvatarManager()
