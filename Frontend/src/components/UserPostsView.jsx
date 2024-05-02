@@ -28,8 +28,8 @@ const UserPostsView = () => {
       try {
         //setIsLoading(true)
         const response = await axios.post(`${url}/user/${username}/${filtro_2}/`, {
-		jwt : jwt
-	});
+          jwt : jwt
+        });
         if (response.data.type === "SUCCESS") {
           const sortedPosts = response.data.posts.sort((a, b) => a.id - b.id);
           setPosts(sortedPosts);

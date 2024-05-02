@@ -4,6 +4,9 @@ from ..models import Profile, Avatar
 from django.http import JsonResponse
 from ..views.token import decode_jwt
 from django.db.models import Sum
+from django.db.models import Q
+from functools import reduce
+
 import json
 
 #------------------Publication controllers--------------------------#
@@ -132,6 +135,53 @@ def get_publications(request):
         print(e)
         return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
 
+#Get publications by tags  
+def get_publications_tags(request):
+    try:
+        # Extract tags list from the request body
+        request_data = json.loads(request.body)
+        tags_list = request_data.get('tagsList', [])
+        # Build a query to filter publications based on tags_list
+        publications_query = Publication.objects.filter(
+            reduce(lambda x, y: x | y, [Q(publication_tags__contains=[tag]) for tag in tags_list])
+        ).order_by('publication_creation_date').select_related('profile').all()
+
+        posts = []
+
+        for publication in publications_query:
+            username = publication.profile.username
+            num_comments = PublicationComment.objects.filter(publication=publication.publication_id).count()
+            score = PublicationVote.objects.filter(publication=publication.publication_id).aggregate(
+                Sum('vote_type'))['vote_type__sum']
+            if not score:
+                score = 0
+                
+            if publication.profile.avatar_id:
+                profile_avatar = Avatar.objects.get(avatar_id = publication.profile.avatar_id.avatar_id).avatar_url
+            else:
+                profile_avatar = ""
+
+            post_data = {
+                "id": publication.publication_id,
+                "userName": username,
+                "profile_avatar" : profile_avatar,
+                "title": publication.publication_title,
+                "description": publication.publication_description,
+                "numComments": num_comments,
+                "score": score,
+                "tagsList": publication.publication_tags
+            }
+            posts.append(post_data)
+
+        if(len(posts) == 0):
+            return JsonResponse({"type": "ERROR", "message":"No se encontraron publicaciones con esas etiquetas"})
+        
+        return JsonResponse({"type": "SUCCESS", "posts": posts})
+    except Publication.DoesNotExist:
+        return JsonResponse({"type": "ERROR", "message": "No se encontraron publicaciones"}, status=404)
+    except Exception as e:
+        return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
+
 #Create a publication
 def create_forum_publication(request):
     try:
@@ -231,6 +281,52 @@ def get_recipes(request):
     except Exception as e:
         return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
 
+def get_recipe_tags(request):
+    try:
+        request_data = json.loads(request.body)
+        tags_list = request_data.get('tagsList', [])
+
+        recipe_query = Recipe.objects.filter(
+            reduce(lambda x, y: x | y, [Q(recipe_tags__contains=[tag]) for tag in tags_list])
+        ).order_by('recipe_creation_date').select_related('profile').all()
+
+        posts = []
+
+        for recipe in recipe_query:
+            username = recipe.profile.username
+            num_comments = RecipeComment.objects.filter(recipe=recipe.recipe_id).count()
+            score = RecipeVote.objects.filter(recipe=recipe.recipe_id).aggregate(
+                Sum('vote_type'))['vote_type__sum']
+            if not score:
+                score = 0
+
+            if recipe.profile.avatar_id:
+                profile_avatar = Avatar.objects.get(avatar_id = recipe.profile.avatar_id.avatar_id).avatar_url
+            else:
+                profile_avatar = ""
+
+            post_data = {
+                "id": recipe.recipe_id,
+                "userName": username,
+                "profile_avatar" : profile_avatar,
+                "title": recipe.recipe_title,
+                "ingredients" : recipe.recipe_ingredients,
+                "description": recipe.recipe_description,
+                "numComments": num_comments,
+                "score": score,
+                "tagsList": recipe.recipe_tags
+            }
+            posts.append(post_data)
+
+        if(len(posts) == 0):
+            return JsonResponse({"type": "ERROR", "message":"No se encontraron recetas con esas etiquetas"})
+        
+        return JsonResponse({"type": "SUCCESS", "posts": posts})
+    except Recipe.DoesNotExist:
+        return JsonResponse({"type": "ERROR", "message": "No se encontraron recetas"}, status=404)
+    except Exception as e:
+        return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
+
 #View details of a specific recipe
 def get_recipe(request):
     try:
@@ -315,6 +411,62 @@ def get_recipe(request):
         # Catch all other exceptions
         return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
 
+#Delete posts    
+def delete_post(request, identifier):
+    try:
+        data = json.loads(request.body)
+
+        if data.get("jwt"):
+            jwt_decoded = decode_jwt(data.get("jwt"))
+        else:
+            return JsonResponse({
+                "type" : "ERROR",
+                "message" : "Ha ocurrido un error, inténtalo de nuevo."
+                })
+        
+        post_id = data.get("post_id")
+
+        if identifier == 'publication':
+            if Publication.objects.filter(publication_id = post_id).exists():
+                publication = Publication.objects.get(publication_id = post_id)
+            else:
+                return JsonResponse({
+                    "type" : "ERROR",
+                    "message" : "La publicación que estás intentando eliminar no existe."
+                    })
+
+            if jwt_decoded["username"] == publication.profile.username:
+                publication.delete()
+                return JsonResponse({
+                    "type" : "SUCCESS",
+                    "message" : "La publicación ha sido eliminada con éxito."
+                    })
+        elif identifier == 'recipe':
+            if Recipe.objects.filter(recipe_id = post_id).exists():
+                recipe = Recipe.objects.get(recipe_id = post_id)
+            else:
+                return JsonResponse({
+                    "type" : "ERROR",
+                    "message" : "La receta que estás intentando eliminar no existe."
+                    })
+
+            if jwt_decoded["username"] == recipe.profile.username:
+                recipe.delete()
+                return JsonResponse({
+                    "type" : "SUCCESS",
+                    "message" : "La receta ha sido eliminada con éxito."
+                    })
+        return JsonResponse({
+            "type" : "ERROR",
+            "message" : "Ha ocurrido un error, inténtalo de nuevo."
+            })
+    except Exception as e:
+        print(str(e))
+        return JsonResponse({
+            "type" : "ERROR",
+            "message" : "Ha ocurrido un error, inténtalo de nuevo."
+            })
+    
 #------------------Vote and comment controllers--------------------------#
 #Cast a vote
 def make_vote(request, id_vote):
@@ -415,7 +567,7 @@ def make_vote(request, id_vote):
             })
 
 #Create a comment   
-def create_comment(request, id_comment):
+def create_comment(rpequest, id_comment):
     try:
         data = json.loads(request.body)
         post_id = int(data.get("post_id"))
@@ -607,7 +759,7 @@ def get_user_posts(request, user_identifier, identifier):
         else:
             return JsonResponse({
                 "type" : "ERROR",
-                "message" : "Ha ocurrido un error, intentalo de nuveo."
+                "message" : "Ha ocurrido un error, inténtalo de nuveo."
             })
             
         return JsonResponse({
@@ -620,3 +772,59 @@ def get_user_posts(request, user_identifier, identifier):
             "type" : "ERROR",
             "message" : str(e)
         })
+
+#Delete comments   
+def delete_comment(request, identifier):
+    try:
+        data = json.loads(request.body)
+
+        if data.get("jwt"):
+            jwt_decoded = decode_jwt(data.get("jwt"))
+        else:
+            return JsonResponse({
+                "type" : "ERROR",
+                "message" : "Ha ocurrido un error, inténtalo de nuevo."
+                })
+        
+        comment_id = data.get("comment_id")
+
+        if identifier == 'publication':
+            if PublicationComment.objects.filter(publication_comment_id = comment_id).exists():
+                comment = PublicationComment.objects.get(publication_comment_id = comment_id)
+            else:
+                return JsonResponse({
+                    "type" : "ERROR",
+                    "message" : "El comentario que estás intentando eliminar no existe."
+                    })
+
+            if jwt_decoded["username"] == comment.profile.username:
+                comment.delete()
+                return JsonResponse({
+                    "type" : "SUCCESS",
+                    "message" : "El comentario ha sido eliminada con éxito."
+                    })
+        elif identifier == 'recipe':
+            if RecipeComment.objects.filter(recipe_comment_id = comment_id).exists():
+                comment = RecipeComment.objects.get(recipe_comment_id = comment_id)
+            else:
+                return JsonResponse({
+                    "type" : "ERROR",
+                    "message" : "El comentario que estás intentando eliminar no existe."
+                    })
+
+            if jwt_decoded["username"] == comment.profile.username:
+                comment.delete()
+                return JsonResponse({
+                    "type" : "SUCCESS",
+                    "message" : "El comentario ha sido eliminado con éxito."
+                    })
+        return JsonResponse({
+            "type" : "ERROR",
+            "message" : "Ha ocurrido un error, inténtalo de nuevo."
+            })
+    except Exception as e:
+        print(str(e))
+        return JsonResponse({
+            "type" : "ERROR",
+            "message" : "Ha ocurrido un error, inténtalo de nuevo."
+            })
