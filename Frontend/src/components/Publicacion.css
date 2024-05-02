@@ -35,7 +35,7 @@
 .userName{
     font-size: 12px;
     font-weight: 400;
-    color: #000000;
+    cursor: pointer;
 }
 
 .title{
@@ -74,3 +74,23 @@
     height: 1px;
     background-color: #c3c3c3;
   }
+
+.publicaion-profileAvatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.publication-username{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: #000000;
+    text-decoration: none;
+    gap: 4px;
+}
+
+.publication-username:hover {
+    color: #0032B4;
+}

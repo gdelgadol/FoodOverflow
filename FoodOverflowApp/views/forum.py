@@ -524,7 +524,7 @@ def get_user_posts(request, user_identifier, identifier):
     try:
         data = json.loads(request.body)
         
-        if user_identifier == "Profile":
+        if user_identifier == "profile":
             if data.get("jwt"):
                 jwt_decoded = decode_jwt(data.get("jwt"))
             else:
