@@ -102,9 +102,9 @@ function Encabezado() {
             <span className="spanHeader">Configuración de la cuenta</span>
           </button>
           </Link>
-          <Link to={"/mis-publicaciones"}>
+          <Link to={"/user/profile"}>
           <button className="menu-button-user" onClick={toggleMenuUsuario}>
-            <span className="spanHeader">Mis publicaciones</span>
+            <span className="spanHeader">Mi perfil</span>
           </button>
           </Link>
           <div className="separator-user-menu"></div>

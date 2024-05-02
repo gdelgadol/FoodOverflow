@@ -6,7 +6,7 @@ import { BiComment } from "react-icons/bi";
 import { Link } from 'react-router-dom';
 import { GiShrug } from "react-icons/gi";
 
-export default function Publicacion ({id_post, userName, title, description, numComments, score, type}) {
+export default function Publicacion ({id_post, userName, profile_avatar, title, description, numComments, score, type}) {
     if (type === 'publications'){
         type = "publication"
     } else {
@@ -29,7 +29,12 @@ export default function Publicacion ({id_post, userName, title, description, num
                     
                 </div>
                 <div className='contenido'>
-                    <span className='userName'>{userName}</span>
+                    <Link to={`/user/${userName}`}>
+                        <div className='publication-username'>
+                            <img src={profile_avatar} className='publicaion-profileAvatar' alt='profile_avatar' />
+                            <span className='userName'>{userName}</span>
+                        </div>
+                    </Link>
                     <span className='title'>{title}</span>
                     <div className="description" dangerouslySetInnerHTML={{ __html: description }}></div>
                     <div className='comments'>
