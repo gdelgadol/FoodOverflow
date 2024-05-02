@@ -4,6 +4,9 @@ from ..models import Profile, Avatar
 from django.http import JsonResponse
 from ..views.token import decode_jwt
 from django.db.models import Sum
+from django.db.models import Q
+from functools import reduce
+
 import json
 
 #------------------Publication controllers--------------------------#
@@ -132,6 +135,53 @@ def get_publications(request):
         print(e)
         return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
 
+#Get publications by tags  
+def get_publications_tags(request):
+    try:
+        # Extract tags list from the request body
+        request_data = json.loads(request.body)
+        tags_list = request_data.get('tagsList', [])
+        # Build a query to filter publications based on tags_list
+        publications_query = Publication.objects.filter(
+            reduce(lambda x, y: x | y, [Q(publication_tags__contains=[tag]) for tag in tags_list])
+        ).order_by('publication_creation_date').select_related('profile').all()
+
+        posts = []
+
+        for publication in publications_query:
+            username = publication.profile.username
+            num_comments = PublicationComment.objects.filter(publication=publication.publication_id).count()
+            score = PublicationVote.objects.filter(publication=publication.publication_id).aggregate(
+                Sum('vote_type'))['vote_type__sum']
+            if not score:
+                score = 0
+                
+            if publication.profile.avatar_id:
+                profile_avatar = Avatar.objects.get(avatar_id = publication.profile.avatar_id.avatar_id).avatar_url
+            else:
+                profile_avatar = ""
+
+            post_data = {
+                "id": publication.publication_id,
+                "userName": username,
+                "profile_avatar" : profile_avatar,
+                "title": publication.publication_title,
+                "description": publication.publication_description,
+                "numComments": num_comments,
+                "score": score,
+                "tagsList": publication.publication_tags
+            }
+            posts.append(post_data)
+
+        if(len(posts) == 0):
+            return JsonResponse({"type": "ERROR", "message":"No se encontraron publicaciones con esas etiquetas"})
+        
+        return JsonResponse({"type": "SUCCESS", "posts": posts})
+    except Publication.DoesNotExist:
+        return JsonResponse({"type": "ERROR", "message": "No se encontraron publicaciones"}, status=404)
+    except Exception as e:
+        return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
+
 #Create a publication
 def create_forum_publication(request):
     try:
@@ -225,6 +275,52 @@ def get_recipes(request):
             }
             posts.append(post_data)
 
+        return JsonResponse({"type": "SUCCESS", "posts": posts})
+    except Recipe.DoesNotExist:
+        return JsonResponse({"type": "ERROR", "message": "No se encontraron recetas"}, status=404)
+    except Exception as e:
+        return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
+
+def get_recipe_tags(request):
+    try:
+        request_data = json.loads(request.body)
+        tags_list = request_data.get('tagsList', [])
+
+        recipe_query = Recipe.objects.filter(
+            reduce(lambda x, y: x | y, [Q(recipe_tags__contains=[tag]) for tag in tags_list])
+        ).order_by('recipe_creation_date').select_related('profile').all()
+
+        posts = []
+
+        for recipe in recipe_query:
+            username = recipe.profile.username
+            num_comments = RecipeComment.objects.filter(recipe=recipe.recipe_id).count()
+            score = RecipeVote.objects.filter(recipe=recipe.recipe_id).aggregate(
+                Sum('vote_type'))['vote_type__sum']
+            if not score:
+                score = 0
+
+            if recipe.profile.avatar_id:
+                profile_avatar = Avatar.objects.get(avatar_id = recipe.profile.avatar_id.avatar_id).avatar_url
+            else:
+                profile_avatar = ""
+
+            post_data = {
+                "id": recipe.recipe_id,
+                "userName": username,
+                "profile_avatar" : profile_avatar,
+                "title": recipe.recipe_title,
+                "ingredients" : recipe.recipe_ingredients,
+                "description": recipe.recipe_description,
+                "numComments": num_comments,
+                "score": score,
+                "tagsList": recipe.recipe_tags
+            }
+            posts.append(post_data)
+
+        if(len(posts) == 0):
+            return JsonResponse({"type": "ERROR", "message":"No se encontraron recetas con esas etiquetas"})
+        
         return JsonResponse({"type": "SUCCESS", "posts": posts})
     except Recipe.DoesNotExist:
         return JsonResponse({"type": "ERROR", "message": "No se encontraron recetas"}, status=404)
