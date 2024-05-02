@@ -174,7 +174,7 @@ function DetallesReceta() {
         try {
             setSubmittingReport(true);
             const response = await axios.post(``, { // Aquí va la URL para reportar receta, entre las comillas
-                recipe_id: id,
+                id_recipe: id,
                 reason: reportReason,
                 jwt: jwt
             });
@@ -232,14 +232,15 @@ function DetallesReceta() {
                         <BiComment />
                         {numComments}
                     </div>
-
-                    </div>
                     <div className="dp-report-button">
                             <button className="dp-bt1" onClick={toggleReportMenu} disabled={submittingReport}>
                                 <IoMdAlert size={18} className="alerta"/>
                                 {submittingReport ? 'Enviando...' : 'Reportar receta'}
                             </button>
-                                {reportMenuVisible && (
+                        </div>
+                    </div>
+                    {reportMenuVisible && (
+                        <div className='dp-aclaracion'>
                                 <div className="dp-report-menu">
                                     <select value={reportReason} onChange={selectReportReason}>
                                         <option value="">Selecciona una razón</option>
@@ -265,8 +266,11 @@ function DetallesReceta() {
                                         </button>
                                     </div>
                                 </div>
-                                )}
-                        </div>
+                                <div className="dp-mensaje">
+                                    <h3>Selecciona el motivo por el cual deseas reportar este post. El administrador revisará el reporte y tomará medidas frente al mismo.</h3>
+                                    </div>
+                            </div>
+                            )}
                 </div>
             </div>
             <div className='dp-makeComment'>

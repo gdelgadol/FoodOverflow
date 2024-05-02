@@ -168,7 +168,7 @@ const submitReport = async () => {
     try {
         setSubmittingReport(true);
         const response = await axios.post(``, { // Aquí va la URL para reportar publicacion, entre las comillas
-            recipe_id: id,
+            id_recipe: id,
             reason: reportReason,
             jwt: jwt
         });
@@ -221,7 +221,10 @@ const submitReport = async () => {
                                 <IoMdAlert size={18} className="alerta"/>
                                 {submittingReport ? 'Enviando...' : 'Reportar publicación'}
                             </button>
-                                {reportMenuVisible && (
+                        </div>
+                    </div>
+                    {reportMenuVisible && (
+                        <div className='dp-aclaracion'>
                                 <div className="dp-report-menu">
                                     <select value={reportReason} onChange={selectReportReason}>
                                         <option value="">Selecciona una razón</option>
@@ -247,10 +250,12 @@ const submitReport = async () => {
                                         </button>
                                     </div>
                                 </div>
-                                )}
-                        </div>
-                    </div>
-            </div>
+                                <div className="dp-mensaje">
+                                    <h3>Selecciona el motivo por el cual deseas reportar este post. El administrador revisará el reporte y tomará medidas frente al mismo.</h3>
+                                    </div>
+                            </div>
+                            )}
+              </div>
       </div>
       <div className="dp-makeComment">
         <input
