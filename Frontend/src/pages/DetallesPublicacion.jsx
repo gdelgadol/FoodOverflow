@@ -7,6 +7,7 @@ import "./DetallesPublicacion.css";
 import Cookies from "universal-cookie";
 import Comentario from "../components/Comentario";
 import { IoMdAlert } from "react-icons/io";
+import { FaBookmark } from "react-icons/fa"
 
 function DetallesPublicacion() {
   const { id } = useParams();
@@ -196,7 +197,7 @@ const submitReport = async () => {
             onClick={() => handleVote(1)}
             title="Estás de acuerdo en que es información útil, relevante o correcta"
           >
-            <HiArrowCircleUp size={30} />
+            <HiArrowCircleUp size={30} className={`xd ${voted && lastVote === 1 ? 'voted' : ''} ${voteStatus === 1 ? 'user-voted2' : ''}`} />
           </button>
           {score}
           <button
@@ -204,7 +205,13 @@ const submitReport = async () => {
             onClick={() => handleVote(-1)}
             title="Consideras que la información no es útil, relevante o correcta"
           >
-            <HiArrowCircleDown size={30} />
+            <HiArrowCircleDown size={30} className={`xd ${voted && lastVote === -1 ? 'voted' : ''} ${voteStatus === -1 ? 'user-voted2' : ''}`}/>
+          </button>
+          <button 
+              className="save-button"
+              title="Guardar publicación"
+          >
+          <FaBookmark size={25} className="dp-guardar" />
           </button>
         </div>
         <div className="dp-contenido">

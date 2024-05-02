@@ -9,6 +9,7 @@ import Cookies from 'universal-cookie';
 import Comentario from "../components/Comentario";
 import { CiCircleAlert } from "react-icons/ci";
 import { IoMdAlert } from "react-icons/io";
+import { FaBookmark } from "react-icons/fa";
 
 function DetallesReceta() {
     const { id } = useParams();
@@ -202,7 +203,7 @@ function DetallesReceta() {
                         onClick={() => handleVote(1)}
                         title="Estás de acuerdo en que es información útil, relevante o correcta"
                     >
-                        <TbChefHat size={30} />
+                        <TbChefHat size={30} className={`xd ${voted && lastVote === 1 ? 'voted' : ''} ${voteStatus === 1 ? 'user-voted2' : ''}`} />
                     </button>
                     {score}
                     <button
@@ -210,7 +211,13 @@ function DetallesReceta() {
                         onClick={() => handleVote(-1)}
                         title="Consideras que la información no es útil, relevante o correcta"
                     >
-                        <TbChefHatOff size={30} />
+                        <TbChefHatOff size={30} className={`xd ${voted && lastVote === -1 ? 'voted' : ''} ${voteStatus === -1 ? 'user-voted2' : ''}`} />
+                    </button>
+                    <button 
+                    className="save-button"
+                    title="Guardar publicación"
+                    >
+                    <FaBookmark size={25} className="dp-guardar" />
                     </button>
                 </div>
                 <div className='dp-contenido'>
