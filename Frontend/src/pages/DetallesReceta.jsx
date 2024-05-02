@@ -193,7 +193,6 @@ function DetallesReceta() {
     };
 
 
-
     return (
         <div className='dp-container'>
             <div className='dp-post'>
@@ -233,6 +232,8 @@ function DetallesReceta() {
                         <BiComment />
                         {numComments}
                     </div>
+
+                    </div>
                     <div className="dp-report-button">
                             <button className="dp-bt1" onClick={toggleReportMenu} disabled={submittingReport}>
                                 <IoMdAlert size={18} className="alerta"/>
@@ -266,7 +267,6 @@ function DetallesReceta() {
                                 </div>
                                 )}
                         </div>
-                    </div>
                 </div>
             </div>
             <div className='dp-makeComment'>
