@@ -143,7 +143,7 @@ def get_publications_tags(request):
         tags_list = request_data.get('tagsList', [])
         # Build a query to filter publications based on tags_list
         publications_query = Publication.objects.filter(
-            reduce(lambda x, y: x & y, [Q(publication_tags__contains=[tag]) for tag in tags_list])
+            reduce(lambda x, y: x | y, [Q(publication_tags__contains=[tag]) for tag in tags_list])
         ).order_by('publication_creation_date').select_related('profile').all()
 
         posts = []
@@ -287,7 +287,7 @@ def get_recipe_tags(request):
         tags_list = request_data.get('tagsList', [])
 
         recipe_query = Recipe.objects.filter(
-            reduce(lambda x, y: x & y, [Q(recipe_tags__contains=[tag]) for tag in tags_list])
+            reduce(lambda x, y: x | y, [Q(recipe_tags__contains=[tag]) for tag in tags_list])
         ).order_by('recipe_creation_date').select_related('profile').all()
 
         posts = []
