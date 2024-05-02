@@ -46,7 +46,7 @@ const UserPostsView = () => {
     };
   
     fetchData();
-  }, [filtro_2]);
+  }, [filtro_2,username]);
   
   useEffect(() => {
     // Ordenar las publicaciones según el filtro seleccionado por el usuario

@@ -43,7 +43,7 @@ export default function UserProfile () {
         .catch((error) => {
             console.error("Error al obtener datos del usuario:", error);
         })
-    }, [])
+    }, [username])
 
     return (
         <div className='up-container'>
