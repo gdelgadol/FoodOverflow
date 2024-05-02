@@ -13,11 +13,13 @@ urlpatterns = [
     ## Publication
     path('publications/', views.get_publications, name = "get_publications"), # get publications
     path('crear_publicacion/', views.create_forum_publication, name= "crear_publicaion"), # create publication path
-    path('publication/', views.get_publication, name= "get_publication"), # get the publication 
+    path('publication/', views.get_publication, name= "get_publication"), # get the publication
+    path('publication/filter/', views.get_publications_tags, name="get_publications_tags"), #Get publications by tags
     ## Recipes
     path('recipes/', views.get_recipes, name = "get_publications"), # get only recipes
     path('crear_recipe/', views.create_recipe, name= "crear_recipe"), # create recipe path
-    path('recipe/', views.get_recipe, name= "get_publication"), # get the recipe 
+    path('recipe/', views.get_recipe, name= "get_publication"), # get the recipe
+    path('recipe/filter/', views.get_recipe_tags, name="get_recipe_tags"), #Get recipe by tags
     ## votes
     path('vote/<str:id_vote>/', views.make_vote, name = "vote"), # Make a vote
     ## comment
