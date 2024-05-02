@@ -6,10 +6,11 @@ from ..tokens import account_activation_token
 from django.core.mail import EmailMultiAlternatives
 from django.utils.html import strip_tags
 from django.db import IntegrityError
-from ..models import Profile
+from ..models import Profile, Avatar
 import json
 from django.http import JsonResponse
 from decouple import config
+import random
 
 #Sign Up function
 def signup(request):
@@ -37,6 +38,11 @@ def signup(request):
                     password = data.get("password"),
                     email = user_email.lower(),
                 )
+
+                avatares = Avatar.objects.all()
+                user.avatar_id = avatares[random.randint(0, len(avatares)-1)]
+                user.save()
+
                 # send the activation Email
                 activate_email(request, user, user.email)
               
