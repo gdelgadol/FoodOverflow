@@ -24,7 +24,7 @@ const UserPostsView = () => {
     const fetchData = async () => {
       try {
         //setIsLoading(true)
-        const response = await axios.post(`${url}/user/Profile/${filtro_2}/`, {
+        const response = await axios.post(`${url}/user/profile/${filtro_2}/`, {
 		jwt : jwt
 	});
         if (response.data.type === "SUCCESS") {

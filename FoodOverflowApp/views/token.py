@@ -23,6 +23,32 @@ def decode_jwt(token):
         print(str(e))
         return None
 
+def get_jwt(request):
+    try:
+        data = json.loads(request.body)
+        if not data.get("jwt"):
+            return JsonResponse({"type" : "ERROR", "message" : "Ha ocurrido un error, intentalo de nuevo."})
+        token = data.get("jwt")
+
+        #Decode the jwt
+        decoded = decode_jwt(token)
+
+        #get profile
+        if Profile.objects.filter(username = decoded["username"]).exists():
+            profile = Profile.objects.get(username = decoded["username"])
+        else: 
+            return JsonResponse({"type" : "ERROR", "message" : "El usuario que estás intentando buscar no existe."})
+    
+        return JsonResponse({
+            "type" : "SUCCESS",
+            "username" : profile.username,
+            "email" : profile.email,
+            "is_admin" : profile.is_admin
+        })
+    
+    except Exception as e:
+        print(str(e))
+        return JsonResponse({"type" : "ERROR", "message" : "Ha ocurrido un error, intentalo de nuevo."})
 
 # return the information encoded in the front token
 def get_user_data(request, identifier):
@@ -44,6 +70,7 @@ def get_user_data(request, identifier):
                 profile = Profile.objects.get(username = decoded["username"])
                 profile_info['email'] = profile.email 
                 profile_info['id'] = profile.id
+                profile_info["saved_posts"] = SavedPost.objects.filter(profile = profile).count()
             else: 
                 return JsonResponse({"type" : "ERROR", "message" : "El usuario que estás intentando buscar no existe."})
 
@@ -66,7 +93,6 @@ def get_user_data(request, identifier):
         profile_info["profile_recipes"] = Recipe.objects.filter(profile = profile).count()
         profile_info["commented_recipes"] = RecipeComment.objects.filter(profile = profile).count()
         profile_info["voted_recipes"] = RecipeVote.objects.filter(profile = profile).count()
-        profile_info["saved_posts"] = SavedPost.objects.filter(profile = profile).count()
 
         #return desired data
         return JsonResponse(profile_info)
