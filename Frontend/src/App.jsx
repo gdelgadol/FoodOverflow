@@ -20,6 +20,8 @@ import DetallesReceta from "./pages/DetallesReceta"
 import AboutUs from "./pages/AboutUs.jsx"
 import SupportUs from "./pages/SupportUs.jsx"
 import UserProfile from "./pages/UserProfile.jsx"
+import Terms from "./pages/Terms.jsx"
+import Acuerdo from "./pages/Acuerdo.jsx"
 
 function App() {
   return (
@@ -45,6 +47,8 @@ function App() {
           </Route>
           <Route path="/about" element={<AboutUs />} />
           <Route path="/support" element={<SupportUs />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/acuerdo" element={<Acuerdo />} />
           <Route path="/user/:username" element={<UserProfile />} />
         </Routes>
       </div>
