@@ -7,6 +7,8 @@ import { BiComment } from "react-icons/bi";
 import './DetallesReceta.css';
 import Cookies from 'universal-cookie';
 import Comentario from "../components/Comentario";
+import { CiCircleAlert } from "react-icons/ci";
+import { IoMdAlert } from "react-icons/io";
 
 function DetallesReceta() {
     const { id } = useParams();
@@ -24,7 +26,10 @@ function DetallesReceta() {
     const [showButtons, setShowButtons] = useState(false);
     const [alertVisible, setAlertVisible] = useState(false);
     const [comments, setComments] = useState([]);
-    const [reload, setReload] = useState(false)
+    const [reload, setReload] = useState(false);
+    const [reportMenuVisible, setReportMenuVisible] = useState(false);
+    const [reportReason, setReportReason] = useState('');
+    const [submittingReport, setSubmittingReport] = useState(false);
     const url =  import.meta.env.VITE_API_URL;
 
     const cookies = new Cookies();
@@ -153,7 +158,40 @@ function DetallesReceta() {
         } catch (error) {
           console.error("Error al realizar la solicitud:", error);
         }
+
     };
+
+    const toggleReportMenu = () => {
+        setReportMenuVisible(!reportMenuVisible);
+        setReportReason(''); 
+    };
+
+    const selectReportReason = (event) => {
+        setReportReason(event.target.value);
+    };
+
+    const submitReport = async () => {
+        try {
+            setSubmittingReport(true);
+            const response = await axios.post(``, { // Aquí va la URL para reportar receta, entre las comillas
+                recipe_id: id,
+                reason: reportReason,
+                jwt: jwt
+            });
+            if (response.data.type === "SUCCESS") {
+                alert(response.data.message);
+                setReportReason('');
+                toggleReportMenu();
+            } else {
+                alert(response.data.message);
+            }
+        } catch (error) {
+            console.error("Error al realizar la solicitud:", error);
+        } finally {
+            setSubmittingReport(false);
+        }
+    };
+
 
 
     return (
@@ -190,9 +228,44 @@ function DetallesReceta() {
                         </div>
                     )}
                     <div className="dp-description" dangerouslySetInnerHTML={{ __html: description }}></div>
+                    <div className='dp-contain'>
                     <div className='dp-numComments'>
                         <BiComment />
                         {numComments}
+                    </div>
+                    <div className="dp-report-button">
+                            <button className="dp-bt1" onClick={toggleReportMenu} disabled={submittingReport}>
+                                <IoMdAlert size={18} className="alerta"/>
+                                {submittingReport ? 'Enviando...' : 'Reportar receta'}
+                            </button>
+                                {reportMenuVisible && (
+                                <div className="dp-report-menu">
+                                    <select value={reportReason} onChange={selectReportReason}>
+                                        <option value="">Selecciona una razón</option>
+                                        <option value="Spam">Spam</option>
+                                        <option value="Contenido inapropiado">Contenido inapropiado</option>
+                                        <option value="Engaño">Contenido engañoso</option>
+                                        <option value="DerechosDeAutor">Derechos de autor</option>
+                                        <option value="Ofensivo">Contenido ofensivo</option>
+                                        <option value="Suplantación">Suplantación</option>
+                                        <option value="Odio">Contenido con odio</option>
+                                        <option value="Peligroso">Contenido peligroso</option>
+                                        <option value="Erróneo">Contenido erróneo</option>
+                                        <option value="ViolaciónDeNormas">Violación de normas</option>
+                                        <option value="Sexo">Contenido sexual</option>
+                                        <option value="Otro">Otro</option>
+                                    </select>
+                                    <div>
+                                        <button onClick={submitReport} className="dp-report-menu-submit" disabled={!reportReason || submittingReport}>
+                                            {submittingReport ? 'Enviando...' : 'Reportar'}
+                                        </button>
+                                        <button onClick={toggleReportMenu} className="dp-report-menu-cancel" disabled={submittingReport}>
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                </div>
+                                )}
+                        </div>
                     </div>
                 </div>
             </div>
