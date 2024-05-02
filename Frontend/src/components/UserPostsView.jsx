@@ -1,11 +1,14 @@
-import Publicacion from "../components/Publicacion";
-import Paginacion from "../components/Paginacion";
+import Publicacion from "./Publicacion.jsx";
+import Paginacion from "./Paginacion.jsx";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import axios from "../api/axios.jsx";
-import "./Home.css"
+import "../pages/Home.css"
 import Cookies from 'universal-cookie';
 
 const UserPostsView = () => {
+
+  const { username } = useParams()
 
   const [posts, setPosts] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
@@ -24,9 +27,9 @@ const UserPostsView = () => {
     const fetchData = async () => {
       try {
         //setIsLoading(true)
-        const response = await axios.post(`${url}/user/profile/${filtro_2}/`, {
-		jwt : jwt
-	});
+        const response = await axios.post(`${url}/user/${username}/${filtro_2}/`, {
+          jwt : jwt
+        });
         if (response.data.type === "SUCCESS") {
           const sortedPosts = response.data.posts.sort((a, b) => a.id - b.id);
           setPosts(sortedPosts);
@@ -88,6 +91,7 @@ const UserPostsView = () => {
             key={index}
             id_post={publicacion.id}
             userName={publicacion.userName}
+            profile_avatar={publicacion.profile_avatar}
             title={publicacion.title}
             description={publicacion.description}
             numComments={publicacion.numComments}

@@ -83,6 +83,7 @@ const Home = () => {
             key={index}
             id_post={publicacion.id}
             userName={publicacion.userName}
+            profile_avatar={publicacion.profile_avatar}
             title={publicacion.title}
             description={publicacion.description}
             numComments={publicacion.numComments}

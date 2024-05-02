@@ -19,7 +19,7 @@ import DetallesPublicacion from "./pages/DetallesPublicacion"
 import DetallesReceta from "./pages/DetallesReceta"
 import AboutUs from "./pages/AboutUs.jsx"
 import SupportUs from "./pages/SupportUs.jsx"
-import UserPostView from "./pages/UserPostsView"
+import UserProfile from "./pages/UserProfile.jsx"
 
 function App() {
   return (
@@ -39,13 +39,13 @@ function App() {
           <Route element={<PrivateRoute />}>
             <Route path="/crear_publicacion" element={<Crear_publicacion />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/mis-publicaciones" element={<UserPostView />} />
             <Route path="/change_email" element={<Change_email />} />
             <Route path="/change_password" element={<Change_password />} />
             <Route path="/change_user" element={<Change_user />} />
           </Route>
           <Route path="/about" element={<AboutUs />} />
           <Route path="/support" element={<SupportUs />} />
+          <Route path="/user/:username" element={<UserProfile />} />
         </Routes>
       </div>
       <Footer />
