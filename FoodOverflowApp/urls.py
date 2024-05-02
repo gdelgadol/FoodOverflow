@@ -24,6 +24,7 @@ urlpatterns = [
     path('comment/<str:id_comment>/', views.create_comment, name = "comment"), #Comment on a post
     path('comment/<str:id_comment>/response/', views.create_comment_response, name = "response"), #Reply to a comment
     # User settings
+    path('get_jwt_info', views.get_jwt, name = "user_token_info"), # user's info in JWT Token
     path('get_user/<str:identifier>', views.get_user_data, name = "user_token"), # user's info in JWT Token
     path('delete_user/',views.delete_user, name = 'delete_user'), # delete_user path
     path('update_password/', views.update_password, name = "update_password"), # Change pasword
