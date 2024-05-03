@@ -362,6 +362,7 @@ function DetallesReceta() {
                     comment_id={comment.comment_id}
                     comment_content={comment.comment_content}
                     comment_user={comment.comment_user}
+                    comment_user_avatar={comment.comment_user_avatar}
                     response_list={comment.response_list}
                     type="recipe"
                 />
