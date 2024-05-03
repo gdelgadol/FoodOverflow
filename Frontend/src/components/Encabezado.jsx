@@ -22,8 +22,10 @@ function Encabezado() {
 
   const handleLogout = () => {
     // Eliminar el token JWT
-    cookies.remove('auth_token');
-    window.location.href = `${urlFront}/Login`;
+    cookies.remove('auth_token', { path: '/' });
+    setTimeout(() => {
+      window.location.href = `${urlFront}/login`;
+    }, 500);
   };
 
   return (
@@ -49,14 +51,14 @@ function Encabezado() {
       </div>
       <div className="menu">
         <div className="menu-info">
+        <Link to={"/"}>
+        <button className="menu-button">
+          <span className="spanHeader">Inicio</span>
+        </button>
+        </Link>
         <Link to={"/about"}>
         <button className="menu-button">
         <span className="spanHeader">Sobre nosotros</span>
-        </button>
-        </Link>
-        <Link to={"/contact"}>
-        <button className="menu-button">
-          <span className="spanHeader">Contáctenos</span>
         </button>
         </Link>
         <Link to={"/support"}>
@@ -117,17 +119,17 @@ function Encabezado() {
       {/* Tamaños de pantalla más pequeños */}
       {menuOpen && (
         <div className="menu-dropdown">
+          <Link to={"/"}>
+          <button className="menu-button">
+            <center>
+            <strong>Inicio</strong>
+            </center>
+          </button>
+          </Link>
           <Link to={"/About"}>
           <button className="menu-button">
             <center>
             <strong>Sobre nosotros</strong>
-            </center>
-          </button>
-          </Link>
-          <Link to={"/Contact"}>
-          <button className="menu-button">
-            <center>
-            <strong>Contáctenos</strong>
             </center>
           </button>
           </Link>

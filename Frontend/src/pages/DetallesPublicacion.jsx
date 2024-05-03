@@ -315,13 +315,14 @@ const submitReport = async () => {
       {comments.map((comment) => (
         <Comentario
           key={comment.comment_id}
+          jwt={jwt}
           reload={reload}
           setReload={setReload}
           post_id={id}
-          jwt={jwt}
           comment_id={comment.comment_id}
           comment_content={comment.comment_content}
           comment_user={comment.comment_user}
+          comment_user_avatar={comment.comment_user_avatar}
           response_list={comment.response_list}
           type="publication"
         />

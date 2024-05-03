@@ -154,20 +154,27 @@ def get_recipe(request):
         comments_list = []
 
         for comment in recipe_comments:
+
+            profile_avatar = Avatar.objects.get(avatar_id = comment.profile.avatar_id.avatar_id).avatar_url
             
             comment_data = {
                 'comment_id': comment.recipe_comment_id,
                 'comment_content': comment.comment_body,
-                'comment_user': comment.profile.username  # Assuming user is related to the comment
+                'comment_user': comment.profile.username,
+                'comment_user_avatar': profile_avatar   # Assuming user is related to the comment
                 # Add more fields if needed
             }
             recipe_comments_response = RecipeComment.objects.filter(recipe=recipe, comment_response_id = comment.recipe_comment_id)
             response_list = []
             for response in recipe_comments_response:
+
+                profile_avatar = Avatar.objects.get(avatar_id = response.profile.avatar_id.avatar_id).avatar_url
+
                 response_data = {
                 'response_id': response.recipe_comment_id,
                 'response_content': response.comment_body,
-                'response_user': response.profile.username  # Assuming user is related to the comment
+                'response_user': response.profile.username,
+                'response_user_avatar': profile_avatar    # Assuming user is related to the comment
                 # Add more fields if needed
                 }
                 response_list.append(response_data)

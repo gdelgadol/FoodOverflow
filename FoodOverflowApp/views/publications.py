@@ -50,19 +50,26 @@ def get_publication(request):
         num_comments = publication_comments.count()
         for comment in publication_comments:
             
+            profile_avatar = Avatar.objects.get(avatar_id = comment.profile.avatar_id.avatar_id).avatar_url
+
             comment_data = {
                 'comment_id': comment.publication_comment_id,
                 'comment_content': comment.comment_body,
-                'comment_user': comment.profile.username  # Assuming user is related to the comment
+                'comment_user': comment.profile.username,
+                'comment_user_avatar': profile_avatar  # Assuming user is related to the comment
                 # Add more fields if needed
             } 
             publication_comments_response = PublicationComment.objects.filter(publication=publication, comment_response_id = comment.publication_comment_id)
             response_list = []
             for response in publication_comments_response:
+
+                profile_avatar = Avatar.objects.get(avatar_id = response.profile.avatar_id.avatar_id).avatar_url
+
                 response_data = {
                 'response_id': response.publication_comment_id,
                 'response_content': response.comment_body,
-                'response_user': response.profile.username  # Assuming user is related to the comment
+                'response_user': response.profile.username,
+                'response_user_avatar': profile_avatar  # Assuming user is related to the comment
                 # Add more fields if needed
                 }
                 response_list.append(response_data)
