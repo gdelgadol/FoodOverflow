@@ -11,6 +11,7 @@ urlpatterns = [
     path('logout/', views.logout, name = "logout"), # Log out path
     # Forum
     path('report/<str:identifier>', views.report, name = "report"), #report posts and post's comments 
+    path('save/<str:identifier>', views.save_posts, name = "save"), #save posts and post's comments 
     ## Publication
     path('publications/', views.get_publications, name = "get_publications"), # get publications
     path('crear_publicacion/', views.create_forum_publication, name= "crear_publicaion"), # create publication path

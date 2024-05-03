@@ -6,6 +6,8 @@ from django.http import JsonResponse
 from ..views.token import decode_jwt
 from django.db.models import Sum
 from decouple import config
+from .publications import save_publication
+from .recipes import save_recipe
 
 import json
 
@@ -520,3 +522,15 @@ def report(request, identifier):
             "type" : "ERROR", 
             "message" : "Ha ocurruido un error, intentalo de nuevo."
             })
+
+#Save posts controller
+def save_posts(request, identifier):
+    if identifier == "recipe":
+        return save_recipe(request)
+    elif identifier == "publication":
+        return save_publication(request)
+    else: 
+        return JsonResponse({
+                "type" : "SUCCESS", 
+                "message" : f'{identifier} no es un identificador válido.'
+                })
