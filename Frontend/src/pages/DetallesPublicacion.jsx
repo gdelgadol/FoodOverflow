@@ -170,9 +170,9 @@ const selectReportReason = (event) => {
 const submitReport = async () => {
     try {
         setSubmittingReport(true);
-        const response = await axios.post(``, { // Aquí va la URL para reportar publicacion, entre las comillas
-            id_recipe: id,
-            reason: reportReason,
+        const response = await axios.post(`${url}/report/publication`, { // Aquí va la URL para reportar publicacion, entre las comillas
+            id: id,
+            message: reportReason,
             jwt: jwt
         });
         if (response.data.type === "SUCCESS") {
@@ -258,15 +258,15 @@ const tagsDictionary = {
                                         <option value="">Selecciona una razón</option>
                                         <option value="Spam">Spam</option>
                                         <option value="Contenido inapropiado">Contenido inapropiado</option>
-                                        <option value="Engaño">Contenido engañoso</option>
-                                        <option value="DerechosDeAutor">Derechos de autor</option>
+                                        <option value="Contenido engañoso">Contenido engañoso</option>
+                                        <option value="Derechos de autor">Derechos de autor</option>
                                         <option value="Ofensivo">Contenido ofensivo</option>
                                         <option value="Suplantación">Suplantación</option>
                                         <option value="Odio">Contenido con odio</option>
-                                        <option value="Peligroso">Contenido peligroso</option>
-                                        <option value="Erróneo">Contenido erróneo</option>
-                                        <option value="ViolaciónDeNormas">Violación de normas</option>
-                                        <option value="Sexo">Contenido sexual</option>
+                                        <option value="Contenido Peligroso">Contenido peligroso</option>
+                                        <option value="contenido erróneo">Contenido erróneo</option>
+                                        <option value="Violación de normas">Violación de normas</option>
+                                        <option value="Contenido sexual">Contenido sexual</option>
                                         <option value="Otro">Otro</option>
                                     </select>
                                     <div>
