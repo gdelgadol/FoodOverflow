@@ -174,6 +174,8 @@ def create_comment(request, id_comment):
         content = data.get("content")
         jwt_decoded = decode_jwt(data.get("jwt"))
 
+        url = config('FRONT_HOST')
+
         if Profile.objects.filter(pk = jwt_decoded["id"]).exists():
             profile = Profile.objects.get(pk = jwt_decoded["id"])
         else:
@@ -190,7 +192,18 @@ def create_comment(request, id_comment):
                     "message" : "La receta no se encuentra registrada.", 
                     "type" : "ERROR"
                     })
+            author = Profile.objects.filter(pk = recipe.profile_id)
+
             RecipeComment.objects.create_recipe_comment(profile, recipe, content)
+
+            url += f'/{id_comment}/{post_id}'
+            message = f'El usuario {profile.username} ha comentado en tu receta: {recipe.recipe_title}. {url}.'
+            try:
+                notification = Notification.objects.notify_recipe(author[0], recipe, message)
+                print(notification, "Notificación creada con éxito")
+            except Exception as e:
+                print(e)
+                return JsonResponse({"message": "No se pudo notificar", "type":"ERROR"})
             
             return JsonResponse({"message" : "¡Comentario creado con éxito!", "type" : "SUCCESS"})
         
@@ -202,7 +215,20 @@ def create_comment(request, id_comment):
                     "message" : "La publicación no se encuentra registrada.", 
                     "type" : "ERROR"
                     })
+            
+            author = Profile.objects.filter(pk = publication.profile_id)
+
             PublicationComment.objects.create_publication_comment(profile, publication, content)
+
+            url += f'/{id_comment}/{post_id}'
+            message = f'El usuario {profile.username} ha comentado en tu publicación: {publication.publication_title}. {url}.'
+            try:
+                notification = Notification.objects.notify_publication(author[0], publication, message)
+                print(notification, "Notificación creada con éxito")
+            except Exception as e:
+                print(e)
+                return JsonResponse({"message": "No se pudo notificar", "type":"ERROR"})
+            
             return JsonResponse({"message" : "¡Comentario creado con éxito!", "type" : "SUCCESS"})
         
     except Exception as e:
@@ -218,6 +244,8 @@ def create_comment_response(request, id_comment):
         comment_id = data.get("comment_id")
         content = data.get("content")
         jwt_decoded = decode_jwt(data.get("jwt"))
+
+        url = config('FRONT_HOST')
 
         if Profile.objects.filter(pk = jwt_decoded["id"]).exists():
             profile = Profile.objects.get(pk = jwt_decoded["id"])
@@ -245,6 +273,19 @@ def create_comment_response(request, id_comment):
                     })
             
             RecipeComment.objects.create_recipe_comment_response(profile, recipe, content, recipe_comment)
+
+            author = Profile.objects.filter(pk = recipe_comment.profile_id)
+
+            url += f'/{id_comment}/{post_id}'
+            message = f'El usuario {profile.username} ha respondido a tu comentario en la receta: {recipe.recipe_title}. {url}.'
+            print(message)
+            try:
+                notification = Notification.objects.notify_recipe(author[0], recipe, message)
+                print(notification, "Notificación creada con éxito")
+            except Exception as e:
+                print(e)
+                return JsonResponse({"message": "No se pudo notificar", "type":"ERROR"})
+            
             return JsonResponse({"message" : "¡Respuesta creada con éxito!", "type" : "SUCCESS"})
         
         elif id_comment == "publication":
@@ -265,6 +306,18 @@ def create_comment_response(request, id_comment):
                     })
             
             PublicationComment.objects.create_publication_comment_response(profile, publication, content, publication_comment)
+
+            author = Profile.objects.filter(pk = publication_comment.profile_id)
+
+            url += f'/{id_comment}/{post_id}'
+            message = f'El usuario {profile.username} ha respondido a tu comentario en la publicación: {publication.publication_title}. {url}.'
+            try:
+                notification = Notification.objects.notify_publication(author[0], publication, message)
+                print(notification, "Notificación creada con éxito")
+            except Exception as e:
+                print(e)
+                return JsonResponse({"message": "No se pudo notificar", "type":"ERROR"})
+            
             return JsonResponse({"message" : "¡Respuesta creada con éxito!", "type" : "SUCCESS"})
         
     except Exception as e:
@@ -445,7 +498,7 @@ def report(request, identifier):
         if not decode_jwt(data.get("jwt")):
             return JsonResponse({
                 "type" : "ERROR", 
-                "message" : "El usuario debe iniciar sesión para raportar una publicación."
+                "message" : "El usuario debe iniciar sesión para reportar una publicación."
                 })
         
         recipe = None
