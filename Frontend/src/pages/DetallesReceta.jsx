@@ -18,6 +18,7 @@ function DetallesReceta() {
     const [description, setDescription] = useState();
     const [numComments, setNumComments] = useState();
     const [ingredients, setIngredients] = useState([]);
+    const [tags, setTags] = useState([]);
     const [score, setScore] = useState();
     const [voted, setVoted] = useState(false); 
     const [lastVote, setLastVote] = useState(0);
@@ -127,6 +128,7 @@ function DetallesReceta() {
             setComments(res.data.recipe_comments);
             setLastVote(res.data.vote_type > 0 ? 1 : (res.data.vote_type < 0 ? -1 : 0));
             setVoteStatus(res.data.vote_type);
+            setTags(res.data.tagsList);
             const userHasVoted = res.data.vote_type !== 0;
             setVoted(userHasVoted);
           } else {
@@ -193,6 +195,19 @@ function DetallesReceta() {
         }
     };
 
+    const tagsDictionary = {
+        1: "Vegetariano",
+        2: "Vegano",
+        3: "Sin gluten",
+        4: "Bajo en carbohidratos",
+        5: "Alta en proteínas",
+        6: "Postre",
+        7: "Desayuno",
+        8: "Almuerzo",
+        9: "Cena",
+        10: "Aperitivo"
+    };
+
 
     return (
         <div className='dp-container'>
@@ -223,6 +238,13 @@ function DetallesReceta() {
                 <div className='dp-contenido'>
                     <span className='dp-userName'>{author}</span>
                     <span className='dp-title'>{title}</span>
+                    <div className='dp-tags'>
+                    <div className='tags-container'>
+                        {tags.map((tagId, index) => (
+                            <div key={index} className='tag'>{tagsDictionary[tagId]}</div>
+                        ))}
+                    </div>
+                    </div>
                     {ingredients.length > 0 && (
                         <div className='dp-ingredients'>
                             <h4>Ingredientes:</h4>

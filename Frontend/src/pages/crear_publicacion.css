@@ -163,3 +163,41 @@
     flex-direction: column;
     justify-content: flex-start;
 }
+
+/* Estilos para los tags */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+  max-width: 700px;
+}
+
+@media (max-width: 80%) {
+  .tags-container {
+    display:flex;
+    flex-direction: column;}
+}
+
+.tag {
+  background-color: #e3e3e3;
+  color: #000000;
+  border-radius: 20px;
+  padding: 0.2rem 0.5rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.tag button {
+  background-color: transparent;
+  border: none;
+  color: #4d4d4d;
+  font-size: 0.8rem;
+  margin-left: 0.3rem;
+  cursor: pointer;
+}
+
+.tag button:hover {
+  color: #333;
+}
