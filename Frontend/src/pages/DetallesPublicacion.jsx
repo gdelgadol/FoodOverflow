@@ -16,6 +16,7 @@ function DetallesPublicacion() {
   const [description, setDescription] = useState();
   const [numComments, setNumComments] = useState();
   const [comments, setComments] = useState([]);
+  const [tags, setTags] = useState([]);
   const [score, setScore] = useState();
   const [showPlaceholder, setShowPlaceholder] = useState(true);
   const [showButtons, setShowButtons] = useState(false);
@@ -122,6 +123,7 @@ function DetallesPublicacion() {
         setScore(res.data.score);
         setLastVote(res.data.vote_type > 0 ? 1 : (res.data.vote_type < 0 ? -1 : 0));
         setVoteStatus(res.data.vote_type);
+        setTags(res.data.tagsList);
         const userHasVoted = res.data.vote_type !== 0;
         setVoted(userHasVoted);
       } else {
@@ -187,6 +189,18 @@ const submitReport = async () => {
     }
 };
 
+const tagsDictionary = {
+  1: "Vegetariano",
+  2: "Vegano",
+  3: "Sin gluten",
+  4: "Bajo en carbohidratos",
+  5: "Alta en proteínas",
+  6: "Postre",
+  7: "Desayuno",
+  8: "Almuerzo",
+  9: "Cena",
+  10: "Aperitivo"
+};
 
   return (
     <div className="dp-container">
@@ -217,6 +231,13 @@ const submitReport = async () => {
         <div className="dp-contenido">
           <span className="dp-userName">{author}</span>
           <span className="dp-title">{title}</span>
+          <div className='dp-tags'>
+            <div className='tags-container'>
+              {tags.map((tagId, index) => (
+                <div key={index} className='tag'>{tagsDictionary[tagId]}</div>
+              ))}
+            </div>
+          </div>
           <div className="dp-description" dangerouslySetInnerHTML={{ __html: description }}></div>
           <div className='dp-contain'>
                     <div className='dp-numComments'>

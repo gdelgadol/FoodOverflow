@@ -88,6 +88,7 @@ const Home = () => {
             description={publicacion.description}
             numComments={publicacion.numComments}
             score={publicacion.score}
+            tags={publicacion.tagsList}
             type={filtro_2}
           />
         ))
