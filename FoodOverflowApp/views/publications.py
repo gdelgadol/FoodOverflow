@@ -1,5 +1,4 @@
-from ..models import Publication, PublicationComment, PublicationVote
-from ..models import Recipe, RecipeComment, RecipeVote
+from ..models import Publication, PublicationComment, PublicationVote, SavedPost
 from ..models import Profile, Avatar
 from ..models import Notification
 from django.http import JsonResponse
@@ -219,4 +218,35 @@ def create_forum_publication(request):
     except Exception as e:
         print(e)
         # Catch all other exceptions
+        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
+
+#Save publication controller
+def save_publication(request):
+    try:
+        data = json.loads(request.body)
+
+        if data.get("jwt"):
+            jwt_decoded = decode_jwt(data.get("jwt"))
+        else:
+            return JsonResponse({"message" : "Hubo un error con la autenticación del usuario.", "type" : "ERROR"})
+
+        if Profile.objects.filter(id = jwt_decoded["id"]).exists():
+            profile = Profile.objects.get(id = jwt_decoded["id"])
+        else:
+            return JsonResponse({"message" : "El perfíl no existe en la base de datos.", "type" : "ERROR"})
+        
+        if Publication.objects.filter(publication_id = data.get("post_id")).exists():
+            publication = Publication.objects.get(publication_id = data.get("post_id"))
+        else:
+            return JsonResponse({"message" : "La publicación que intentas guardar no existe.", "type" : "ERROR"})
+
+        if SavedPost.objects.filter(profile = profile , publication = publication).exists():
+            saved_post = SavedPost.objects.get(profile = profile , publication = publication)
+            saved_post.delete()
+            return JsonResponse({"message" : "Publicación eliminada de guardados con éxito.", "type" : "SUCCESS"})
+        else:
+            SavedPost.objects.save_publication(profile, publication)
+            return JsonResponse({"message" : "Publicación guardada con éxito.", "type" : "SUCCESS"})
+    except Exception as e:
+        print(e)
         return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})

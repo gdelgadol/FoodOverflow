@@ -6,12 +6,26 @@ import { BiComment } from "react-icons/bi";
 import { Link } from 'react-router-dom';
 import { GiShrug } from "react-icons/gi";
 
-export default function Publicacion ({id_post, userName, profile_avatar, title, description, numComments, score, type}) {
+export default function Publicacion ({id_post, userName, profile_avatar, title, description, numComments, score, type, tags}) {
     if (type === 'publications'){
         type = "publication"
     } else {
         type = "recipe"
     }
+
+    const tagsDictionary = {
+        1: "Vegetariano",
+        2: "Vegano",
+        3: "Sin gluten",
+        4: "Bajo en carbohidratos",
+        5: "Alta en proteínas",
+        6: "Postre",
+        7: "Desayuno",
+        8: "Almuerzo",
+        9: "Cena",
+        10: "Aperitivo"
+    };
+
     return (
         <div>
             <Link to={`/${type}/${id_post}`} className='publicacion'>
@@ -36,6 +50,13 @@ export default function Publicacion ({id_post, userName, profile_avatar, title, 
                         </div>
                     </Link>
                     <span className='title'>{title}</span>
+                    <div className='dp-tags'>
+                    <div className='tags-container'>
+                        {tags.map((tagId, index) => (
+                            <div key={index} className='tag2'>{tagsDictionary[tagId]}</div>
+                        ))}
+                    </div>
+                    </div>
                     <div className="description" dangerouslySetInnerHTML={{ __html: description }}></div>
                     <div className='comments'>
                         <BiComment />

@@ -1,4 +1,4 @@
-from ..models import Recipe, RecipeComment, RecipeVote
+from ..models import Recipe, RecipeComment, RecipeVote, SavedPost
 from ..models import Profile, Avatar
 from ..models import Notification
 from django.http import JsonResponse
@@ -212,4 +212,34 @@ def get_recipe(request):
     except Exception as e:
         print(e)
         # Catch all other exceptions
+        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
+    
+def save_recipe(request):
+    try:
+        data = json.loads(request.body)
+
+        if data.get("jwt"):
+            jwt_decoded = decode_jwt(data.get("jwt"))
+        else:
+            return JsonResponse({"message" : "Hubo un error con la autenticación del usuario.", "type" : "ERROR"})
+
+        if Profile.objects.filter(id = jwt_decoded["id"]).exists():
+            profile = Profile.objects.get(id = jwt_decoded["id"])
+        else:
+            return JsonResponse({"message" : "El perfíl no existe en la base de datos.", "type" : "ERROR"})
+        
+        if Recipe.objects.filter(recipe_id = data.get("post_id")).exists():
+            recipe = Recipe.objects.get(recipe_id = data.get("post_id"))
+        else:
+            return JsonResponse({"message" : "La receta que intentas guardar no existe.", "type" : "ERROR"})
+
+        if SavedPost.objects.filter(profile = profile , recipe = recipe).exists():
+            saved_post = SavedPost.objects.get(profile = profile , recipe = recipe)
+            saved_post.delete()
+            return JsonResponse({"message" : "Receta eliminada de guardados con éxito.", "type" : "SUCCESS"})
+        else:
+            SavedPost.objects.save_recipe(profile, recipe)
+            return JsonResponse({"message" : "Receta guardada con éxito.", "type" : "SUCCESS"})
+    except Exception as e:
+        print(e)
         return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})

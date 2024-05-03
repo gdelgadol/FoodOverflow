@@ -18,6 +18,7 @@ function DetallesReceta() {
     const [description, setDescription] = useState();
     const [numComments, setNumComments] = useState();
     const [ingredients, setIngredients] = useState([]);
+    const [tags, setTags] = useState([]);
     const [score, setScore] = useState();
     const [voted, setVoted] = useState(false); 
     const [lastVote, setLastVote] = useState(0);
@@ -127,6 +128,7 @@ function DetallesReceta() {
             setComments(res.data.recipe_comments);
             setLastVote(res.data.vote_type > 0 ? 1 : (res.data.vote_type < 0 ? -1 : 0));
             setVoteStatus(res.data.vote_type);
+            setTags(res.data.tagsList);
             const userHasVoted = res.data.vote_type !== 0;
             setVoted(userHasVoted);
           } else {
@@ -174,9 +176,9 @@ function DetallesReceta() {
     const submitReport = async () => {
         try {
             setSubmittingReport(true);
-            const response = await axios.post(``, { // Aquí va la URL para reportar receta, entre las comillas
-                id_recipe: id,
-                reason: reportReason,
+            const response = await axios.post(`${url}/report/recipe`, { // Aquí va la URL para reportar receta, entre las comillas
+                id: id,
+                message: reportReason,
                 jwt: jwt
             });
             if (response.data.type === "SUCCESS") {
@@ -191,6 +193,19 @@ function DetallesReceta() {
         } finally {
             setSubmittingReport(false);
         }
+    };
+
+    const tagsDictionary = {
+        1: "Vegetariano",
+        2: "Vegano",
+        3: "Sin gluten",
+        4: "Bajo en carbohidratos",
+        5: "Alta en proteínas",
+        6: "Postre",
+        7: "Desayuno",
+        8: "Almuerzo",
+        9: "Cena",
+        10: "Aperitivo"
     };
 
 
@@ -223,6 +238,13 @@ function DetallesReceta() {
                 <div className='dp-contenido'>
                     <span className='dp-userName'>{author}</span>
                     <span className='dp-title'>{title}</span>
+                    <div className='dp-tags'>
+                    <div className='tags-container'>
+                        {tags.map((tagId, index) => (
+                            <div key={index} className='tag'>{tagsDictionary[tagId]}</div>
+                        ))}
+                    </div>
+                    </div>
                     {ingredients.length > 0 && (
                         <div className='dp-ingredients'>
                             <h4>Ingredientes:</h4>
@@ -250,18 +272,18 @@ function DetallesReceta() {
                         <div className='dp-aclaracion'>
                                 <div className="dp-report-menu">
                                     <select value={reportReason} onChange={selectReportReason}>
-                                        <option value="">Selecciona una razón</option>
+                                    <option value="">Selecciona una razón</option>
                                         <option value="Spam">Spam</option>
                                         <option value="Contenido inapropiado">Contenido inapropiado</option>
-                                        <option value="Engaño">Contenido engañoso</option>
-                                        <option value="DerechosDeAutor">Derechos de autor</option>
+                                        <option value="Contenido engañoso">Contenido engañoso</option>
+                                        <option value="Derechos de autor">Derechos de autor</option>
                                         <option value="Ofensivo">Contenido ofensivo</option>
                                         <option value="Suplantación">Suplantación</option>
                                         <option value="Odio">Contenido con odio</option>
-                                        <option value="Peligroso">Contenido peligroso</option>
-                                        <option value="Erróneo">Contenido erróneo</option>
-                                        <option value="ViolaciónDeNormas">Violación de normas</option>
-                                        <option value="Sexo">Contenido sexual</option>
+                                        <option value="Contenido Peligroso">Contenido peligroso</option>
+                                        <option value="contenido erróneo">Contenido erróneo</option>
+                                        <option value="Violación de normas">Violación de normas</option>
+                                        <option value="Contenido sexual">Contenido sexual</option>
                                         <option value="Otro">Otro</option>
                                     </select>
                                     <div>

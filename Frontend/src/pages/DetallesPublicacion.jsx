@@ -16,6 +16,7 @@ function DetallesPublicacion() {
   const [description, setDescription] = useState();
   const [numComments, setNumComments] = useState();
   const [comments, setComments] = useState([]);
+  const [tags, setTags] = useState([]);
   const [score, setScore] = useState();
   const [showPlaceholder, setShowPlaceholder] = useState(true);
   const [showButtons, setShowButtons] = useState(false);
@@ -122,6 +123,7 @@ function DetallesPublicacion() {
         setScore(res.data.score);
         setLastVote(res.data.vote_type > 0 ? 1 : (res.data.vote_type < 0 ? -1 : 0));
         setVoteStatus(res.data.vote_type);
+        setTags(res.data.tagsList);
         const userHasVoted = res.data.vote_type !== 0;
         setVoted(userHasVoted);
       } else {
@@ -168,9 +170,9 @@ const selectReportReason = (event) => {
 const submitReport = async () => {
     try {
         setSubmittingReport(true);
-        const response = await axios.post(``, { // Aquí va la URL para reportar publicacion, entre las comillas
-            id_recipe: id,
-            reason: reportReason,
+        const response = await axios.post(`${url}/report/publication`, { // Aquí va la URL para reportar publicacion, entre las comillas
+            id: id,
+            message: reportReason,
             jwt: jwt
         });
         if (response.data.type === "SUCCESS") {
@@ -187,6 +189,18 @@ const submitReport = async () => {
     }
 };
 
+const tagsDictionary = {
+  1: "Vegetariano",
+  2: "Vegano",
+  3: "Sin gluten",
+  4: "Bajo en carbohidratos",
+  5: "Alta en proteínas",
+  6: "Postre",
+  7: "Desayuno",
+  8: "Almuerzo",
+  9: "Cena",
+  10: "Aperitivo"
+};
 
   return (
     <div className="dp-container">
@@ -217,6 +231,13 @@ const submitReport = async () => {
         <div className="dp-contenido">
           <span className="dp-userName">{author}</span>
           <span className="dp-title">{title}</span>
+          <div className='dp-tags'>
+            <div className='tags-container'>
+              {tags.map((tagId, index) => (
+                <div key={index} className='tag'>{tagsDictionary[tagId]}</div>
+              ))}
+            </div>
+          </div>
           <div className="dp-description" dangerouslySetInnerHTML={{ __html: description }}></div>
           <div className='dp-contain'>
                     <div className='dp-numComments'>
@@ -237,15 +258,15 @@ const submitReport = async () => {
                                         <option value="">Selecciona una razón</option>
                                         <option value="Spam">Spam</option>
                                         <option value="Contenido inapropiado">Contenido inapropiado</option>
-                                        <option value="Engaño">Contenido engañoso</option>
-                                        <option value="DerechosDeAutor">Derechos de autor</option>
+                                        <option value="Contenido engañoso">Contenido engañoso</option>
+                                        <option value="Derechos de autor">Derechos de autor</option>
                                         <option value="Ofensivo">Contenido ofensivo</option>
                                         <option value="Suplantación">Suplantación</option>
                                         <option value="Odio">Contenido con odio</option>
-                                        <option value="Peligroso">Contenido peligroso</option>
-                                        <option value="Erróneo">Contenido erróneo</option>
-                                        <option value="ViolaciónDeNormas">Violación de normas</option>
-                                        <option value="Sexo">Contenido sexual</option>
+                                        <option value="Contenido Peligroso">Contenido peligroso</option>
+                                        <option value="contenido erróneo">Contenido erróneo</option>
+                                        <option value="Violación de normas">Violación de normas</option>
+                                        <option value="Contenido sexual">Contenido sexual</option>
                                         <option value="Otro">Otro</option>
                                     </select>
                                     <div>
