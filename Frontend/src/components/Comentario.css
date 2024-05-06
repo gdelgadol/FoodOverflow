@@ -62,3 +62,24 @@
     outline: none;
     font-weight: 600;
 }
+
+.commentario-report-button {
+    margin-left: 10px;
+    cursor: pointer;
+    width: auto;
+    padding: 0;
+    color: red;
+    border: none;
+    outline: none;
+    font-weight: 600;
+}
+
+.commentario-report-button2 {
+    cursor: pointer;
+    width: auto;
+    padding: 0;
+    color: red;
+    border: none;
+    outline: none;
+    font-weight: 600;
+}
