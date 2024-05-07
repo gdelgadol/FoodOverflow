@@ -27,6 +27,10 @@ urlpatterns = [
     ## comment
     path('comment/<str:id_comment>/', views.create_comment, name = "comment"), #Comment on a post
     path('comment/<str:id_comment>/response/', views.create_comment_response, name = "response"), #Reply to a comment
+    #notifications
+    path('notifications/', views.get_user_notifications, name="get_notifications"), #Get all user notifications
+    path('notifications/delete/', views.delete_user_notification, name="delete_user_notification"), #Delete a user notification
+    path('notifications/deleteall/', views.delete_all_notifications, name="delete_all_notifications"), #Delete all user notifications
     # User settings
     path('get_jwt_info', views.get_jwt, name = "user_token_info"), # user's info in JWT Token
     path('get_user/<str:identifier>', views.get_user_data, name = "user_token"), # user's info in JWT Token

@@ -6,3 +6,4 @@ from .forum import *
 from .profile_settings import *
 from .publications import *
 from .recipes import *
+from .notifications import *
