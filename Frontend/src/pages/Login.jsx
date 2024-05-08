@@ -105,7 +105,7 @@ const Login = () => {
           login_cookie.set("auth_token", jwt_token);
 
           alert("Inicio exitoso!");
-          window.location.href = `${urlFront}/`;
+          window.location.href = `${urlFront}/forum`;
         } else {
           setErrMsg(res.data.message);
         }

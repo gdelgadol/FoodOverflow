@@ -255,3 +255,105 @@
   height: 1px;
   background-color: #0000005e; /* Color de la línea separadora */
 }
+
+.menu-button-userAvatar {
+  background-color:initial;
+  color: initial;
+  border: initial;
+  cursor: pointer;
+}
+
+.menu-userAvatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%
+}
+
+.menu-button-publicar {
+  height: 35px;
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin-right: 15px;
+  background-color: #ff5c00;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.menu-username-avatar {
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px;
+}
+
+.menu-button-profile {
+  display: block;
+  width: 100%;
+  border: none;
+  text-align: left;
+  background-color: #ffffff;
+  color: #333333;
+  cursor: pointer;
+}
+
+.menu-button-profile:hover {
+  background-color: #f0f0f0; /* Cambiar el color de fondo al pasar el ratón */
+}
+
+.menu-button-notification {
+  position: relative;
+  border: none;
+  margin: 0 5px;
+  background-color: #ffffff;
+  color: #333333;
+  cursor: pointer;
+  border-radius: 40px;
+}
+
+.menu-button-notification:hover {
+  background-color: #eeeeee;
+}
+
+.menu-notificacion {
+  position: absolute;
+  top: 100%;
+  right: 5%;
+  width: 270px; 
+  background-color: #fff; 
+  border: 1px solid #ccc; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+  z-index: 999;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.notification-badge {
+  position: absolute;
+  bottom: 5px; 
+  left: 25px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%; 
+  background-color: #0032B4; 
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.span-notification {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 10px;
+  border: none;
+  text-align: left;
+  color: #333333;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+}
