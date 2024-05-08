@@ -22,6 +22,7 @@ import SupportUs from "./pages/SupportUs.jsx"
 import UserProfile from "./pages/UserProfile.jsx"
 import Terms from "./pages/Terms.jsx"
 import Acuerdo from "./pages/Acuerdo.jsx"
+import Inicio from "./pages/Inicio.jsx"
 
 function App() {
   return (
@@ -31,7 +32,8 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Inicio />} />
+          <Route path="/forum" element={<Home />} />
           <Route path="/activate/:uid/:token" element={<Activate />} />
           <Route path="/settings/:u_id/:token/:email" element={<Settings />} />
           <Route path="/recuperar_contrasena" element={<Rec_contrasena />} />

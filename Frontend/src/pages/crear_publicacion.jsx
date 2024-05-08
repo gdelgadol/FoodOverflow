@@ -113,7 +113,7 @@ function Crear_publicacion() {
         .then((res) => {
           if (res.data.type === "SUCCESS") {
             alert(res.data.message);
-            navigate("/");
+            navigate("/forum");
           } else {
             alert(res.data.message);
           }
@@ -139,7 +139,7 @@ function Crear_publicacion() {
         .then((res) => {
           if (res.data.type === "SUCCESS") {
             alert(res.data.message);
-            navigate("/");
+            navigate("/forum");
           } else {
             alert(res.data.message);
           }

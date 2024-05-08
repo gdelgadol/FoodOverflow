@@ -1,0 +1,60 @@
+.home {
+    display: flex;
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 80vw;
+}
+
+.home-text {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+}
+
+.ini-p {
+    color: #ffffff;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.home-p {
+    overflow: hidden;
+}
+
+.home-p span {
+    font-size: 30px;
+    color: orangered;
+    font-weight: 700;
+    padding-left: 7px;
+    display: none;
+}
+
+.home-p span.text-in {
+    display: block;
+    animation: textIn .5s ease;
+}
+
+.home-p span.text-out {
+    animation: textOut .5s ease;
+}
+
+@keyframes textIn {
+    0% {
+        transform: translateY(100%);
+    }
+
+    100% {
+        transform: translateY(0%);
+    }
+}
+
+@keyframes textOut {
+    0% {
+        transform: translateY(0%);
+    }
+
+    100% {
+        transform: translateY(-100%);
+
+    }
+}
