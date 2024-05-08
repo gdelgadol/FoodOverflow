@@ -25,6 +25,7 @@ const Busqueda = () => {
         const response = await axios.post(`${url}/${filtro_2}/filter/`, {
           tagsList: tags.split(',').map(tag => parseInt(tag)), // Convertimos los tags de string a array de números enteros
         });
+        console.log(tags.split(',').map(tag => parseInt(tag)));
         if (response.data.type === 'SUCCESS') {
           const sortedPosts = response.data.posts.sort((a, b) => b.id - a.id);
           setPosts(sortedPosts);
@@ -41,7 +42,7 @@ const Busqueda = () => {
     };
 
     fetchData();
-  }, [filtro_2,tags]);
+  }, [filtro_2, tags]);
 
   useEffect(() => {
     // Ordenar las publicaciones según el filtro seleccionado por el usuario
