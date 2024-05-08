@@ -30,6 +30,9 @@
 .search {
   flex: 0.5;
   margin: 0 20px;
+  justify-content: space-between;
+  display:flex;
+  align-items: center;
 }
 
 .search input {
@@ -105,7 +108,6 @@
 .menu-button2:hover {
   background-color: #ffe9cd;
 }
-
 
 .menu-button3 {
   height: 35px;
@@ -254,4 +256,19 @@
   width: 100%;
   height: 1px;
   background-color: #0000005e; /* Color de la línea separadora */
+}
+
+.search-button {
+  height: 35px;
+  border: 1px solid #ff5c00;
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin: 0 5px;
+  background-color: #ffffff;
+  color: #ff5c00;
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background-color: #ffe9cd;
 }

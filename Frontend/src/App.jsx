@@ -22,6 +22,8 @@ import SupportUs from "./pages/SupportUs.jsx"
 import UserProfile from "./pages/UserProfile.jsx"
 import Terms from "./pages/Terms.jsx"
 import Acuerdo from "./pages/Acuerdo.jsx"
+import Busqueda from "./components/Busqueda.jsx"
+import ResultsSearch from "./pages/Results_search.jsx"
 
 function App() {
   return (
@@ -49,6 +51,8 @@ function App() {
           <Route path="/support" element={<SupportUs />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/acuerdo" element={<Acuerdo />} />
+          <Route path="/search/:tags" element={<Busqueda />} />
+          <Route path="/results_search/:tags" element={<ResultsSearch />} />
           <Route path="/user/:username" element={<UserProfile />} />
         </Routes>
       </div>
