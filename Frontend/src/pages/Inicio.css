@@ -1,60 +1,84 @@
-.home {
+.in-container {
+    background-color: #282828;
+    border-radius: 20px;
+    padding: 70px;
     display: flex;
-    background-color: rgba(0, 0, 0, 0.8);
-    width: 80vw;
-}
-
-.home-text {
-    display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    gap: 40px;
+    margin: 20px;
     align-items: center;
-    text-align: center;
+    justify-content: center;
 }
 
-.ini-p {
-    color: #ffffff;
-    font-size: 30px;
-    font-weight: 700;
+.in-message {
+    display: flex;
+    color: white;
+    font-size: 40px;
+    gap: 40px;
+    flex-direction: row;
 }
 
-.home-p {
-    overflow: hidden;
+.in-name {
+    font-size: 40px;
+    color: #ff7525;
+    font-weight: bold;
 }
 
-.home-p span {
-    font-size: 30px;
-    color: orangered;
-    font-weight: 700;
-    padding-left: 7px;
-    display: none;
+.in-logo-food {
+    width: 200px;
+    height: 240px;
 }
 
-.home-p span.text-in {
-    display: block;
-    animation: textIn .5s ease;
+.in-text{
+    max-width: 500px;
 }
 
-.home-p span.text-out {
-    animation: textOut .5s ease;
+.in-unete {
+    display: flex;
+    padding: 10px 50px;
+    border-radius: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 
-@keyframes textIn {
-    0% {
-        transform: translateY(100%);
-    }
-
-    100% {
-        transform: translateY(0%);
-    }
+.in-unete-button {
+    width: 300px;
+    height: 50px;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #e77431;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 5px 0;
 }
 
-@keyframes textOut {
-    0% {
-        transform: translateY(0%);
-    }
+.in-unete-button:hover {
+    background-color: #c15110;
+}
 
-    100% {
-        transform: translateY(-100%);
+.in-buscar {
+    background-color: transparent !important;
+    font-size: 14px;
+    border: none;
+    text-decoration: underline !important;
+    cursor: pointer;
+    color: white;
+}
 
-    }
+.in-buscar:hover {
+    color: #ea7e3f;
+}
+
+@media screen and (max-width: 900px) {
+    .in-message {
+         flex-direction: column;
+         align-items: center;
+     }
+     .in-text {
+         text-align: center;
+     }
 }

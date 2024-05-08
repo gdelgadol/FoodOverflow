@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useRect } from "react-use-rect";
 import './Inicio.css'
+import iconoBlanco from "../assets/logo-blanco.png";
+import { Link } from "react-router-dom";
 
 const mock = ["crear", "preguntar", "comentar", "valorar"];
 
@@ -40,7 +42,8 @@ const SlideText = ({ source }) => {
               currentItemIndex === index ? `-${(rect?.height ?? 0) * 2}px` : 0
             })`,
             transition: "all 1s ease-in-out",
-            color: "orangered"
+            color: "#ff7525",
+            fontWeight: "bold",
           }}
         >
           {text}
@@ -52,9 +55,38 @@ const SlideText = ({ source }) => {
 
 const Inicio = () => {
   return (
-    <div style={{ color: "Black", fontSize: "2rem" }}>
-      En FoodOverflow puedes <SlideText source={mock} /> recetas y disfrutar
-      del mundo de la comida
+    <div className="in-container">
+      <div className="in-message">
+        <div>
+          <img
+            alt="Logo de Food Overflow"
+            src={iconoBlanco}
+            className="in-logo-food"
+          />
+        </div>
+        <div className="in-text">
+          <span className="in-name">
+            Food Overflow
+          </span>
+          <br />
+          Un foro donde puedes <SlideText source={mock} /> recetas y
+          <br />
+          <span>
+            disfrutar del mundo de la comida.
+          </span>
+        </div>
+      </div>
+      <div className="in-unete">
+        <Link to={'/register'}>
+          <button className="in-unete-button">Únete a la comunidad</button>
+        </Link>
+        <div style={{color: "white"}}>
+          o
+          <Link to={'/register'}>
+          <button className="in-buscar">explora el foro</button>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };
