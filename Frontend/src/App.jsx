@@ -15,6 +15,7 @@ import {Routes, Route} from "react-router-dom";
 import Encabezado from "./components/Encabezado.jsx"
 import Footer from "./components/Footer.jsx"
 import PrivateRoute from "./utils/PrivateRoute"
+import ExclusiveRoute from "./utils/ExclusiveRoute.jsx"
 import DetallesPublicacion from "./pages/DetallesPublicacion"
 import DetallesReceta from "./pages/DetallesReceta"
 import AboutUs from "./pages/AboutUs.jsx"
@@ -24,6 +25,7 @@ import Terms from "./pages/Terms.jsx"
 import Acuerdo from "./pages/Acuerdo.jsx"
 import Busqueda from "./components/Busqueda.jsx"
 import ResultsSearch from "./pages/Results_search.jsx"
+import Inicio from "./pages/Inicio.jsx"
 
 function App() {
   return (
@@ -31,9 +33,8 @@ function App() {
       <Encabezado />
       <div className="container">
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Inicio />} />
+          <Route path="/forum" element={<Home />} />
           <Route path="/activate/:uid/:token" element={<Activate />} />
           <Route path="/settings/:u_id/:token/:email" element={<Settings />} />
           <Route path="/recuperar_contrasena" element={<Rec_contrasena />} />
@@ -46,6 +47,10 @@ function App() {
             <Route path="/change_email" element={<Change_email />} />
             <Route path="/change_password" element={<Change_password />} />
             <Route path="/change_user" element={<Change_user />} />
+          </Route>
+          <Route element={<ExclusiveRoute />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
           </Route>
           <Route path="/about" element={<AboutUs />} />
           <Route path="/support" element={<SupportUs />} />
