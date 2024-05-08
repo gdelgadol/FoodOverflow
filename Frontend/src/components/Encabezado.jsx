@@ -1,6 +1,6 @@
 import './Encabezado.css';
 import iconoImg from '../assets/logo.png';
-import { Link, useNavigate } from 'react-router-dom'; // Importamos useNavigate
+import { Link, useNavigate, useLocation } from 'react-router-dom'; // Importamos useNavigate
 import Cookies from 'universal-cookie';
 import Creatable from 'react-select/creatable';
 import React, { useState, useEffect } from 'react';
@@ -26,6 +26,12 @@ function Encabezado() {
   const urlFront = import.meta.env.VITE_FRONT_URL;
   const url = import.meta.env.VITE_API_URL;
   const [menuNotificacionOpen, setMenuNotificacionOpen] = useState(false);
+  const location = useLocation(); // Usamos useLocation para obtener la ruta actual
+
+  useEffect(() => {
+    // Limpiar las etiquetas seleccionadas cuando la ruta cambie
+    setSelectedTags([]);
+  }, [location.pathname]); // Ejecutar el efecto cuando la ruta cambie
 
 
   const toggleMenu = () => {
