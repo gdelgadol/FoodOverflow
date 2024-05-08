@@ -11,6 +11,62 @@ from .recipes import save_recipe
 
 import json
 
+#Delete comments   
+def delete_comment(request, identifier):
+    try:
+        data = json.loads(request.body)
+
+        if data.get("jwt"):
+            jwt_decoded = decode_jwt(data.get("jwt"))
+        else:
+            return JsonResponse({
+                "type" : "ERROR",
+                "message" : "Ha ocurrido un error, inténtalo de nuevo."
+                })
+        
+        comment_id = data.get("comment_id")
+
+        if identifier == 'publication':
+            if PublicationComment.objects.filter(publication_comment_id = comment_id).exists():
+                comment = PublicationComment.objects.get(publication_comment_id = comment_id)
+            else:
+                return JsonResponse({
+                    "type" : "ERROR",
+                    "message" : "El comentario que estás intentando eliminar no existe."
+                    })
+
+            if jwt_decoded["username"] == comment.profile.username:
+                comment.delete()
+                return JsonResponse({
+                    "type" : "SUCCESS",
+                    "message" : "El comentario ha sido eliminada con éxito."
+                    })
+        elif identifier == 'recipe':
+            if RecipeComment.objects.filter(recipe_comment_id = comment_id).exists():
+                comment = RecipeComment.objects.get(recipe_comment_id = comment_id)
+            else:
+                return JsonResponse({
+                    "type" : "ERROR",
+                    "message" : "El comentario que estás intentando eliminar no existe."
+                    })
+
+            if jwt_decoded["username"] == comment.profile.username:
+                comment.delete()
+                return JsonResponse({
+                    "type" : "SUCCESS",
+                    "message" : "El comentario ha sido eliminado con éxito."
+                    })
+        return JsonResponse({
+            "type" : "ERROR",
+            "message" : "Ha ocurrido un error, inténtalo de nuevo."
+            })
+    except Exception as e:
+        print(str(e))
+        return JsonResponse({
+            "type" : "ERROR",
+            "message" : "Ha ocurrido un error, inténtalo de nuevo."
+            })
+
 #Delete posts    
 def delete_post(request, identifier):
     try:
@@ -519,155 +575,6 @@ def get_saved_posts(request, identifier):
             "type" : "ERROR",
             "message" : str(e)
         })
-
-#Delete comments   
-def delete_comment(request, identifier):
-    try:
-        data = json.loads(request.body)
-
-        if data.get("jwt"):
-            jwt_decoded = decode_jwt(data.get("jwt"))
-        else:
-            return JsonResponse({
-                "type" : "ERROR",
-                "message" : "Ha ocurrido un error, inténtalo de nuevo."
-                })
-        
-        comment_id = data.get("comment_id")
-
-        if identifier == 'publication':
-            if PublicationComment.objects.filter(publication_comment_id = comment_id).exists():
-                comment = PublicationComment.objects.get(publication_comment_id = comment_id)
-            else:
-                return JsonResponse({
-                    "type" : "ERROR",
-                    "message" : "El comentario que estás intentando eliminar no existe."
-                    })
-
-            if jwt_decoded["username"] == comment.profile.username:
-                comment.delete()
-                return JsonResponse({
-                    "type" : "SUCCESS",
-                    "message" : "El comentario ha sido eliminada con éxito."
-                    })
-        elif identifier == 'recipe':
-            if RecipeComment.objects.filter(recipe_comment_id = comment_id).exists():
-                comment = RecipeComment.objects.get(recipe_comment_id = comment_id)
-            else:
-                return JsonResponse({
-                    "type" : "ERROR",
-                    "message" : "El comentario que estás intentando eliminar no existe."
-                    })
-
-            if jwt_decoded["username"] == comment.profile.username:
-                comment.delete()
-                return JsonResponse({
-                    "type" : "SUCCESS",
-                    "message" : "El comentario ha sido eliminado con éxito."
-                    })
-        return JsonResponse({
-            "type" : "ERROR",
-            "message" : "Ha ocurrido un error, inténtalo de nuevo."
-            })
-    except Exception as e:
-        print(str(e))
-        return JsonResponse({
-            "type" : "ERROR",
-            "message" : "Ha ocurrido un error, inténtalo de nuevo."
-            })
-
-#Report comments or publications
-def report(request, identifier):
-    try:
-        data = json.loads(request.body)
-        
-        admins = Profile.objects.filter(is_admin = True)
-
-        id = data.get("id")
-        message = data.get("message")
-
-        url = config('FRONT_HOST')
-
-        if not decode_jwt(data.get("jwt")):
-            return JsonResponse({
-                "type" : "ERROR", 
-                "message" : "El usuario debe iniciar sesión para reportar una publicación."
-                })
-        
-        recipe = None
-        publication = None
-        
-        if identifier == "publication":
-            if Publication.objects.filter(publication_id = id).exists():
-                publication = Publication.objects.get(publication_id = id)
-            else:
-                return JsonResponse({
-                    "type" : "ERROR", 
-                    "message" : "La publicación que estás reportando no existe."
-                    })
-            url += f'/{identifier}/{id}'
-            message = f'La publicación con id {id} ha sido reportada por {message}. {url}.'
-            identifier = "Publicación reportada"
-        elif identifier == "recipe":
-            if Recipe.objects.filter(recipe_id = id).exists():
-                recipe = Recipe.objects.get(recipe_id = id)
-            else:
-                return JsonResponse({
-                    "type" : "ERROR", 
-                    "message" : "La receta que estás reportando no existe."
-                    })
-            url += f'/{identifier}/{id}'
-            message = f'La receta con id {id} ha sido reportada por {message}. {url}'
-            identifier = "Receta reportada"
-        elif identifier == "publication_comment":
-            if PublicationComment.objects.filter(publication_comment_id = id).exists():
-                publication_comment = PublicationComment.objects.get(publication_comment_id = id)
-            else:
-                return JsonResponse({
-                    "type" : "ERROR", 
-                    "message" : "El comentario que estás reportando no existe."
-                    })
-            publication = publication_comment.publication
-            publication_id = publication.publication_id
-            url += f'/publication/{publication_id}'
-            message = f'El comentario con id {id} en la publicación con id {publication_id} ha sido reportada por {message}.'
-            identifier = "Comentario reportado"
-        elif identifier == "recipe_comment":
-            if RecipeComment.objects.filter(recipe_comment_id = id).exists():
-                recipe_comment = RecipeComment.objects.get(recipe_comment_id = id)
-            else:
-                return JsonResponse({
-                    "type" : "ERROR", 
-                    "message" : "El comentario que estás reportando no existe."
-                    })
-            recipe = recipe_comment.recipe
-            recipe_id = recipe.recipe_id
-            url += f'/recipe/{recipe_id}'
-            message = f'El comentario con id {id} en la receta con id {recipe_id} ha sido reportada por {message}. {url}'
-            identifier = "Comentario reportado"
-        else:
-            print(identifier, " no es un identificador valido.")
-            return JsonResponse({
-                "type" : "ERROR", 
-                "message" : "Ha ocurruido un error, intentalo de nuevo."
-                })
-        
-        for admin in admins:
-            if publication:
-                Notification.objects.notify_publication(admin, publication, message)
-            elif recipe:
-                Notification.objects.notify_recipe(admin, recipe, message)
-        
-        return JsonResponse({
-                "type" : "SUCCESS", 
-                "message" : f'{identifier} con éxito. Nuestros administradores revisarán tu petición.'
-                })
-    except Exception as e:
-        print(e)
-        return JsonResponse({
-            "type" : "ERROR", 
-            "message" : "Ha ocurruido un error, intentalo de nuevo."
-            })
 
 #Save posts controller
 def save_posts(request, identifier):

@@ -18,7 +18,7 @@ def decode_jwt(token):
 
         profile = Profile.objects.get(username = response["username"])
         # return a dict with the decoded data
-        return {'username' : profile.username, 'email' : profile.email, 'id': profile.id}
+        return {'username' : profile.username, 'email' : profile.email, 'id': profile.id, "is_admin" : profile.is_admin}
     except Exception as e:
         print(str(e))
         return None

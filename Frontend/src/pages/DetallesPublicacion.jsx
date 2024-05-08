@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { HiArrowCircleDown, HiArrowCircleUp } from "react-icons/hi";
 import axios from "../api/axios.jsx";
 import { BiComment } from "react-icons/bi";
+import { FaTrashCan } from "react-icons/fa6";
 import "./DetallesPublicacion.css";
 import Cookies from "universal-cookie";
 import Comentario from "../components/Comentario";
@@ -29,6 +30,8 @@ function DetallesPublicacion() {
   const [reportMenuVisible, setReportMenuVisible] = useState(false);
   const [reportReason, setReportReason] = useState('');
   const [submittingReport, setSubmittingReport] = useState(false);
+  const [username, setUsername] = useState('');
+  const [is_admin, set_is_admin] = useState(false);
   const url =  import.meta.env.VITE_API_URL;
 
   const cookies = new Cookies();
@@ -103,9 +106,11 @@ function DetallesPublicacion() {
     }
 };
 
+  const handle_delete_post = () => {};
 
   useEffect(() => {
     obtenerDetallesPublicacion(id);
+    get_user_data();
   }, [reload]);
 
   const obtenerDetallesPublicacion = async (id) => {
@@ -133,6 +138,22 @@ function DetallesPublicacion() {
       console.error("Error al realizar la solicitud:", error);
     }
   };
+
+  const get_user_data = async () =>{
+    try{
+      const response = await axios.post(`${url}/get_jwt_info`, {
+          jwt: jwt,
+      });
+      
+      if (response.data.type === "SUCCESS"){
+        setUsername(response.data.username);
+        set_is_admin(response.data.is_admin);
+      }
+
+    }catch (error) {
+        console.error("Error al realizar la solicitud:", error);
+    }
+  }
 
   const submitComment = async () => {
     try {
@@ -205,6 +226,12 @@ const tagsDictionary = {
   return (
     <div className="dp-container">
       <div className="dp-post">
+      {author == username || is_admin ? (
+        <button
+            className="dp-delete-button"
+            title="Eliminar publicación"> 
+            <FaTrashCan />
+        </button>) : <div></div>}
         <div className="dp-score">
           <button
             className={`vote-button ${voted && lastVote === 1 ? 'voted' : ''} ${voteStatus === 1 ? 'user-voted' : ''}`}
@@ -346,6 +373,8 @@ const tagsDictionary = {
           comment_user_avatar={comment.comment_user_avatar}
           response_list={comment.response_list}
           type="publication"
+          username = {username}
+          is_admin = {is_admin}
         />
         ))
       }
