@@ -3,7 +3,7 @@ import axios from "../api/axios.jsx";
 import Cookies from "universal-cookie";
 import "./Comentario.css";
 
-export default function Comentario({ jwt, reload, setReload, post_id, comment_id, comment_content, comment_user, comment_user_avatar, response_list, type, id_publication, id_recipe }) {
+export default function Comentario({ jwt, reload, setReload, post_id, comment_id, comment_content, comment_user, comment_user_avatar, response_list, type, id_publication, id_recipe, username, is_admin }) {
     const [showResponses, setShowResponses] = useState(false);
     const [inputReply, setInputReply] = useState(false);
     const [response, setResponse] = useState('');
@@ -140,6 +140,10 @@ export default function Comentario({ jwt, reload, setReload, post_id, comment_id
                     <button className="commentario-report-button" onClick={toggleReportMenu} disabled={submittingReport}>
                         {submittingReport ? 'Enviando...' : 'Reportar'}
                     </button>
+                    { comment_user == username || is_admin ?(
+                    <button className="commentario-delete-button">
+                        Eliminar
+                    </button>) : <div></div> }
                 </div>
                 {inputReply && (
                     <div className="comentario-reply">
@@ -214,6 +218,10 @@ export default function Comentario({ jwt, reload, setReload, post_id, comment_id
                                 <button className="commentario-report-button" onClick={() => toggleReportMenuResponse(index)} disabled={submittingReport}>
                                     {submittingReport ? 'Enviando...' : 'Reportar'}
                                 </button>
+                                { response.response_user == username || is_admin ?(
+                                <button className="commentario-delete-button">
+                                    Eliminar
+                                </button>) : <div></div> }
                             </div>
                             {reportMenuResponseVisible[index] && (
                                 <div className='dp-aclaracion'>
