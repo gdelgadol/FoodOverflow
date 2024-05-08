@@ -12,6 +12,7 @@ urlpatterns = [
     # Forum
     path('report/<str:identifier>', views.report, name = "report"), #report posts and post's comments 
     path('save/<str:identifier>', views.save_posts, name = "save"), #save posts and post's comments 
+    path('saved_posts/<str:identifier>', views.get_saved_posts, name = "saved_posts"), #Get the user's saved posts
     ## Publication
     path('publications/', views.get_publications, name = "get_publications"), # get publications
     path('crear_publicacion/', views.create_forum_publication, name= "crear_publicaion"), # create publication path

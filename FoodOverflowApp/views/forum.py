@@ -1,6 +1,6 @@
 from ..models import Publication, PublicationComment, PublicationVote
 from ..models import Recipe, RecipeComment, RecipeVote
-from ..models import Profile, Avatar
+from ..models import Profile, Avatar, SavedPost
 from ..models import Notification
 from django.http import JsonResponse
 from ..views.token import decode_jwt
@@ -402,6 +402,99 @@ def get_user_posts(request, user_identifier, identifier):
                 post_data = {
                     "id": publication.publication_id,
                     "userName": username,
+                    "profile_avatar" : profile_avatar,
+                    "title": publication.publication_title,
+                    "description": publication.publication_description,
+                    "numComments": num_comments,
+                    "score": score,
+                    "tagsList": publication.publication_tags
+                }
+                posts.append(post_data)
+        else:
+            return JsonResponse({
+                "type" : "ERROR",
+                "message" : "Ha ocurrido un error, inténtalo de nuveo."
+            })
+            
+        return JsonResponse({
+                "type" : "SUCCESS",
+                "posts" : posts
+            })
+    except Exception as e:
+        print(e)
+        return JsonResponse({
+            "type" : "ERROR",
+            "message" : str(e)
+        })
+    
+#get user's saved posts
+def get_saved_posts(request, identifier):
+    try:
+        data = json.loads(request.body)
+        
+        if data.get("jwt"):
+            jwt_decoded = decode_jwt(data.get("jwt"))
+        else:
+            return JsonResponse({
+                "type" : "ERROR",
+                "message" : "El usuario no ha iniciado sesión."
+            })
+        
+        if Profile.objects.filter(id = jwt_decoded["id"]).exists():
+            profile = Profile.objects.get(id = jwt_decoded["id"])
+        else:
+            return JsonResponse({
+                "type" : "ERROR",
+                "message" : "El usuario no se encuentra registrado."
+            })
+        
+        if identifier == "recipes":
+            saved_recipes = SavedPost.objects.filter(profile = profile, publication = None)
+            
+            posts = []
+
+            if profile.avatar_id:
+                profile_avatar = Avatar.objects.get(avatar_id = profile.avatar_id.avatar_id).avatar_url
+            else:
+                profile_avatar = ""
+            
+            for saved_recipe in saved_recipes:
+                recipe = saved_recipe.recipe
+                num_comments = RecipeComment.objects.filter(recipe = recipe.recipe_id).count()
+                score = RecipeVote.objects.filter(recipe = recipe.recipe_id).aggregate(Sum('vote_type'))['vote_type__sum']
+                if not score:
+                    score = 0
+                post_data = {
+                    "id": recipe.recipe_id,
+                    "userName": profile.username,
+                    "profile_avatar" : profile_avatar,
+                    "title": recipe.recipe_title,
+                    "ingredients" : recipe.recipe_ingredients,
+                    "description": recipe.recipe_description,
+                    "numComments": num_comments,
+                    "score": score,
+                    "tagsList": recipe.recipe_tags
+                }
+                posts.append(post_data)
+
+        elif identifier == "publications":
+            saved_publications = SavedPost.objects.filter(profile = profile, recipe = None)
+            posts = []
+
+            if profile.avatar_id:
+                profile_avatar = Avatar.objects.get(avatar_id = profile.avatar_id.avatar_id).avatar_url
+            else:
+                profile_avatar = ""
+            
+            for saved_publication in saved_publications:
+                publication = saved_publication.publication
+                num_comments = PublicationComment.objects.filter(publication = publication.publication_id).count()
+                score = PublicationVote.objects.filter(publication = publication.publication_id).aggregate(Sum('vote_type'))['vote_type__sum']
+                if not score:
+                    score = 0
+                post_data = {
+                    "id": publication.publication_id,
+                    "userName": profile.username,
                     "profile_avatar" : profile_avatar,
                     "title": publication.publication_title,
                     "description": publication.publication_description,
