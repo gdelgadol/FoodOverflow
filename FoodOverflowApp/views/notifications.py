@@ -1,14 +1,8 @@
-from ..models import Publication, PublicationComment, PublicationVote
-from ..models import Recipe, RecipeComment, RecipeVote
-from ..models import Profile, Avatar
+from ..models import Profile
 from ..models import Notification
 from django.http import JsonResponse
 from ..views.token import decode_jwt
-from django.db.models import Sum
-from decouple import config
-from .publications import save_publication
-from .recipes import save_recipe
-
+import re
 import json
 
 def get_user_notifications(request):
@@ -29,12 +23,26 @@ def get_user_notifications(request):
         notifications = []
 
         for notification in notification_query:
+            # Define a regex pattern to match URLs of the form "/recipe/id" or "/publication/id"
+            url_pattern = r'/(?:recipe|publication)/\d+'
+
+            # Find all matching patterns in the message using the regex pattern
+            urls = re.findall(url_pattern, notification.message)
+
+            # Assuming there's only one URL in the message, you can access it like this
+            if urls:
+                extracted_url = urls[0]
+                print("Extracted URL:", extracted_url)
+            else:
+                return JsonResponse ({
+                    "message":"No URL of the specified format found in the message.",
+                    "type":"ERROR"
+                })
+
             notification_data = {
-                "id": notification.notification_id,
+                "notification_id": notification.notification_id,
                 "message": notification.message,
-                "publication_id": notification.publication_id,
-                "profile_id": notification.profile_id,
-                "recipe_id": notification.recipe_id
+                "url": extracted_url
             }
 
             notifications.append(notification_data)
