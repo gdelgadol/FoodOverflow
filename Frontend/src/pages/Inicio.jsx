@@ -82,7 +82,7 @@ const Inicio = () => {
         </Link>
         <div style={{color: "white"}}>
           o
-          <Link to={'/register'}>
+          <Link to={'/forum'}>
           <button className="in-buscar">explora el foro</button>
           </Link>
         </div>
