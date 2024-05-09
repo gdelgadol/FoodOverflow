@@ -3,7 +3,7 @@ import axios from "../api/axios.jsx";
 import Cookies from "universal-cookie";
 import "./Comentario.css";
 
-export default function Comentario({ jwt, reload, setReload, post_id, comment_id, comment_content, comment_user, comment_user_avatar, response_list, type, id_publication, id_recipe, username, is_admin }) {
+export default function Comentario({ jwt, reload, setReload, post_id, comment_id, comment_content, comment_user, comment_user_avatar, response_list, type, is_publication, username, is_admin }) {
     const [showResponses, setShowResponses] = useState(false);
     const [inputReply, setInputReply] = useState(false);
     const [response, setResponse] = useState('');
@@ -87,6 +87,23 @@ export default function Comentario({ jwt, reload, setReload, post_id, comment_id
         setResponse(reply);
     };
 
+    const handle_delete_comment = async (id, type) => {
+        try {
+          if(confirm(`Esta acción es definitiva ¿Estás seguro de eliminar ${type}?`)){
+            var identifier = '';
+            is_publication ? identifier = 'publication' : identifier = 'recipe';
+            const res = await axios.post(`${url}/delete_comment/${identifier}`, {
+              comment_id: id,
+              jwt : jwt
+            });
+            alert(res.data.message);
+            setReload(!reload);
+          }
+        } catch (error) {
+          console.error("Error al realizar la solicitud:", error);
+        }
+      };
+
     const toggleReportMenu = () => {
         setReportMenuVisible(!reportMenuVisible);
         setReportReason('');
@@ -141,7 +158,7 @@ export default function Comentario({ jwt, reload, setReload, post_id, comment_id
                         {submittingReport ? 'Enviando...' : 'Reportar'}
                     </button>
                     { comment_user == username || is_admin ?(
-                    <button className="commentario-delete-button">
+                    <button className="commentario-delete-button" onClick = {() => handle_delete_comment(comment_id, 'el comentario')}>
                         Eliminar
                     </button>) : <div></div> }
                 </div>
@@ -219,7 +236,7 @@ export default function Comentario({ jwt, reload, setReload, post_id, comment_id
                                     {submittingReport ? 'Enviando...' : 'Reportar'}
                                 </button>
                                 { response.response_user == username || is_admin ?(
-                                <button className="commentario-delete-button">
+                                <button className="commentario-delete-button" onClick={() => handle_delete_comment(response.response_id,'la respuesta')}>
                                     Eliminar
                                 </button>) : <div></div> }
                             </div>

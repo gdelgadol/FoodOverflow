@@ -34,6 +34,7 @@ function DetallesReceta() {
     const [submittingReport, setSubmittingReport] = useState(false);
     const [username, setUsername] = useState('');
     const [is_admin, set_is_admin] = useState(false);
+    const [reports, setReports] = useState([]);
     const url =  import.meta.env.VITE_API_URL;
 
     const cookies = new Cookies();
@@ -109,6 +110,20 @@ function DetallesReceta() {
         }
     };
     
+    const handle_delete_post = async () => {
+        try {
+          if(confirm("Esta acción es definitiva ¿Estás seguro de eliminar la publicación?")){
+            const res = await axios.post(`${url}/delete_posts/recipe`, {
+              post_id: id,
+              jwt : jwt
+            });
+            alert(res.data.message);
+            history.back();
+          }
+        } catch (error) {
+          console.error("Error al realizar la solicitud:", error);
+        }
+      };
 
     useEffect(() => {
         obtenerDetallesReceta(id);
@@ -151,6 +166,17 @@ function DetallesReceta() {
           if (response.data.type === "SUCCESS"){
             setUsername(response.data.username);
             set_is_admin(response.data.is_admin);
+          }
+
+          if(response.data.is_admin){
+            const response = await axios.post(`${url}/get_reports/`, {
+                jwt: jwt,
+                recipe_id : id
+            });
+    
+            if (response.data.type === "SUCCESS"){
+              setReports(response.data.messages);
+            }
           }
     
         }catch (error) {
@@ -230,11 +256,14 @@ function DetallesReceta() {
 
     return (
         <div className='dp-container'>
+            {is_admin ? (<div>Este post ha sido reportado por:</div>): (<div></div>)}
+            {is_admin ? (reports.map((message) => <li key = {message}>{message}</li>)): (<div></div>)}
             <div className='dp-post'>
             {author == username || is_admin ? (
                 <button
                     className="dp-delete-button"
-                    title="Eliminar publicación"> 
+                    title="Eliminar publicación"
+                    onClick={handle_delete_post}> 
                     <FaTrashCan />
                 </button>) : <div></div>}
                 <div className='dp-score'>
