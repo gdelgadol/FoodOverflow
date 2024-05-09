@@ -125,6 +125,7 @@ export default function Comentario({ jwt, reload, setReload, post_id, comment_id
                 alert(response.data.message);
                 // Cerrar el menú de reporte después de un reporte exitoso
                 toggleReportMenu();
+                setReload(!reload);
             } else {
                 alert(response.data.message);
             }

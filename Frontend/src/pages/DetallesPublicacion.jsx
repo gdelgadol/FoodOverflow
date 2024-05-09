@@ -203,6 +203,20 @@ function DetallesPublicacion() {
     }
   };
 
+  const ignore_report = async (id) => {
+    try {
+        const response = await axios.post(`${url}/notifications/delete/`, { // Aquí va la URL para reportar receta, entre las comillas
+            notification_id : id,
+            ignore_report : true,
+            jwt: jwt
+        });
+        console.log(response.data.message);
+        setReload(!reload);
+    } catch (error) {
+        console.error("Error al realizar la solicitud:", error);
+    }
+}
+
   const toggleReportMenu = () => {
     setReportMenuVisible(!reportMenuVisible);
     setReportReason(''); 
@@ -224,6 +238,7 @@ const submitReport = async () => {
             alert(response.data.message);
             setReportReason('');
             toggleReportMenu();
+            setReload(!reload);
         } else {
             alert(response.data.message);
         }
@@ -249,8 +264,8 @@ const tagsDictionary = {
 
   return (
     <div className="dp-container">
-      {is_admin ? (<div>Este post ha sido reportado por:</div>): (<div></div>)}
-      {is_admin ? (reports.map((message) => <li key = {message}>{message}</li>)): (<div></div>)}
+      {is_admin && reports.length ? (<div>Este post ha sido reportado por:</div>): (<div></div>)}
+      {is_admin ? (reports.map((report) => <li key = {report.id}>{report.message} <button onClick = {() => ignore_report(report.id)}>Ignorar reporte</button></li>)): (<div></div>)}
       <div className="dp-post">
       {author == username || is_admin ? (
         <button
@@ -319,7 +334,7 @@ const tagsDictionary = {
                                         <option value="Suplantación">Suplantación</option>
                                         <option value="Odio">Contenido con odio</option>
                                         <option value="Contenido Peligroso">Contenido peligroso</option>
-                                        <option value="contenido erróneo">Contenido erróneo</option>
+                                        <option value="Contenido erróneo">Contenido erróneo</option>
                                         <option value="Violación de normas">Violación de normas</option>
                                         <option value="Contenido sexual">Contenido sexual</option>
                                         <option value="Otro">Otro</option>

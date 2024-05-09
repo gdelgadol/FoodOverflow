@@ -18,7 +18,7 @@ def get_user_notifications(request):
 
         user = Profile.objects.get(username = jwt_decoded["username"])
 
-        notification_query = Notification.objects.filter(profile_id = user.id)
+        notification_query = Notification.objects.filter(profile_id = user.id).order_by("-notification_id")
 
         notifications = []
 
@@ -69,7 +69,7 @@ def delete_user_notification(request):
         notification_is_not_report = notification.message.split(". ")[0] != "report"
 
         if jwt_decoded["username"] == notification.profile.username:
-            if notification_is_not_report:
+            if notification_is_not_report or data.get("ignore_report"):
                 notification.delete()
                 return JsonResponse({
                     "type" : "SUCCESS",
@@ -168,7 +168,7 @@ def report(request, identifier):
             publication = publication_comment.publication
             publication_id = publication.publication_id
             url += f'publication/{publication_id}'
-            message = f'report. El comentario con id {id} en la publicación con id {publication_id} ha sido reportada por: {message}.'
+            message = f'report. : El comentario con id {id} ha sido reportado por {message}. {url}'
             identifier = "Comentario reportado"
         elif identifier == "recipe_comment":
             if RecipeComment.objects.filter(recipe_comment_id = id).exists():
@@ -181,7 +181,7 @@ def report(request, identifier):
             recipe = recipe_comment.recipe
             recipe_id = recipe.recipe_id
             url += f'recipe/{recipe_id}'
-            message = f'report. El comentario con id {id} en la receta con id {recipe_id} ha sido reportada por: {message}. {url}'
+            message = f'report. : El comentario con id {id} ha sido reportado por {message}. {url}'
             identifier = "Comentario reportado"
         else:
             print(identifier, " no es un identificador valido.")
@@ -228,11 +228,12 @@ def get_posts_reports(request):
                 })
         
 
-        notifications = Notification.objects.filter(profile = admin, recipe = recipe, publication = publication)
+        notifications = Notification.objects.filter(profile = admin, recipe = recipe, publication = publication).order_by("-notification_id")
         messages = []
 
         for notification in notifications:
-            messages.append((notification.message.split(". ")[1]).split(": ")[1])
+            if notification.message.split(". ")[0] == "report":
+                messages.append({ "message" : (notification.message.split(". ")[1]).split(": ")[1], "id" : notification.notification_id})
 
         return JsonResponse({"type" : "SUCCESS", "messages" : messages})
     except Exception as e:
