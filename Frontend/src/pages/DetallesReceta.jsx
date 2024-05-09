@@ -149,7 +149,7 @@ function DetallesReceta() {
             setLastVote(res.data.vote_type > 0 ? 1 : (res.data.vote_type < 0 ? -1 : 0));
             setVoteStatus(res.data.vote_type);
             setTags(res.data.tagsList);
-            setSaved(res.data.is_saved === 1); 
+            setSaved(res.data.is_saved); 
             const userHasVoted = res.data.vote_type !== 0;
             setVoted(userHasVoted);
           } else {

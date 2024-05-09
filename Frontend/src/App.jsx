@@ -26,6 +26,7 @@ import Acuerdo from "./pages/Acuerdo.jsx"
 import Busqueda from "./components/Busqueda.jsx"
 import ResultsSearch from "./pages/Results_search.jsx"
 import Inicio from "./pages/Inicio.jsx"
+import UserSavedPosts from "./pages/UserSavedPosts.jsx"
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
           <Route path="/search/:tags" element={<Busqueda />} />
           <Route path="/results_search/:tags" element={<ResultsSearch />} />
           <Route path="/user/:username" element={<UserProfile />} />
+          <Route path="/saved_posts_user" element={<UserSavedPosts />} />
         </Routes>
       </div>
       <Footer />
