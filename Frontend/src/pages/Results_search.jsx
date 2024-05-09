@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from "../api/axios.jsx";
 import Cookies from 'universal-cookie';
-import Busqueda from '../components/Busqueda.jsx';
 import './Results_search.css';
+import Busqueda from '../components/Busqueda.jsx';
 
 function ResultsSearch() {
     const { tags } = useParams(); // Obtener los parámetros de la URL

@@ -4,11 +4,13 @@ import Publicacion from './Publicacion';
 import Paginacion from './Paginacion';
 import { useParams } from 'react-router-dom';
 import '../pages/Home.css';
+import '../pages/Results_search.css';
 import Cookies from 'universal-cookie';
 
 const Busqueda = () => {
   const { tags } = useParams(); // Obtenemos los tags de la URL
   const [posts, setPosts] = useState([]);
+  const [contador, setContador] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(10); // Número de publicaciones por página
   const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +31,7 @@ const Busqueda = () => {
         if (response.data.type === 'SUCCESS') {
           const sortedPosts = response.data.posts.sort((a, b) => b.id - a.id);
           setPosts(sortedPosts);
+          setContador(response.data.number_posts);
         } else {
           alert(response.data.message);
         }
