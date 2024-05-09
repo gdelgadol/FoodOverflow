@@ -1,9 +1,9 @@
 import json
 import jwt
 from decouple import config
-from django.http import JsonResponse
 from ..models import Profile, Avatar
 from ..models import Publication, Recipe, PublicationComment, RecipeComment, PublicationVote, RecipeVote, SavedPost
+from .modules import error_response, success_response, get_if_exists
 
 
 # Decode the JWT token
@@ -27,7 +27,7 @@ def get_jwt(request):
     try:
         data = json.loads(request.body)
         if not data.get("jwt"):
-            return JsonResponse({"type" : "ERROR", "message" : "Ha ocurrido un error, intentalo de nuevo."})
+            return error_response("Ha ocurrido un error, intentalo de nuevo.")
         token = data.get("jwt")
 
         #Decode the jwt
@@ -37,10 +37,9 @@ def get_jwt(request):
         if Profile.objects.filter(username = decoded["username"]).exists():
             profile = Profile.objects.get(username = decoded["username"])
         else: 
-            return JsonResponse({"type" : "ERROR", "message" : "El usuario que estás intentando buscar no existe."})
+            return error_response("El usuario que estás intentando buscar no existe.")
     
-        return JsonResponse({
-            "type" : "SUCCESS",
+        return success_response({
             "username" : profile.username,
             "email" : profile.email,
             "is_admin" : profile.is_admin
@@ -48,7 +47,7 @@ def get_jwt(request):
     
     except Exception as e:
         print(str(e))
-        return JsonResponse({"type" : "ERROR", "message" : "Ha ocurrido un error, intentalo de nuevo."})
+        return error_response("Ha ocurrido un error, intentalo de nuevo.")
 
 # return the information encoded in the front token
 def get_user_data(request, identifier):
@@ -59,26 +58,25 @@ def get_user_data(request, identifier):
             #get the Json token
             data = json.loads(request.body)
             if not data.get("jwt"):
-                return JsonResponse({"type" : "ERROR", "message" : "Ha ocurrido un error, intentalo de nuevo."})
+                return error_response("Ha ocurrido un error, intentalo de nuevo.")
             token = data.get("jwt")
 
             #Decode the jwt
             decoded = decode_jwt(token)
 
             #get profile
-            if Profile.objects.filter(username = decoded["username"]).exists():
-                profile = Profile.objects.get(username = decoded["username"])
+            profile = get_if_exists(Profile, {'username' : decoded["username"]})
+            if profile:
                 profile_info['email'] = profile.email 
                 profile_info['id'] = profile.id
                 profile_info["saved_posts"] = SavedPost.objects.filter(profile = profile).count()
             else: 
-                return JsonResponse({"type" : "ERROR", "message" : "El usuario que estás intentando buscar no existe."})
+                return error_response("El usuario que estás intentando buscar no existe.")
 
         else:
-            if Profile.objects.filter(username = identifier).exists():
-                profile = Profile.objects.get(username = identifier)
-            else: 
-                return JsonResponse({"type" : "ERROR", "message" : "El usuario que estás intentando buscar no existe."})
+            profile = get_if_exists(Profile, {'username' : identifier})
+            if not profile: 
+                return error_response("El usuario que estás intentando buscar no existe.")
 
         if profile.avatar_id:
             profile_info["avatar"] = Avatar.objects.get(avatar_id = profile.avatar_id.avatar_id).avatar_url
@@ -95,7 +93,7 @@ def get_user_data(request, identifier):
         profile_info["voted_recipes"] = RecipeVote.objects.filter(profile = profile).count()
 
         #return desired data
-        return JsonResponse(profile_info)
+        return success_response(profile_info)
     except Exception as e:
         print(str(e))
-        return JsonResponse({"type" : "ERROR", "message" : "Ha ocurrido un error, intentalo de nuevo."})
+        return error_response("Ha ocurrido un error, intentalo de nuevo.")

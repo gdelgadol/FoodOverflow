@@ -1,5 +1,4 @@
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.encoding import force_bytes, force_str
 from django.template.loader import render_to_string
 from ..tokens import account_activation_token
@@ -8,7 +7,7 @@ from django.utils.html import strip_tags
 from django.db import IntegrityError
 from ..models import Profile, Avatar
 import json
-from django.http import JsonResponse
+from .modules import error_response, success_response
 from decouple import config
 import random
 
@@ -17,53 +16,37 @@ def signup(request):
     try:
         # get json data
         data = json.loads(request.body)
-        try:
-            # chack if username or email exists
-            if Profile.objects.filter(username = data.get('username')).exists() or Profile.objects.filter(email = data.get('email')).exists():
-                return JsonResponse(
-                    {
-                        "message": "El nombre de usuario o correo ya se encuentran registrados.",
-                        "type": "ERROR",
-                    }
-                )
-            # check if the password are the same
-            if data.get("password") == data.get("check_password"):
-                # get the username
-                user_name = data.get("username")
-                # get the email
-                user_email = data.get("email")
-                # create the user profile
-                user = Profile.objects.create_user(
-                    username = user_name,
-                    password = data.get("password"),
-                    email = user_email.lower(),
-                )
+        # check if username or email exists
+        if Profile.objects.filter(username = data.get('username')).exists() or Profile.objects.filter(email = data.get('email')).exists():
+            return error_response("El nombre de usuario o correo ya se encuentran registrados.")
+        # check if the password are the same
+        if data.get("password") == data.get("check_password"):
+            # get the username
+            user_name = data.get("username")
+            # get the email
+            user_email = data.get("email")
+            # create the user profile
+            user = Profile.objects.create_user(
+                username = user_name,
+                password = data.get("password"),
+                email = user_email.lower(),
+            )
 
-                avatares = Avatar.objects.all()
-                user.avatar_id = avatares[random.randint(0, len(avatares)-1)]
-                user.save()
+            avatares = Avatar.objects.all()
+            user.avatar_id = avatares[random.randint(0, len(avatares)-1)]
+            user.save()
 
-                # send the activation Email
-                activate_email(request, user, user.email)
-              
-                # return Success
-                return JsonResponse(
-                    {
-                        "message": "¡Usuario creado con éxito! Por favor no olvides activar tu cuenta para ingresar.",
-                        "type": "SUCCESS",
-                    }
-                )
-            else:
-                # If the passwords are not the same return Error
-                return JsonResponse(
-                    {"message": "Las contraseñas no coinciden.", "type": "ERROR"}
-                )
-        except IntegrityError:
-            # If user already exists return error
-            return JsonResponse({"message": "El usuario que intentas registrar ya existe.", "type": "ERROR"})
+            # send the activation Email
+            activate_email(request, user, user.email)
+            
+            # return Success
+            return success_response({"message": "¡Usuario creado con éxito! Por favor no olvides activar tu cuenta para ingresar."})
+        else:
+            # If the passwords are not the same return Error
+            return error_response("Las contraseñas no coinciden.")
     except Exception as e:
         print(str(e))
-        return JsonResponse({"message": "Ha ocurrido un error, intentalo de nuevo.", "type": "ERROR"})
+        return error_response("Ha ocurrido un error, intentalo de nuevo.")
 
 # send email function
 def activate_email(request, user, to_email):
@@ -96,7 +79,7 @@ def activate_email(request, user, to_email):
         email.send()
     except Exception as e:
         print(str(e))
-        return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
+        return error_response(str(e))
 
 # Activation function
 def activate(request, uidb64, token):
@@ -110,35 +93,22 @@ def activate(request, uidb64, token):
     # if user exists check the sended token
     try:
         if user.active: #if user is currently activated
-            return JsonResponse(
-                {"message": "El usuario ha sido activado previamente con éxito", "type": "SUCCESS"}
-            )
+            return success_response({"message": "El usuario ha sido activado previamente con éxito"})
         elif user is not None and account_activation_token.check_token(user, token):
             # Activate User account
             user.active = True
             user.save()
             #return success message
-            return JsonResponse(
-                {"message": "El usuario ha sido activado con éxito", "type": "SUCCESS"}
-            )
+            return success_response({"message": "El usuario ha sido activado con éxito"})
         else:
             # if user does not exists or it is not activated
             if not user.active:
                 # delete the account
                 user.delete()
                 # return error message
-                return JsonResponse(
-                    {
-                        "message": "El usuario no ha podido ser activado, intenta el registro nuevamente.",
-                        "type": "ERROR",
-                    }
-                )
+                return error_response("El usuario no ha podido ser activado, intenta el registro nuevamente.")
             # return error message
-            return JsonResponse(
-                {"message": "El usuario no ha podido ser activado, intenta nuevamente.", "type": "ERROR"}
-            )
+            return error_response("El usuario no ha podido ser activado, intenta nuevamente.")
     except Exception as e:
         print(str(e))
-        return JsonResponse(
-                {"message": "Ha ocurrido un error, intenta nuevamente.", "type": "ERROR"}
-            )
+        return error_response("Ha ocurrido un error, intenta nuevamente.")
