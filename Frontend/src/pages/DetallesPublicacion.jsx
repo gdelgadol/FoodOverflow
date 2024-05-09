@@ -33,6 +33,7 @@ function DetallesPublicacion() {
   const [username, setUsername] = useState('');
   const [is_admin, set_is_admin] = useState(false);
   const [reports, setReports] = useState([]);
+  const [saved, setSaved] = useState(false);
   const url =  import.meta.env.VITE_API_URL;
 
   const cookies = new Cookies();
@@ -143,6 +144,7 @@ function DetallesPublicacion() {
         setLastVote(res.data.vote_type > 0 ? 1 : (res.data.vote_type < 0 ? -1 : 0));
         setVoteStatus(res.data.vote_type);
         setTags(res.data.tagsList);
+        setSaved(res.data.is_saved); 
         const userHasVoted = res.data.vote_type !== 0;
         setVoted(userHasVoted);
       } else {
@@ -234,6 +236,22 @@ const submitReport = async () => {
     }
 };
 
+const submitSave = async () => {
+  try {
+      const response = await axios.post(`${url}/save/publication`, {
+          post_id: id,
+          jwt: jwt
+      });
+      if (response.data.type === "SUCCESS") {
+          setSaved(!saved);
+      } else {
+          alert(response.data.message);
+      }
+  } catch (error) {
+      console.error("Error al realizar la solicitud:", error);
+  }
+};
+
 const tagsDictionary = {
   1: "Vegetariano",
   2: "Vegano",
@@ -276,11 +294,12 @@ const tagsDictionary = {
           >
             <HiArrowCircleDown size={30} className={`xd ${voted && lastVote === -1 ? 'voted' : ''} ${voteStatus === -1 ? 'user-voted2' : ''}`}/>
           </button>
-          <button 
-              className="save-button"
-              title="Guardar publicación"
+          <button
+              className={`save-button ${saved ? 'saved' : ''}`} // Agrega la clase 'saved' cuando 'saved' es true
+              onClick={submitSave}
+              title={saved ? "Eliminar de guardados" : "Guardar publicación"}
           >
-          <FaBookmark size={25} className="dp-guardar" />
+              <FaBookmark size={25} className="dp-guardar" />
           </button>
         </div>
         <div className="dp-contenido">

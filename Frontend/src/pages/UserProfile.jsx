@@ -5,10 +5,9 @@ import axios from "../api/axios.jsx";
 import Cookies from 'universal-cookie';
 import UserPostsView from '../components/UserPostsView.jsx';
 import { FaBookmark } from "react-icons/fa";
-
+import { Link } from 'react-router-dom';
 
 export default function UserProfile () {
-
     const { username } = useParams()
     const url =  import.meta.env.VITE_API_URL;
     const cookies = new Cookies();
@@ -26,6 +25,10 @@ export default function UserProfile () {
         avatar: ''
     })
 
+    const [userInfo2, setUserInfo2] = useState({
+        username2: '',
+    })
+
     useEffect(() => {
         axios.post(`${url}/get_user/${username}`, {
             jwt: jwt,
@@ -33,6 +36,7 @@ export default function UserProfile () {
         .then((res) => {
             setUserInfo({
                 username: res.data.username,
+                username2: res.data.username,
                 description: res.data.description,
                 profile_publications: res.data.profile_publications,
                 commented_publications: res.data.commented_publications,
@@ -47,6 +51,23 @@ export default function UserProfile () {
             console.error("Error al obtener datos del usuario:", error);
         })
     }, [])
+
+    useEffect(() => {
+        axios.post(`${url}/get_user/profile`, {
+            jwt: jwt,
+        })
+        .then((res) => {
+            setUserInfo2({
+                username2: res.data.username,
+            })
+        })
+        .catch((error) => {
+            console.error("Error al obtener datos del usuario:", error);
+        })
+    }, [])
+
+    const currentUser = cookies.get("username");
+    console.log(userInfo2.username2);
 
     return (
         <div className='up-container'>
@@ -77,10 +98,14 @@ export default function UserProfile () {
                         <div className='up-info-statistics-text'>Votos</div>
                     </div>
                 </div>
-                <button className='savedPosts-button'>
-                    <FaBookmark size={16} className='book'/>
-                    Posts guardados
-                    </button>
+                {userInfo2.username2 === userInfo.username && (
+                    <Link to={`/saved_posts_user`}>
+                        <button className='savedPosts-button'>
+                            <FaBookmark size={16} className='book'/>
+                            Posts guardados
+                        </button>
+                    </Link>
+                )}
             </div>
             <UserPostsView></UserPostsView>
         </div>
