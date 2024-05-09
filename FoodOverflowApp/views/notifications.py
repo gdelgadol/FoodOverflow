@@ -23,7 +23,8 @@ def get_user_notifications(request):
         notifications = []
 
         for notification in notification_query:
-            if user.is_admin:
+            notification_is_not_report = notification.message.split(". ")[0] != "report"
+            if not notification_is_not_report:
                 extracted_url = notification.message.split(". ")[-1]
             else:
                 # Define a regex pattern to match URLs of the form "/recipe/id" or "/publication/id"
@@ -56,11 +57,6 @@ def delete_user_notification(request):
         data = json.loads(request.body)
         if data.get("jwt"):
             jwt_decoded = decode_jwt(data.get("jwt"))
-            if jwt_decoded["is_admin"]:
-                return JsonResponse({
-                "type" : "SUCCESS",
-                "message" : "Soy Admin."
-                })
         else:
             return JsonResponse({
                 "type" : "ERROR",
@@ -70,9 +66,15 @@ def delete_user_notification(request):
         notification_id = data.get("notification_id")
 
         notification = Notification.objects.get(pk = notification_id)
+        notification_is_not_report = notification.message.split(". ")[0] != "report"
 
         if jwt_decoded["username"] == notification.profile.username:
-            notification.delete()
+            if notification_is_not_report:
+                notification.delete()
+                return JsonResponse({
+                    "type" : "SUCCESS",
+                    "message" : "Cargando vista del post."
+                })
             return JsonResponse({
                 "type" : "SUCCESS",
                 "message" : "La notificación ha sido eliminada con éxito."
@@ -142,7 +144,7 @@ def report(request, identifier):
                     "message" : "La publicación que estás reportando no existe."
                     })
             url += f'{identifier}/{id}'
-            message = f'La publicación con id {id} ha sido reportada por {message}. {url}'
+            message = f'report. La publicación con id {id} ha sido reportada por: {message}. {url}'
             identifier = "Publicación reportada"
         elif identifier == "recipe":
             if Recipe.objects.filter(recipe_id = id).exists():
@@ -153,7 +155,7 @@ def report(request, identifier):
                     "message" : "La receta que estás reportando no existe."
                     })
             url += f'{identifier}/{id}'
-            message = f'La receta con id {id} ha sido reportada por {message}. {url}'
+            message = f'report. La receta con id {id} ha sido reportada por: {message}. {url}'
             identifier = "Receta reportada"
         elif identifier == "publication_comment":
             if PublicationComment.objects.filter(publication_comment_id = id).exists():
@@ -166,7 +168,7 @@ def report(request, identifier):
             publication = publication_comment.publication
             publication_id = publication.publication_id
             url += f'publication/{publication_id}'
-            message = f'El comentario con id {id} en la publicación con id {publication_id} ha sido reportada por {message}.'
+            message = f'report. El comentario con id {id} en la publicación con id {publication_id} ha sido reportada por: {message}.'
             identifier = "Comentario reportado"
         elif identifier == "recipe_comment":
             if RecipeComment.objects.filter(recipe_comment_id = id).exists():
@@ -179,7 +181,7 @@ def report(request, identifier):
             recipe = recipe_comment.recipe
             recipe_id = recipe.recipe_id
             url += f'recipe/{recipe_id}'
-            message = f'El comentario con id {id} en la receta con id {recipe_id} ha sido reportada por {message}. {url}'
+            message = f'report. El comentario con id {id} en la receta con id {recipe_id} ha sido reportada por: {message}. {url}'
             identifier = "Comentario reportado"
         else:
             print(identifier, " no es un identificador valido.")
@@ -198,6 +200,41 @@ def report(request, identifier):
                 "type" : "SUCCESS", 
                 "message" : f'{identifier} con éxito. Nuestros administradores revisarán tu petición.'
                 })
+    except Exception as e:
+        print(e)
+        return JsonResponse({
+            "type" : "ERROR", 
+            "message" : "Ha ocurruido un error, intentalo de nuevo."
+            })
+    
+#get posts reports
+def get_posts_reports(request):
+    try:
+        data = json.loads(request.body)
+        publication = None
+        recipe = None
+
+        if data.get("publication_id"):
+            
+            publication = Publication.objects.get(publication_id = int(data.get("publication_id")))
+        elif data.get("recipe_id"):
+            recipe = Recipe.objects.get(recipe_id = int(data.get("recipe_id")))
+
+        if data.get("jwt"):
+            admin = Profile.objects.get(username = decode_jwt(data.get("jwt"))["username"])
+        else:
+            return JsonResponse({"type" : "ERROR", 
+                "message" : "Enviamoe un jwt."
+                })
+        
+
+        notifications = Notification.objects.filter(profile = admin, recipe = recipe, publication = publication)
+        messages = []
+
+        for notification in notifications:
+            messages.append((notification.message.split(". ")[1]).split(": ")[1])
+
+        return JsonResponse({"type" : "SUCCESS", "messages" : messages})
     except Exception as e:
         print(e)
         return JsonResponse({

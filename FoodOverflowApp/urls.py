@@ -13,6 +13,9 @@ urlpatterns = [
     path('report/<str:identifier>', views.report, name = "report"), #report posts and post's comments 
     path('save/<str:identifier>', views.save_posts, name = "save"), #save posts and post's comments 
     path('saved_posts/<str:identifier>', views.get_saved_posts, name = "saved_posts"), #Get the user's saved posts
+    path('delete_posts/<str:identifier>', views.delete_post, name = "delete"), #delete post
+    path('delete_comment/<str:identifier>', views.delete_comment, name = "delete"), #delete post,
+    path('get_reports/', views.get_posts_reports, name = "get_reports"),
     ## Publication
     path('publications/', views.get_publications, name = "get_publications"), # get publications
     path('crear_publicacion/', views.create_forum_publication, name= "crear_publicaion"), # create publication path
