@@ -32,6 +32,7 @@ function DetallesPublicacion() {
   const [submittingReport, setSubmittingReport] = useState(false);
   const [username, setUsername] = useState('');
   const [is_admin, set_is_admin] = useState(false);
+  const [reports, setReports] = useState([]);
   const url =  import.meta.env.VITE_API_URL;
 
   const cookies = new Cookies();
@@ -106,7 +107,20 @@ function DetallesPublicacion() {
     }
 };
 
-  const handle_delete_post = () => {};
+  const handle_delete_post = async () => {
+    try {
+      if(confirm("Esta acción es definitiva ¿Estás seguro de eliminar la publicación?")){
+        const res = await axios.post(`${url}/delete_posts/publication`, {
+          post_id: id,
+          jwt : jwt
+        });
+        alert(res.data.message);
+        history.back();
+      }
+    } catch (error) {
+      console.error("Error al realizar la solicitud:", error);
+    }
+  };
 
   useEffect(() => {
     obtenerDetallesPublicacion(id);
@@ -150,6 +164,16 @@ function DetallesPublicacion() {
         set_is_admin(response.data.is_admin);
       }
 
+      if(response.data.is_admin){
+        const response = await axios.post(`${url}/get_reports/`, {
+            jwt: jwt,
+            publication_id : id
+        });
+
+        if (response.data.type === "SUCCESS"){
+          setReports(response.data.messages);
+        }
+      }
     }catch (error) {
         console.error("Error al realizar la solicitud:", error);
     }
@@ -225,11 +249,15 @@ const tagsDictionary = {
 
   return (
     <div className="dp-container">
+      {is_admin ? (<div>Este post ha sido reportado por:</div>): (<div></div>)}
+      {is_admin ? (reports.map((message) => <li key = {message}>{message}</li>)): (<div></div>)}
       <div className="dp-post">
       {author == username || is_admin ? (
         <button
             className="dp-delete-button"
-            title="Eliminar publicación"> 
+            onClick= {handle_delete_post}
+            title="Eliminar publicación"
+            > 
             <FaTrashCan />
         </button>) : <div></div>}
         <div className="dp-score">
@@ -243,7 +271,7 @@ const tagsDictionary = {
           {score}
           <button
             className={`vote-button ${voted && lastVote === -1 ? 'voted' : ''} ${voteStatus === -1 ? 'user-voted' : ''}`}
-            onClick={() => handleVote(-1)}
+            onClick = {() => handleVote(-1)}
             title="Consideras que la información no es útil, relevante o correcta"
           >
             <HiArrowCircleDown size={30} className={`xd ${voted && lastVote === -1 ? 'voted' : ''} ${voteStatus === -1 ? 'user-voted2' : ''}`}/>
@@ -375,6 +403,7 @@ const tagsDictionary = {
           type="publication"
           username = {username}
           is_admin = {is_admin}
+          is_publication = {true}
         />
         ))
       }

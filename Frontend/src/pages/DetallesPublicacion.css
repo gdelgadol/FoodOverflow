@@ -528,7 +528,10 @@ dp-alert-cancel-close:focus {
     padding-right: 15px;
     padding-top: 7px;
     padding-bottom: 7px;
-    position: absolute; right:1vw; top:1vh;
+    position: absolute; 
+    right:1vw; 
+    top:1vh;
+    cursor: pointer;
 }
 
 .dp-delete-button:hover {

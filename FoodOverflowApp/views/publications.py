@@ -29,6 +29,7 @@ def get_publication(request):
         publication_comments = PublicationComment.objects.filter(publication=publication)
 	
         vote_type = 0
+        is_saved = False
 
 	    # Extracting vote type
         if (data.get("jwt")):
@@ -42,11 +43,14 @@ def get_publication(request):
             
                 if PublicationVote.objects.filter(publication = publication, profile = profile).exists():
                     vote_type = PublicationVote.objects.get(publication = publication, profile = profile).vote_type
+                if SavedPost.objects.filter(profile = profile, publication = publication).exists():
+                    is_saved = True
 
         # Extracting relevant data from the comments
         comments_list = []
         publication_comments = PublicationComment.objects.filter(publication=publication, comment_response_id = None)
         num_comments = publication_comments.count()
+        
         for comment in publication_comments:
             
             profile_avatar = Avatar.objects.get(avatar_id = comment.profile.avatar_id.avatar_id).avatar_url
@@ -98,7 +102,8 @@ def get_publication(request):
             "score": publication_score,
             "publication_comments": comments_list,
             "vote_type" : vote_type,
-            "tagsList": publication.publication_tags
+            "tagsList": publication.publication_tags,
+            "is_saved" : is_saved
             }
         
         return JsonResponse(publication_json)

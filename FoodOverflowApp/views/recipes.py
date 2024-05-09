@@ -135,6 +135,7 @@ def get_recipe(request):
         recipe_comments = RecipeComment.objects.filter(recipe=recipe, comment_response_id = None)
         
         vote_type = 0
+        is_saved = False
 
         # Extracting vote type
         if (data.get("jwt")):
@@ -148,6 +149,8 @@ def get_recipe(request):
             
                 if RecipeVote.objects.filter(recipe = recipe, profile = profile).exists():
                     vote_type = RecipeVote.objects.get(recipe = recipe, profile = profile).vote_type
+                if SavedPost.objects.filter(profile = profile, recipe = recipe).exists():
+                    is_saved = True
 
         # Extracting relevant data from the comments
         num_comments = recipe_comments.count()
@@ -205,7 +208,8 @@ def get_recipe(request):
             "score": recipe_score,
             "recipe_comments": comments_list,
             "vote_type" : vote_type,
-            "tagsList": recipe.recipe_tags
+            "tagsList": recipe.recipe_tags,
+            "is_saved" : is_saved
             }
         
         return JsonResponse(recipe_json)

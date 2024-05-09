@@ -11,7 +11,7 @@ from .recipes import save_recipe
 
 import json
 
-#Delete comments   
+#Delete comments and posts  
 def delete_comment(request, identifier):
     try:
         data = json.loads(request.body)
@@ -35,7 +35,7 @@ def delete_comment(request, identifier):
                     "message" : "El comentario que estás intentando eliminar no existe."
                     })
 
-            if jwt_decoded["username"] == comment.profile.username:
+            if jwt_decoded["username"] == comment.profile.username  or jwt_decoded["is_admin"]:
                 comment.delete()
                 return JsonResponse({
                     "type" : "SUCCESS",
@@ -50,7 +50,7 @@ def delete_comment(request, identifier):
                     "message" : "El comentario que estás intentando eliminar no existe."
                     })
 
-            if jwt_decoded["username"] == comment.profile.username:
+            if jwt_decoded["username"] == comment.profile.username or jwt_decoded["is_admin"]:
                 comment.delete()
                 return JsonResponse({
                     "type" : "SUCCESS",
@@ -91,7 +91,7 @@ def delete_post(request, identifier):
                     "message" : "La publicación que estás intentando eliminar no existe."
                     })
 
-            if jwt_decoded["username"] == publication.profile.username:
+            if jwt_decoded["username"] == publication.profile.username or jwt_decoded["is_admin"]:
                 publication.delete()
                 return JsonResponse({
                     "type" : "SUCCESS",
@@ -106,7 +106,7 @@ def delete_post(request, identifier):
                     "message" : "La receta que estás intentando eliminar no existe."
                     })
 
-            if jwt_decoded["username"] == recipe.profile.username:
+            if jwt_decoded["username"] == recipe.profile.username or jwt_decoded["is_admin"]:
                 recipe.delete()
                 return JsonResponse({
                     "type" : "SUCCESS",
@@ -584,6 +584,6 @@ def save_posts(request, identifier):
         return save_publication(request)
     else: 
         return JsonResponse({
-                "type" : "SUCCESS", 
+                "type" : "ERROR", 
                 "message" : f'{identifier} no es un identificador válido.'
                 })

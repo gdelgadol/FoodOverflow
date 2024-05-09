@@ -137,7 +137,7 @@ function Encabezado() {
         })
         .then((res) => {
           setNotificaciones(res.data.notifications);
-          console.log(res.data.notifications);
+          //console.log(res.data.notifications);
         })
         .catch((error) => {
           console.error("Error al obtener datos del usuario:", error);
