@@ -50,6 +50,12 @@
     max-height: calc(5 * 1.3em); 
     margin-bottom: 8px;
     font-weight: 500;
+    max-width: 100%;
+}
+
+.description img {
+    max-width: 100%;
+    height: auto;
 }
 
 .comments{

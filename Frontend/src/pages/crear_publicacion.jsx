@@ -5,8 +5,12 @@ import Cookies from "universal-cookie";
 import iconoImg from "../assets/logo.png";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import Quill from 'quill';
+import ImageCompress from 'quill-image-compress';
 
 import { Link, useNavigate } from "react-router-dom";
+
+Quill.register('modules/imageCompress', ImageCompress);
 
 function Crear_publicacion() {
   const cookies = new Cookies();
@@ -288,6 +292,12 @@ function Crear_publicacion() {
                       ['link', 'image'],
                       ['clean'],
                     ],
+                    imageCompress: {
+                      quality: 0.5, // Adjust quality as needed
+                      maxWidth: 400, // Maximum width of compressed image
+                      maxHeight: 400, // Maximum height of compressed image
+                      imageType: 'image/jpeg' // Compressed image type
+                    }
                   }}
                 />
               </div>
