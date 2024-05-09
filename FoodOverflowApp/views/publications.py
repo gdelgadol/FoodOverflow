@@ -183,7 +183,7 @@ def get_publications_tags(request):
         if(len(posts) == 0):
             return JsonResponse({"type": "ERROR", "message":"No se encontraron publicaciones con esas etiquetas"})
         
-        return JsonResponse({"type": "SUCCESS", "posts": posts})
+        return JsonResponse({"type": "SUCCESS", "posts": posts, "number_posts": len(posts)})
     except Publication.DoesNotExist:
         return JsonResponse({"type": "ERROR", "message": "No se encontraron publicaciones"}, status=404)
     except Exception as e:
