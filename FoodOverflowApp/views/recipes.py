@@ -1,11 +1,10 @@
 from ..models import Recipe, RecipeComment, RecipeVote, SavedPost
 from ..models import Profile, Avatar
-from ..models import Notification
-from django.http import JsonResponse
 from ..views.token import decode_jwt
 from django.db.models import Sum
 from django.db.models import Q
 from functools import reduce
+from .modules import error_response, success_response, get_if_exists
 
 import json
 
@@ -22,10 +21,10 @@ def create_recipe(request):
         if data.get("jwt"):
             jwt_token = decode_jwt(data.get("jwt"))
         else:
-            return JsonResponse({"message" : "Debes iniciar sesión para crear una publicación.", "type" : "ERROR"})
+            return error_response("Debes iniciar sesión para crear una publicación.")
 
         if not jwt_token:
-            return JsonResponse({"message" : "Hubo un error, intenta iniciar sesión nuevamente.", "type" : "ERROR"})
+            return error_response("Hubo un error, intenta iniciar sesión nuevamente.")
 
         user = Profile.objects.get(id = jwt_token['id'])
 
@@ -34,11 +33,11 @@ def create_recipe(request):
         else:
             Recipe.objects.create_recipe_tags(title, ingredients, instructions, user, tags_list)
 
-        return JsonResponse({"message" : "¡Receta creada con éxito!", "type" : "SUCCESS"})
+        return success_response({"message" : "¡Receta creada con éxito!"})
     except Exception as e:
         print(e)
         # Catch all other exceptions
-        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
+        return error_response("Hubo un error, inténtelo de nuevo")
 
 #View all recipes done by a user
 def get_recipes(request):
@@ -71,11 +70,10 @@ def get_recipes(request):
             }
             posts.append(post_data)
 
-        return JsonResponse({"type": "SUCCESS", "posts": posts})
-    except Recipe.DoesNotExist:
-        return JsonResponse({"type": "ERROR", "message": "No se encontraron recetas"}, status=404)
+        return success_response({"posts": posts})
     except Exception as e:
-        return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
+        print(e)
+        return error_response(str(e))
 
 def get_recipe_tags(request):
     try:
@@ -115,13 +113,11 @@ def get_recipe_tags(request):
             posts.append(post_data)
 
         if(len(posts) == 0):
-            return JsonResponse({"type": "ERROR", "message":"No se encontraron recetas con esas etiquetas"})
+            error_response("No se encontraron recetas con esas etiquetas.")
         
-        return JsonResponse({"type": "SUCCESS", "posts": posts})
-    except Recipe.DoesNotExist:
-        return JsonResponse({"type": "ERROR", "message": "No se encontraron recetas"}, status=404)
+        return success_response({"posts": posts})
     except Exception as e:
-        return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
+        return error_response(str(e))
 
 #View details of a specific recipe
 def get_recipe(request):
@@ -142,13 +138,14 @@ def get_recipe(request):
             jwt_decoded = decode_jwt(data.get("jwt"))
 
             if not jwt_decoded:
-                return JsonResponse({"message" : "Hubo un error, intenta iniciar sesión nuevamente.", "type" : "ERROR"})
+                return error_response("Hubo un error, intenta iniciar sesión nuevamente.")
 
             if Profile.objects.filter(id = jwt_decoded["id"]).exists():
                 profile = Profile.objects.get(id = jwt_decoded["id"])
-            
-                if RecipeVote.objects.filter(recipe = recipe, profile = profile).exists():
-                    vote_type = RecipeVote.objects.get(recipe = recipe, profile = profile).vote_type
+                
+                vote = get_if_exists(RecipeVote, {'recipe' : recipe, 'profile' : profile})
+                if vote:
+                    vote_type = vote.vote_type
                 if SavedPost.objects.filter(profile = profile, recipe = recipe).exists():
                     is_saved = True
 
@@ -198,7 +195,6 @@ def get_recipe(request):
             profile_avatar = ""
 
         recipe_json = {
-            "type": "SUCCESS",
             'username' : recipe.profile.username,
             'profile_avatar' : profile_avatar,
             'title' : recipe.recipe_title,
@@ -212,11 +208,11 @@ def get_recipe(request):
             "is_saved" : is_saved
             }
         
-        return JsonResponse(recipe_json)
+        return success_response(recipe_json)
     except Exception as e:
         print(e)
         # Catch all other exceptions
-        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
+        return error_response("Hubo un error, inténtelo de nuevo")
     
 def save_recipe(request):
     try:
@@ -225,25 +221,25 @@ def save_recipe(request):
         if data.get("jwt"):
             jwt_decoded = decode_jwt(data.get("jwt"))
         else:
-            return JsonResponse({"message" : "Hubo un error con la autenticación del usuario.", "type" : "ERROR"})
+            return error_response("Hubo un error con la autenticación del usuario.")
 
         if Profile.objects.filter(id = jwt_decoded["id"]).exists():
             profile = Profile.objects.get(id = jwt_decoded["id"])
         else:
-            return JsonResponse({"message" : "El perfíl no existe en la base de datos.", "type" : "ERROR"})
+            return error_response("El perfíl no existe en la base de datos.")
         
         if Recipe.objects.filter(recipe_id = data.get("post_id")).exists():
             recipe = Recipe.objects.get(recipe_id = data.get("post_id"))
         else:
-            return JsonResponse({"message" : "La receta que intentas guardar no existe.", "type" : "ERROR"})
+            return error_response("La receta que intentas guardar no existe.")
 
         if SavedPost.objects.filter(profile = profile , recipe = recipe).exists():
             saved_post = SavedPost.objects.get(profile = profile , recipe = recipe)
             saved_post.delete()
-            return JsonResponse({"message" : "Receta eliminada de guardados con éxito.", "type" : "SUCCESS"})
+            return error_response("Receta eliminada de guardados con éxito.")
         else:
             SavedPost.objects.save_recipe(profile, recipe)
-            return JsonResponse({"message" : "Receta guardada con éxito.", "type" : "SUCCESS"})
+            return success_response({"message" : "Receta guardada con éxito."})
     except Exception as e:
         print(e)
-        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
+        return error_response("Hubo un error, inténtelo de nuevo")

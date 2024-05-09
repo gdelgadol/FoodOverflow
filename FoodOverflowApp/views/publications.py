@@ -1,11 +1,10 @@
 from ..models import Publication, PublicationComment, PublicationVote, SavedPost
 from ..models import Profile, Avatar
-from ..models import Notification
-from django.http import JsonResponse
 from ..views.token import decode_jwt
 from django.db.models import Sum
 from django.db.models import Q
 from functools import reduce
+from .modules import error_response, success_response, get_if_exists
 
 import json
 
@@ -18,13 +17,9 @@ def get_publication(request):
         data = json.loads(request.body)
         publication_id = int(data.get("publication_id"))
 
-        if Publication.objects.select_related('profile').filter(publication_id = publication_id).exists():
-            publication = Publication.objects.select_related('profile').get(publication_id = publication_id)
-        else:
-            return JsonResponse({
-                "message" : "La publicación que estás intentando ver no existe.", 
-                "type" : "ERROR"
-                })
+        publication = get_if_exists(Publication, {'publication_id' : publication_id})
+        if not publication:
+            return error_response("La publicación que estás intentando ver no existe")
 
         publication_comments = PublicationComment.objects.filter(publication=publication)
 	
@@ -34,15 +29,15 @@ def get_publication(request):
 	    # Extracting vote type
         if (data.get("jwt")):
             jwt_decoded = decode_jwt(data.get("jwt"))
-
             if not jwt_decoded:
-                return JsonResponse({"message" : "Hubo un error, intenta iniciar sesión nuevamente.", "type" : "ERROR"})
+                return error_response("Hubo un error, intenta iniciar sesión nuevamente.")
 
-            if Profile.objects.filter(id = jwt_decoded["id"]).exists():
-                profile = Profile.objects.get(id = jwt_decoded["id"])
+            profile = get_if_exists(Profile, {'id' : jwt_decoded["id"]})
             
-                if PublicationVote.objects.filter(publication = publication, profile = profile).exists():
-                    vote_type = PublicationVote.objects.get(publication = publication, profile = profile).vote_type
+            if profile:
+                vote = get_if_exists(PublicationVote, {'publication' : publication, 'profile' : profile})
+                if vote:
+                    vote_type = vote.vote_type
                 if SavedPost.objects.filter(profile = profile, publication = publication).exists():
                     is_saved = True
 
@@ -93,7 +88,6 @@ def get_publication(request):
             profile_avatar = ""
             
         publication_json = {
-            "type": "SUCCESS",
             'username' : publication.profile.username,
             'profile_avatar' : profile_avatar,
             'title' : publication.publication_title,
@@ -106,11 +100,11 @@ def get_publication(request):
             "is_saved" : is_saved
             }
         
-        return JsonResponse(publication_json)
+        return success_response(publication_json)
     except Exception as e:
         print(e)
         # Catch all other exceptions
-        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
+        return error_response("Hubo un error, inténtelo de nuevo.")
     
 #View all publications made by a user
 def get_publications(request):
@@ -142,10 +136,10 @@ def get_publications(request):
             }
             posts.append(post_data)
 
-        return JsonResponse({"type": "SUCCESS", "posts": posts})
+        return success_response({'posts' : posts})
     except Exception as e:
         print(e)
-        return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
+        return error_response(str(e))
 
 #Get publications by tags  
 def get_publications_tags(request):
@@ -186,13 +180,13 @@ def get_publications_tags(request):
             posts.append(post_data)
 
         if(len(posts) == 0):
-            return JsonResponse({"type": "ERROR", "message":"No se encontraron publicaciones con esas etiquetas"})
+            return error_response("No se encontraron publicaciones con esas etiquetas.")
         
-        return JsonResponse({"type": "SUCCESS", "posts": posts, "number_posts": len(posts)})
+        return success_response({"posts": posts, "number_posts": len(posts)})
     except Publication.DoesNotExist:
-        return JsonResponse({"type": "ERROR", "message": "No se encontraron publicaciones"}, status=404)
+        return error_response("No se encontraron publicaciones")
     except Exception as e:
-        return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
+        return error_response(str(e))
 
 #Create a publication
 def create_forum_publication(request):
@@ -206,11 +200,11 @@ def create_forum_publication(request):
         if data.get("jwt"):
             jwt_token = decode_jwt(data.get("jwt"))
         else:
-            return JsonResponse({"message" : "Debes iniciar sesión para crear una publicación.", "type" : "ERROR"})
+            return error_response("Debes iniciar sesión para crear una publicación.")
 
         if not jwt_token:
             print(jwt_token)
-            return JsonResponse({"message" : "Hubo un error, intenta iniciar sesión nuevamente.", "type" : "ERROR"})
+            return error_response("Hubo un error, intenta iniciar sesión nuevamente.")
 
         username = jwt_token['username']
         user = Profile.objects.get(username = username)
@@ -219,11 +213,11 @@ def create_forum_publication(request):
         else:
             Publication.objects.create_publication_tags(title, description, user, tags_list)
 
-        return JsonResponse({"message" : "¡Publicación creada con éxito!", "type" : "SUCCESS"})
+        return success_response({"message" : "¡Publicación creada con éxito!"})
     except Exception as e:
         print(e)
         # Catch all other exceptions
-        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
+        return error_response("Hubo un error, inténtelo de nuevo.")
 
 #Save publication controller
 def save_publication(request):
@@ -233,25 +227,25 @@ def save_publication(request):
         if data.get("jwt"):
             jwt_decoded = decode_jwt(data.get("jwt"))
         else:
-            return JsonResponse({"message" : "Hubo un error con la autenticación del usuario.", "type" : "ERROR"})
+            return error_response("Hubo un error con la autenticación del usuario.")
 
         if Profile.objects.filter(id = jwt_decoded["id"]).exists():
             profile = Profile.objects.get(id = jwt_decoded["id"])
         else:
-            return JsonResponse({"message" : "El perfíl no existe en la base de datos.", "type" : "ERROR"})
+            return error_response("El perfíl no existe en la base de datos.")
         
         if Publication.objects.filter(publication_id = data.get("post_id")).exists():
             publication = Publication.objects.get(publication_id = data.get("post_id"))
         else:
-            return JsonResponse({"message" : "La publicación que intentas guardar no existe.", "type" : "ERROR"})
+            return error_response("La publicación que intentas guardar no existe.")
 
-        if SavedPost.objects.filter(profile = profile , publication = publication).exists():
-            saved_post = SavedPost.objects.get(profile = profile , publication = publication)
+        saved_post = get_if_exists(SavedPost, {'profile' : profile , 'publication' : publication})
+        if saved_post:
             saved_post.delete()
-            return JsonResponse({"message" : "Publicación eliminada de guardados con éxito.", "type" : "SUCCESS"})
+            return success_response({"message" : "Publicación eliminada de guardados con éxito."})
         else:
             SavedPost.objects.save_publication(profile, publication)
-            return JsonResponse({"message" : "Publicación guardada con éxito.", "type" : "SUCCESS"})
+            return success_response({"message" : "Publicación guardada con éxito."})
     except Exception as e:
         print(e)
-        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
+        return error_response("Hubo un error, inténtelo de nuevo.")

@@ -7,7 +7,7 @@ from django.utils.html import strip_tags
 from ..models import Profile
 import json
 from decouple import config
-from django.http import JsonResponse
+from .modules import error_response, success_response
 
 # Create and send reset link to email if user exists
 
@@ -19,16 +19,13 @@ def password_reset(request):
         if Profile.objects.filter(email=user_email).exists():
             user = Profile.objects.get(email__exact = user_email)
             send_email(request, user, user.email)
-            return JsonResponse({"message": "Correo enviado", "type": "SUCCESS"})
+            return success_response({"message": "Correo enviado"})
         else:
-            return JsonResponse({"message": "El usuario no existe", "type": "ERROR"})
+            return error_response("El usuario no existe.")
     except Exception as e:
         print(str(e))
         user_email=False
-        return JsonResponse({
-                'type' : 'ERROR', 
-                'message' : 'Ha ocurrido un error, intenta nuevamente.'
-                })
+        return error_response("Ha ocurrido un error, intenta nuevamente.")
         
 
 
@@ -47,15 +44,12 @@ def reset(request, uidb64, token):
         if user is not None and account_activation_token.check_token(user, token):
             user.set_password(new_password)
             user.save()
-            return JsonResponse({"message":"Contraseña reseteada."})
+            return success_response({"message":"Contraseña reseteada."})
         else:
-            return JsonResponse({"message":"Link no es válido"})
+            return error_response("Link no es válido")
     except Exception as e:
         print(str(e))
-        return JsonResponse({
-                'type' : 'ERROR', 
-                'message' : 'Ha ocurrido un error, intenta nuevamente.'
-                })
+        return error_response("Ha ocurrido un error, intenta nuevamente.")
 
 
 def send_email(request, user, to_email):
@@ -88,4 +82,4 @@ def send_email(request, user, to_email):
         email.send()
     except Exception as e:
         print(e)
-        return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
+        return error_response(str(e))
