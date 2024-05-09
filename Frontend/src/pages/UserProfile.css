@@ -78,3 +78,30 @@
         position: inherit;
     }
 }
+
+.savedPosts-button {
+    margin-top: 15px;
+    background-color: #ff5c00;
+    color: #ffffff; 
+    border: none; 
+    padding: 10px 20px; 
+    font-size: 16px; 
+    border-radius: 5px; 
+    cursor: pointer;
+    transition: background-color 0.3s ease; 
+    justify-content: space-between;
+    display:flex;
+    align-items: center;
+  }
+  
+  .savedPosts-button:hover {
+    background-color: #ff836d; 
+  }
+  
+  .savedPosts-button:focus {
+    outline: none; 
+  }
+
+  .book {
+    margin-right: 4px;
+  }

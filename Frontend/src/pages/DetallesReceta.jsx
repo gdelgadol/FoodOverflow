@@ -34,6 +34,7 @@ function DetallesReceta() {
     const [submittingReport, setSubmittingReport] = useState(false);
     const [username, setUsername] = useState('');
     const [is_admin, set_is_admin] = useState(false);
+    const [saved, setSaved] = useState(false);
     const url =  import.meta.env.VITE_API_URL;
 
     const cookies = new Cookies();
@@ -132,6 +133,7 @@ function DetallesReceta() {
             setLastVote(res.data.vote_type > 0 ? 1 : (res.data.vote_type < 0 ? -1 : 0));
             setVoteStatus(res.data.vote_type);
             setTags(res.data.tagsList);
+            setSaved(res.data.is_saved === 1); 
             const userHasVoted = res.data.vote_type !== 0;
             setVoted(userHasVoted);
           } else {
@@ -214,6 +216,22 @@ function DetallesReceta() {
         }
     };
 
+    const submitSave = async () => {
+        try {
+            const response = await axios.post(`${url}/save/recipe`, {
+                post_id: id,
+                jwt: jwt
+            });
+            if (response.data.type === "SUCCESS") {
+                setSaved(!saved);
+            } else {
+                alert(response.data.message);
+            }
+        } catch (error) {
+            console.error("Error al realizar la solicitud:", error);
+        }
+    };
+    
     const tagsDictionary = {
         1: "Vegetariano",
         2: "Vegano",
@@ -253,9 +271,10 @@ function DetallesReceta() {
                     >
                         <TbChefHatOff size={30} className={`xd ${voted && lastVote === -1 ? 'voted' : ''} ${voteStatus === -1 ? 'user-voted2' : ''}`} />
                     </button>
-                    <button 
-                    className="save-button"
-                    title="Guardar publicación"
+                    <button
+                        className={`save-button ${saved ? 'saved' : ''}`} // Agrega la clase 'saved' cuando 'saved' es true
+                        onClick={submitSave}
+                        title={saved ? "Eliminar de guardados" : "Guardar publicación"}
                     >
                     <FaBookmark size={25} className="dp-guardar" />
                     </button>
