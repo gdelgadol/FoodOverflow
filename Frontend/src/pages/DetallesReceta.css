@@ -619,3 +619,7 @@ dp-alert-cancel-close:focus {
 .dr-delete-button:hover::before {
     opacity: 1;
 }
+
+.saved {
+    color: orange;
+}

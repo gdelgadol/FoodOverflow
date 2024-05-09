@@ -21,8 +21,9 @@ function SupportUs() {
                     src={Logo_about_us}
                     className='su-logo-food'
                 />
-                <h1 className='su-logo-text'>Puedes apoyar a la comunidad Food Overflow
-                    con una donación</h1>
+                <h1 className='su-logo-text'>¡Puedes apoyar a la comunidad Food Overflow
+                    con una donación!</h1>
+                <h1 className='su-sub-text'>Tus donaciones nos ayudan seguir aportándote a tí y a la comunidad un espacio para compartir, aprender y discutir sobre el mundo culinario.</h1>
             </div>
             <div className='su-pagos-container'>
                 <div className='su-pago'>

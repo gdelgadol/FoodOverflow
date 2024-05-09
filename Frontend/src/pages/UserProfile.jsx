@@ -4,6 +4,9 @@ import { useParams } from 'react-router-dom'
 import axios from "../api/axios.jsx";
 import Cookies from 'universal-cookie';
 import UserPostsView from '../components/UserPostsView.jsx';
+import { FaBookmark } from "react-icons/fa";
+
+
 export default function UserProfile () {
 
     const { username } = useParams()
@@ -74,6 +77,10 @@ export default function UserProfile () {
                         <div className='up-info-statistics-text'>Votos</div>
                     </div>
                 </div>
+                <button className='savedPosts-button'>
+                    <FaBookmark size={16} className='book'/>
+                    Posts guardados
+                    </button>
             </div>
             <UserPostsView></UserPostsView>
         </div>
