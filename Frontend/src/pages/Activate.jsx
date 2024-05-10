@@ -20,25 +20,15 @@ function Activate() {
             title: `<strong>${res.data.message}</strong>`,
             icon: "success",
             confirmButtonColor: "#27ae60",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              navigate("/login");
-            } else if (result.isDenied) {
-              navigate("/login");
-            }
-          });
-        }else if(res.data.type === "ERROR")
+          })
+        }else if(res.data.type === "ERROR"){
           Swal.fire({
             title: `<strong>${res.data.message}</strong>`,
             icon: "error",
             confirmButtonColor: "#ff0000",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              navigate("/login");
-            } else if (result.isDenied) {
-              navigate("/login");
-            }
-          });
+          })
+        };
+        navigate("/login");
       });
   };
 
