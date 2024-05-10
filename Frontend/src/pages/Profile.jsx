@@ -59,7 +59,6 @@ function AccountDetails() {
 
     const handleDeleteAccount = () => {
         if (!deleteChecked || confirmPassword === "") {
-          console.log("No hay check ni password");
           Swal.fire({
             title: "<strong>Por favor, confirma la eliminación de la cuenta y proporciona la contraseña.</strong>",
             icon: "warning",
@@ -75,11 +74,25 @@ function AccountDetails() {
           })
           .then((res) => {
             if (res.data.type === "SUCCESS") {
-              alert(res.data.message);
               cookies.remove("auth_token");
-              window.location.href = `${urlFront}/login`;
+              Swal.fire({
+                title: `<strong>${res.data.message}</strong>`,
+                icon: "success",
+                confirmButtonColor: "#27ae60",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.href = `${urlFront}/login`;
+                } else if (result.isDenied) {
+                  window.location.href = `${urlFront}/login`;
+                }
+              });
             } else {
-              alert(res.data.message);
+              Swal.fire({
+                title: `<strong>${res.data.message}</strong>`,
+                icon: "error",
+                timer: 4000,
+                confirmButtonColor: "#ff0000",
+              });
             }
           })
           .catch((error) => {

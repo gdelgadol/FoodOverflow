@@ -32,15 +32,28 @@ function Change_email() {
       })
       .then((res) => {
         if (res.data.type === "SUCCESS") {
+          cookies.remove("auth_token");
           Swal.fire({
             title: `<strong>${res.data.message} Inicia sesión nuevamente.</strong>`,
             icon: "success",
-            timer: 4000,
             confirmButtonColor: "#27ae60",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = `${urlFront}/login`;
+            } else if (result.isDenied) {
+              window.location.href = `${urlFront}/login`;
+            }
           });
-          //sendActivationEmail(formData.newEmail);
-          cookies.remove("auth_token");
-          window.location.href = `${urlFront}/login`;
+
+          // Swal.fire({
+          //   title: `<strong>${res.data.message} Inicia sesión nuevamente.</strong>`,
+          //   icon: "success",
+          //   timer: 4000,
+          //   confirmButtonColor: "#27ae60",
+          // });
+          // //sendActivationEmail(formData.newEmail);
+          // cookies.remove("auth_token");
+          // window.location.href = `${urlFront}/login`;
         } else {
           Swal.fire({
             title: `<strong>${res.data.message}</strong>`,
