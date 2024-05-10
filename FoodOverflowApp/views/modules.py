@@ -30,26 +30,26 @@ def get_all_posts(models, data, identifier, order_by, save = False):
     profile = data['profile']
 
     username = profile.username
-
-    if profile.avatar_id:
-        profile_avatar = Avatar.objects.get(avatar_id = profile.avatar_id.avatar_id).avatar_url
-    else:
-        profile_avatar = ""
     
     for querie in queries:
         searcher = querie
+
         if save:
             if identifier == 'recipes':
                 searcher = querie.recipe
             elif identifier == 'publications':
                 searcher = querie.publication
+
+        if searcher.profile.avatar_id:
+            profile_avatar = Avatar.objects.get(avatar_id = searcher.profile.avatar_id.avatar_id).avatar_url
+    
         num_comments = models[1].objects.filter(**{identifier[0:-1] : searcher}).count()
         score = models[2].objects.filter(**{identifier[0:-1] : searcher}).aggregate(Sum('vote_type'))['vote_type__sum']
         if not score:
             score = 0
         post_data = {
             "id": searcher.pk,
-            "userName": username,
+            "userName": searcher.profile.username,
             "profile_avatar" : profile_avatar,
             "numComments": num_comments,
             "score": score,

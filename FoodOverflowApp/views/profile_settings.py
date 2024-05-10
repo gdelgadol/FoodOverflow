@@ -1,4 +1,4 @@
-from ..models import Profile
+from ..models import Profile, Avatar
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from ..tokens import account_activation_token
@@ -107,6 +107,57 @@ def update_password(request):
     except Exception as e:
         print(str(e))
         return error_response("Ha ocurrido un error, intenta nuevamente.")
+    
+#update avatar
+def update_avatar(request):
+    try:
+        #get frontend data
+        data = json.loads(request.body)
+        if data.get('jwt'):
+            jwt_token_decoded = decode_jwt(data.get('jwt'))
+            if not jwt_token_decoded:
+                return error_response("Ha ocurrido un error, Inténta iniciar sesión de nuevo.")
+
+        profile = get_if_exists(Profile, {'username' : jwt_token_decoded['username']})
+        if not profile:
+            return error_response('El perfil que estás buscando no existe.')
+
+        if data.get('avatar_id'):
+            avatar = get_if_exists(Avatar, {"pk" : int(data.get('avatar_id'))})
+            if not avatar:
+                return error_response("Avatar no válido.")
+
+        profile.avatar_id = avatar
+        profile.save()
+
+        return success_response({'message' : 'El avatar ha sido actualizado.'})
+
+    except Exception as e:
+        print(e)
+        return error_response("Ha ocurrido un error, intenta nuevamente.")
+
+#update description
+def update_description(request):
+    try:
+        #get frontend data
+        data = json.loads(request.body)
+        if data.get('jwt'):
+            jwt_token_decoded = decode_jwt(data.get('jwt'))
+            if not jwt_token_decoded:
+                return error_response("Ha ocurrido un error, Inténta iniciar sesión de nuevo.")
+
+        profile = get_if_exists(Profile, {'username' : jwt_token_decoded['username']})
+        if not profile:
+            return error_response('El perfil que estás buscando no existe.')
+
+        profile.description = data.get('description')
+        profile.save()
+
+        return success_response({'message' : 'La descripción ha sido actualizada.'})
+
+    except Exception as e:
+        print(e)
+        return error_response("Ha ocurrido un error, intenta nuevamente.")
 
 #update user email
 def update_email(request):
@@ -173,7 +224,6 @@ def confirm_email(request, user, to_email):
 
 #Update the email
 def email_confirmated(request, uidb64, token, email):
-    print(email)
     try:
         #decode the uid
         uid = force_str(urlsafe_base64_decode(uidb64))

@@ -23,6 +23,9 @@ def signup(request):
         if data.get("password") == data.get("check_password"):
             # get the username
             user_name = data.get("username")
+            if user_name == 'profile':
+                return error_response("'profile' no es un nombre de usuario válido.")
+
             # get the email
             user_email = data.get("email")
             # create the user profile
@@ -32,8 +35,16 @@ def signup(request):
                 email = user_email.lower(),
             )
 
-            avatares = Avatar.objects.all()
-            user.avatar_id = avatares[random.randint(0, len(avatares)-1)]
+            if not data.get("avatar_id"):
+                avatares = Avatar.objects.all()
+                user.avatar_id = avatares[random.randint(0, len(avatares)-1)]
+            else:
+                avatar = Avatar.objects.get(pk = int(data.get("avatar_id")))
+                user.avatar_id = avatar
+
+            if data.get("description"):
+                user.description = data.get("description")
+            
             user.save()
 
             # send the activation Email
