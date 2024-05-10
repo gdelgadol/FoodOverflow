@@ -4,6 +4,7 @@ import axios from "../api/axios.jsx";
 import Cookies from 'universal-cookie';
 import { Link } from "react-router-dom";
 import { TbChefHat } from "react-icons/tb";
+import Swal from 'sweetalert2';
 import { MdOutlineDelete } from "react-icons/md";
 
 function AccountDetails() {
@@ -58,9 +59,13 @@ function AccountDetails() {
 
     const handleDeleteAccount = () => {
         if (!deleteChecked || confirmPassword === "") {
-          alert(
-            "Por favor, confirma la eliminación de la cuenta y proporciona la contraseña."
-          );
+          console.log("No hay check ni password");
+          Swal.fire({
+            title: "<strong>Por favor, confirma la eliminación de la cuenta y proporciona la contraseña.</strong>",
+            icon: "warning",
+            timer: 4000,
+            confirmButtonColor: "#ff0000",
+          });
           return;
         }
         axios

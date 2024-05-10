@@ -5,6 +5,7 @@ import iconoImg from "../assets/logo.png";
 import { Link } from "react-router-dom";
 import axios from "../api/axios.jsx";
 import Cookies from 'universal-cookie';
+import Swal from 'sweetalert2';
 
 function Change_password() {
   const [formData, setFormData] = useState({
@@ -41,11 +42,21 @@ function Change_password() {
       });
       
       if (response.data.type === "SUCCESS") {
-        alert(response.data.message + " Inicia sesión nuevamente" );
+        Swal.fire({
+          title: `<strong>${response.data.message} Inicia sesión nuevamente.</strong>`,
+          icon: "success",
+          timer: 4000,
+          confirmButtonColor: "#27ae60",
+        });
         cookies.remove("auth_token");
         window.location.href = `${urlFront}/login`;
       } else {
-        alert(response.data.message);
+        Swal.fire({
+          title: `<strong>${response.data.message}</strong>`,
+          icon: "error",
+          timer: 4000,
+          confirmButtonColor: "#ff0000",
+        });
       }
     } catch (error) {
       console.error("Error al cambiar la contraseña:", error);

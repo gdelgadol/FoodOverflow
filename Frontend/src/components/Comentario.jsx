@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "../api/axios.jsx";
 import Cookies from "universal-cookie";
 import "./Comentario.css";
+import Swal from 'sweetalert2'
 
 export default function Comentario({ jwt, reload, setReload, post_id, comment_id, comment_content, comment_user, comment_user_avatar, response_list, type, is_publication, username, is_admin }) {
     const [showResponses, setShowResponses] = useState(false);
@@ -40,11 +41,21 @@ export default function Comentario({ jwt, reload, setReload, post_id, comment_id
                 jwt: jwt
             });
             if (response.data.type === "SUCCESS") {
-                alert(response.data.message);
+                Swal.fire({
+                    title: `<strong>${response.data.message}</strong>`,
+                    icon: "success",
+                    timer: 4000,
+                    confirmButtonColor: "#27ae60",
+                });
                 // Cerrar el menú de reporte después de un reporte exitoso
                 toggleReportMenuResponse(responseIndex);
             } else {
-                alert(response.data.message);
+                Swal.fire({
+                    title: `<strong>${response.data.message}</strong>`,
+                    icon: "error",
+                    timer: 4000,
+                    confirmButtonColor: "#ff0000",
+                });
             }
         } catch (error) {
             console.error("Error al realizar la solicitud:", error);
@@ -70,12 +81,22 @@ export default function Comentario({ jwt, reload, setReload, post_id, comment_id
                 jwt: jwt
             });
             if (res.data.type === "SUCCESS") {
-                alert(res.data.message);
+                Swal.fire({
+                    title: `<strong>${res.data.message}</strong>`,
+                    icon: "success",
+                    timer: 4000,
+                    confirmButtonColor: "#27ae60",
+                });
                 setResponse('');
                 setInputReply(false);
                 setReload(!reload);
             } else {
-                alert(res.data.message);
+                Swal.fire({
+                    title: `<strong>${res.data.message}</strong>`,
+                    icon: "error",
+                    timer: 4000,
+                    confirmButtonColor: "#ff0000",
+                });
             }
         } catch (error) {
             console.error("Error al realizar la solicitud:", error);
@@ -89,17 +110,41 @@ export default function Comentario({ jwt, reload, setReload, post_id, comment_id
 
     const handle_delete_comment = async (id, type) => {
         try {
-          if(confirm(`Esta acción es definitiva ¿Estás seguro de eliminar ${type}?`)){
-            var identifier = '';
-            is_publication ? identifier = 'publication' : identifier = 'recipe';
-            const res = await axios.post(`${url}/delete_comment/${identifier}`, {
-              comment_id: id,
-              jwt : jwt
+            Swal.fire({
+                title: `<strong>¿Estás seguro de eliminar ${type}?</strong>`,
+                text: "Esta acción es definitiva y una vez eliminada, no se puede recuperar.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sí, estoy seguro"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var identifier = '';
+                    is_publication ? identifier = 'publication' : identifier = 'recipe';
+                    axios.post(`${url}/delete_comment/${identifier}`, {
+                        comment_id: id,
+                        jwt : jwt
+                    }).then((res) => {
+                        Swal.fire({
+                            title: `<strong>${res.data.message}</strong>`,
+                            icon: "success",
+                            timer: 4000,
+                            confirmButtonColor: "#27ae60",
+                        });
+                        setReload(!reload);
+                    }).catch((error) => {
+                        Swal.fire({
+                            title: "<strong>Error</strong>",
+                            text: "Hubo un error al eliminar el comentario.",
+                            icon: "error",
+                            timer: 4000,
+                            confirmButtonColor: "#ff0000",
+                        });
+                    });
+                }
             });
-            alert(res.data.message);
-            setReload(!reload);
-          }
-        } catch (error) {
+        }catch (error) {
           console.error("Error al realizar la solicitud:", error);
         }
       };
@@ -122,12 +167,22 @@ export default function Comentario({ jwt, reload, setReload, post_id, comment_id
                 jwt: jwt
             });
             if (response.data.type === "SUCCESS") {
-                alert(response.data.message);
+                Swal.fire({
+                    title: `<strong>${response.data.message}</strong>`,
+                    icon: "success",
+                    timer: 4000,
+                    confirmButtonColor: "#27ae60",
+                });
                 // Cerrar el menú de reporte después de un reporte exitoso
                 toggleReportMenu();
                 setReload(!reload);
             } else {
-                alert(response.data.message);
+                Swal.fire({
+                    title: `<strong>${response.data.message}</strong>`,
+                    icon: "error",
+                    timer: 4000,
+                    confirmButtonColor: "#ff0000",
+                });
             }
         } catch (error) {
             console.error("Error al realizar la solicitud:", error);

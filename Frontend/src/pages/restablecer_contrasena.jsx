@@ -3,6 +3,7 @@ import axios from "axios";
 import "./Register.css";
 import "./restablecer_contrasena.css";
 import iconoImg from "../assets/logo.png";
+import Swal from 'sweetalert2';
 
 import { Link, useNavigate } from "react-router-dom";
 import { useParams } from 'react-router-dom';
@@ -62,11 +63,26 @@ function Restablecer_contrasena() {
         password: state.password,
       })
       .then((res) => {
-        if (res.data.message === "Contraseña reseteada") { //desde el back se configura este mensaje
-          alert("¡Contraseña restablecida con exito! Puedes volver a iniciar sesión.");
-          navigate("/login");
+        if (res.data.message === "Contraseña reseteada.") { //desde el back se configura este mensaje
+          Swal.fire({
+            title: "<strong>¡Contraseña restablecida con exito! Puedes volver a iniciar sesión.</strong>",
+            icon: "success",
+            timer: 4000,
+            confirmButtonColor: "#27ae60",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              navigate("/login");
+            } else if (result.isDenied) {
+              navigate("/login");
+            }
+          });
         } else {
-          alert("No se pudo restablecer tu contraseña. Por favor intentalo de nuevo.");
+          Swal.fire({
+            title: "<strong>¡No se pudo restablecer tu contraseña. Por favor intentalo de nuevo.</strong>",
+            icon: "error",
+            timer: 4000,
+            confirmButtonColor: "#ff0000",
+          });
         }
       });
   };

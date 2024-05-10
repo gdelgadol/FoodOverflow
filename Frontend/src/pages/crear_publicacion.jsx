@@ -7,6 +7,8 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Quill from 'quill';
 import ImageCompress from 'quill-image-compress';
+import Swal from 'sweetalert2';
+
 
 import { Link, useNavigate } from "react-router-dom";
 
@@ -116,21 +118,36 @@ function Crear_publicacion() {
         })
         .then((res) => {
           if (res.data.type === "SUCCESS") {
-            alert(res.data.message);
+            Swal.fire({
+              title: `<strong>${res.data.message}</strong>`,
+              icon: "success",
+              timer: 4000,
+              confirmButtonColor: "#27ae60",
+            });
             navigate("/forum");
           } else {
-            alert(res.data.message);
+            Swal.fire({
+              title: `<strong>${response.data.message}</strong>`,
+              icon: "success",
+              timer: 4000,
+              confirmButtonColor: "#ff0000",
+            });
           }
         });
     } else {
-      alert("Usuario no ha iniciado sesión");
+      Swal.fire({
+        title: "<strong>El usuario no ha iniciado sesión.</strong>",
+        icon: "error",
+        timer: 4000,
+        confirmButtonColor: "#ff0000",
+      });
     }
   };
 
   const crear_receta = () => {
     if (jwt) {
       const ingredientsString = state.ingredients
-        .map((ingredient) => `${ingredient.name}: ${ingredient.quantity}`)
+        .map((ingredient) => `${ingredient.name}: ${ingredient.quantity} ${ingredient.units}`)
         .join("_");
       axios
         .post(`${url}/crear_recipe/`, {
@@ -142,14 +159,29 @@ function Crear_publicacion() {
         })
         .then((res) => {
           if (res.data.type === "SUCCESS") {
-            alert(res.data.message);
+            Swal.fire({
+              title: `<strong>${res.data.message}</strong>`,
+              icon: "success",
+              timer: 4000,
+              confirmButtonColor: "#27ae60",
+            });
             navigate("/forum");
           } else {
-            alert(res.data.message);
+            Swal.fire({
+              title: `<strong>${res.data.message}</strong>`,
+              icon: "error",
+              timer: 4000,
+              confirmButtonColor: "#ff0000",
+            });
           }
         });
     } else {
-      alert("Usuario no ha iniciado sesión");
+      Swal.fire({
+        title: "<strong>El usuario no ha iniciado sesión</strong>",
+        icon: "error",
+        timer: 4000,
+        confirmButtonColor: "#ff0000",
+      });
     }
   };
 
@@ -247,10 +279,17 @@ function Crear_publicacion() {
                       onChange={(e) => handleIngredientChange(index, e)}
                     />
                     <input
-                      type="text"
+                      type="number"
                       name="quantity"
                       placeholder="Cantidad del ingrediente"
                       value={ingredient.quantity}
+                      onChange={(e) => handleIngredientChange(index, e)}
+                    />
+                    <input
+                      type="text"
+                      name="units"
+                      placeholder="Unidades"
+                      value={ingredient.units}
                       onChange={(e) => handleIngredientChange(index, e)}
                     />
                     <button

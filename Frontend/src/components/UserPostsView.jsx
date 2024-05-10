@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import axios from "../api/axios.jsx";
 import "../pages/Home.css"
 import Cookies from 'universal-cookie';
+import Swal from 'sweetalert2';
 
 const UserPostsView = () => {
 
@@ -34,7 +35,12 @@ const UserPostsView = () => {
           const sortedPosts = response.data.posts.sort((a, b) => a.id - b.id);
           setPosts(sortedPosts);
         } else {
-          alert(response.data.message);
+          Swal.fire({
+            title: `<strong>${response.data.message}</strong>`,
+            icon: "error",
+            timer: 4000,
+            confirmButtonColor: "#ff0000",
+        });
         }
       } catch (error) {
         console.error("Error al obtener datos:", error);

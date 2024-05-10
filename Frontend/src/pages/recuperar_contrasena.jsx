@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import "./recuperar_contrasena.css";
 import imagen from "../assets/logo.png";
 import eyeOpenIcon from "../assets/ojo.png";
+import Swal from 'sweetalert2';
 import axios from "../api/axios.jsx";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -73,8 +74,18 @@ const Rec_contrasena = () => {
       })
       .then((res) => {
         if (res.data.message === "Correo enviado") { //mensaje que va a llegar desde el backend
-          alert("¡Se ha enviado el email exitosamente! Revisa tu bandeja de entrada, también tu bandeja de spam");
-          navigate("/login");
+          Swal.fire({
+            title: "<strong>¡Se ha enviado el email exitosamente! Revisa tu bandeja de entrada, también tu bandeja de spam.</strong>",
+            icon: "success",
+            timer: 4000,
+            confirmButtonColor: "#27ae60",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              navigate("/login");
+            } else if (result.isDenied) {
+              navigate("/login");
+            }
+          });
         } else {
           setErrMsg(res.data.message);
         }

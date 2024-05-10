@@ -10,6 +10,7 @@ import Comentario from "../components/Comentario";
 import { FaTrashCan } from "react-icons/fa6";
 import { IoMdAlert } from "react-icons/io";
 import { FaBookmark } from "react-icons/fa";
+import Swal from 'sweetalert2'
 
 function DetallesReceta() {
     const { id } = useParams();
@@ -56,7 +57,13 @@ function DetallesReceta() {
           setShowPlaceholder(false),
           setShowButtons(true)
         )
-        : alert("Debes iniciar sesión para comentar")
+        : Swal.fire({
+            title: "<strong>Error</strong>",
+            text: "Debes iniciar sesión para comentar.",
+            icon: "error",
+            timer: 4000,
+            confirmButtonColor: "#ff0000",
+        });
         
     };
     
@@ -105,7 +112,12 @@ function DetallesReceta() {
                     setScore(score + scoreChange);
                 }
             } else {
-                alert(response.data.message);
+                Swal.fire({
+                    title: `<strong>${response.data.message}</strong>`,
+                    icon: "error",
+                    timer: 4000,
+                    confirmButtonColor: "#ff0000",
+                });
             }
         } catch (error) {
             console.error("Error al realizar la solicitud:", error);
@@ -114,14 +126,39 @@ function DetallesReceta() {
     
     const handle_delete_post = async () => {
         try {
-          if(confirm("Esta acción es definitiva ¿Estás seguro de eliminar la publicación?")){
-            const res = await axios.post(`${url}/delete_posts/recipe`, {
-              post_id: id,
-              jwt : jwt
+            Swal.fire({
+                title: "<strong>¿Estás seguro de eliminar la receta?</strong>",
+                text: "Esta acción es definitiva y una vez eliminada, no se puede recuperar.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Sí, estoy seguro"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.post(`${url}/delete_posts/recipe`, {
+                        post_id: id,
+                        jwt: jwt
+                    }).then((res) => {
+                        Swal.fire({
+                            title: `<strong>${res.data.message}</strong>`,
+                            icon: "success",
+                            timer: 4000,
+                            confirmButtonColor: "#27ae60",
+                        });
+                        history.back();
+                    }).catch((error) => {
+                        Swal.fire({
+                            title: "<strong>Error</strong>",
+                            text: "Hubo un error al eliminar la receta.",
+                            icon: "error",
+                            timer: 4000,
+                            confirmButtonColor: "#ff0000",
+                        });
+                    });
+                }
             });
-            alert(res.data.message);
-            history.back();
-          }
+            
         } catch (error) {
           console.error("Error al realizar la solicitud:", error);
         }
@@ -153,7 +190,12 @@ function DetallesReceta() {
             const userHasVoted = res.data.vote_type !== 0;
             setVoted(userHasVoted);
           } else {
-            alert(res.data.message);
+            Swal.fire({
+                title: `<strong>${res.data.message}</strong>`,
+                icon: "error",
+                timer: 4000,
+                confirmButtonColor: "#ff0000",
+            });
           }
         } catch (error) {
             console.error("Error al realizar la solicitud:", error);
@@ -198,13 +240,23 @@ function DetallesReceta() {
             }
           );
           if (res.data.type === "SUCCESS") {
-            alert(res.data.message);
+            Swal.fire({
+                title: `<strong>${res.data.message}</strong>`,
+                icon: "success",
+                timer: 4000,
+                confirmButtonColor: "#27ae60",
+            });
             setComment("");
             setShowPlaceholder(true);
             setShowButtons(false);
             setReload(!reload);
           } else {
-            alert(res.data.message);
+            Swal.fire({
+                title: `<strong>${res.data.message}</strong>`,
+                icon: "error",
+                timer: 4000,
+                confirmButtonColor: "#ff0000",
+            });
           }
         } catch (error) {
           console.error("Error al realizar la solicitud:", error);
@@ -230,12 +282,22 @@ function DetallesReceta() {
                 jwt: jwt
             });
             if (response.data.type === "SUCCESS") {
-                alert(response.data.message);
+                Swal.fire({
+                    title: `<strong>${response.data.message}</strong>`,
+                    icon: "success",
+                    timer: 4000,
+                    confirmButtonColor: "#27ae60",
+                });
                 setReportReason('');
                 toggleReportMenu();
                 setReload(!reload);
             } else {
-                alert(response.data.message);
+                Swal.fire({
+                    title: `<strong>${response.data.message}</strong>`,
+                    icon: "error",
+                    timer: 4000,
+                    confirmButtonColor: "#ff0000",
+                });
             }
         } catch (error) {
             console.error("Error al realizar la solicitud:", error);
@@ -267,7 +329,12 @@ function DetallesReceta() {
             if (response.data.type === "SUCCESS") {
                 setSaved(!saved);
             } else {
-                alert(response.data.message);
+                Swal.fire({
+                    title: `<strong>${response.data.message}</strong>`,
+                    icon: "error",
+                    timer: 4000,
+                    confirmButtonColor: "#ff0000",
+                });
             }
         } catch (error) {
             console.error("Error al realizar la solicitud:", error);

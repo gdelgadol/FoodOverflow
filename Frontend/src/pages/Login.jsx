@@ -4,7 +4,7 @@ import imagen from "../assets/logo.png";
 import eyeOpenIcon from "../assets/ojo.png";
 import axios from "../api/axios.jsx";
 import Cookies from "universal-cookie";
-
+import Swal from 'sweetalert2';
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -100,12 +100,21 @@ const Login = () => {
       .then((res) => {
         if (res.data.message === "¡Login exitoso!") {
           const jwt_token = res.data.jwt;
-
           //Creating cookie
           login_cookie.set("auth_token", jwt_token);
 
-          alert("Inicio exitoso!");
-          window.location.href = `${urlFront}/forum`;
+          Swal.fire({
+            title: `<strong>${res.data.message}</strong>`,
+            icon: "success",
+            timer: 4000,
+            confirmButtonColor: "#27ae60",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = `${urlFront}/forum`;
+            } else if (result.isDenied) {
+              window.location.href = `${urlFront}/forum`;
+            }
+          });
         } else {
           setErrMsg(res.data.message);
         }

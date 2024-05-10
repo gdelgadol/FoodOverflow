@@ -13,11 +13,27 @@ function Settings() {
     axios.post(`${url}/settings/${u_id}/${token}/${email}`)
       .then((res) => {
         //console.log("Correo de activación enviado:", res.data);
-        navigate("/login");
-        alert(res.data.message);
+        Swal.fire({
+          title: `<strong>${res.data.message}</strong>`,
+          icon: "success",
+          timer: 4000,
+          confirmButtonColor: "#27ae60",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            navigate("/login");
+          } else if (result.isDenied) {
+            navigate("/login");
+          }
+        });
       })
       .catch((error) => {
-        alert("Error al enviar el correo de activación:", error);
+        Swal.fire({
+          title: "<strong>Error al enviar el correo de activación:</strong>",
+          text: `${error}`,
+          icon: "success",
+          timer: 4000,
+          confirmButtonColor: "#ff0000",
+        });
       });
   };
 

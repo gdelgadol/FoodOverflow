@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import axios from "axios";
 import "./Register.css";
 import iconoImg from "../assets/logo.png";
-
+import Swal from 'sweetalert2';
 import { Link, useNavigate } from "react-router-dom";
 
 /* Toda esta función es generada por chat gpt, para ver como conectamos eso con el back*/
@@ -65,10 +65,25 @@ function Register() {
       })
       .then((res) => {
         if (res.data.type === "SUCCESS") {
-          alert(res.data.message);
-          navigate("/login");
+          Swal.fire({
+            title: `<strong>${res.data.message}</strong>`,
+            icon: "success",
+            timer: 4000,
+            confirmButtonColor: "#27ae60",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              navigate("/login");
+            } else if (result.isDenied) {
+              navigate("/login");
+            }
+          });
         } else {
-          alert(res.data.message);
+          Swal.fire({
+            title: `<strong>${res.data.message}</strong>`,
+            icon: "error",
+            timer: 4000,
+            confirmButtonColor: "#ff0000",
+          });
         }
       });
   };
