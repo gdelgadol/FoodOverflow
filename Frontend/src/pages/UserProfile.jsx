@@ -50,7 +50,7 @@ export default function UserProfile () {
         .catch((error) => {
             console.error("Error al obtener datos del usuario:", error);
         })
-    }, [])
+    }, [username])
 
     useEffect(() => {
         axios.post(`${url}/get_user/profile`, {
@@ -65,9 +65,6 @@ export default function UserProfile () {
             console.error("Error al obtener datos del usuario:", error);
         })
     }, [])
-
-    const currentUser = cookies.get("username");
-    console.log(userInfo2.username2);
 
     return (
         <div className='up-container'>
