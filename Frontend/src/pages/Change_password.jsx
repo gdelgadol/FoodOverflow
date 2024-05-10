@@ -42,7 +42,7 @@ function Change_password() {
       });
       
       if (response.data.type === "SUCCESS") {
-        cookies.remove("auth_token");
+        cookies.remove('auth_token', { path: '/' });
         Swal.fire({
           title: `<strong>${response.data.message} Inicia sesión nuevamente.</strong>`,
           icon: "success",

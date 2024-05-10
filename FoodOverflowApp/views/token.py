@@ -4,6 +4,7 @@ from decouple import config
 from ..models import Profile, Avatar
 from ..models import Publication, Recipe, PublicationComment, RecipeComment, PublicationVote, RecipeVote, SavedPost
 from .modules import error_response, success_response, get_if_exists
+from django.forms.models import model_to_dict
 
 
 # Decode the JWT token
@@ -96,4 +97,18 @@ def get_user_data(request, identifier):
         return success_response(profile_info)
     except Exception as e:
         print(str(e))
+        return error_response("Ha ocurrido un error, intentalo de nuevo.")
+    
+#get all avatars
+def get_avatars(request):
+    try:
+        avatares = Avatar.objects.all()
+        avatars = []
+
+        for avatar in avatares:
+            avatars.append(model_to_dict(avatar))
+
+        return success_response({'avatars' : avatars})
+    except Exception as e:
+        print(e)
         return error_response("Ha ocurrido un error, intentalo de nuevo.")

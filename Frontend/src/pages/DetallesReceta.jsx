@@ -15,7 +15,7 @@ import Swal from 'sweetalert2'
 function DetallesReceta() {
     const { id } = useParams();
     const [author, setAuthor] = useState();
-    const [title, setTitle] = useState();
+    const [custom_title, setcustom_title] = useState();
     const [description, setDescription] = useState();
     const [numComments, setNumComments] = useState();
     const [ingredients, setIngredients] = useState([]);
@@ -58,7 +58,7 @@ function DetallesReceta() {
           setShowButtons(true)
         )
         : Swal.fire({
-            title: "<strong>Error</strong>",
+            custom_title: "<strong>Error</strong>",
             text: "Debes iniciar sesión para comentar.",
             icon: "error",
             timer: 4000,
@@ -113,7 +113,7 @@ function DetallesReceta() {
                 }
             } else {
                 Swal.fire({
-                    title: `<strong>${response.data.message}</strong>`,
+                    custom_title: `<strong>${response.data.message}</strong>`,
                     icon: "error",
                     timer: 4000,
                     confirmButtonColor: "#ff0000",
@@ -127,7 +127,7 @@ function DetallesReceta() {
     const handle_delete_post = async () => {
         try {
             Swal.fire({
-                title: "<strong>¿Estás seguro de eliminar la receta?</strong>",
+                custom_title: "<strong>¿Estás seguro de eliminar la receta?</strong>",
                 text: "Esta acción es definitiva y una vez eliminada, no se puede recuperar.",
                 icon: "warning",
                 showCancelButton: true,
@@ -141,7 +141,7 @@ function DetallesReceta() {
                         jwt: jwt
                     }).then((res) => {
                         Swal.fire({
-                            title: `<strong>${res.data.message}</strong>`,
+                            custom_title: `<strong>${res.data.message}</strong>`,
                             icon: "success",
                             timer: 4000,
                             confirmButtonColor: "#27ae60",
@@ -149,7 +149,7 @@ function DetallesReceta() {
                         history.back();
                     }).catch((error) => {
                         Swal.fire({
-                            title: "<strong>Error</strong>",
+                            custom_title: "<strong>Error</strong>",
                             text: "Hubo un error al eliminar la receta.",
                             icon: "error",
                             timer: 4000,
@@ -177,7 +177,7 @@ function DetallesReceta() {
           });
           if (res.data.type === "SUCCESS") {
             setAuthor(res.data.username);
-            setTitle(res.data.title);
+            setcustom_title(res.data.custom_title);
             setDescription(res.data.description);
             setNumComments(res.data.numComments);
             setIngredients(res.data.ingredients.split("_"));
@@ -191,7 +191,7 @@ function DetallesReceta() {
             setVoted(userHasVoted);
           } else {
             Swal.fire({
-                title: `<strong>${res.data.message}</strong>`,
+                custom_title: `<strong>${res.data.message}</strong>`,
                 icon: "error",
                 timer: 4000,
                 confirmButtonColor: "#ff0000",
@@ -241,7 +241,7 @@ function DetallesReceta() {
           );
           if (res.data.type === "SUCCESS") {
             Swal.fire({
-                title: `<strong>${res.data.message}</strong>`,
+                custom_title: `<strong>${res.data.message}</strong>`,
                 icon: "success",
                 timer: 4000,
                 confirmButtonColor: "#27ae60",
@@ -252,7 +252,7 @@ function DetallesReceta() {
             setReload(!reload);
           } else {
             Swal.fire({
-                title: `<strong>${res.data.message}</strong>`,
+                custom_title: `<strong>${res.data.message}</strong>`,
                 icon: "error",
                 timer: 4000,
                 confirmButtonColor: "#ff0000",
@@ -283,7 +283,7 @@ function DetallesReceta() {
             });
             if (response.data.type === "SUCCESS") {
                 Swal.fire({
-                    title: `<strong>${response.data.message}</strong>`,
+                    custom_title: `<strong>${response.data.message}</strong>`,
                     icon: "success",
                     timer: 4000,
                     confirmButtonColor: "#27ae60",
@@ -293,7 +293,7 @@ function DetallesReceta() {
                 setReload(!reload);
             } else {
                 Swal.fire({
-                    title: `<strong>${response.data.message}</strong>`,
+                    custom_title: `<strong>${response.data.message}</strong>`,
                     icon: "error",
                     timer: 4000,
                     confirmButtonColor: "#ff0000",
@@ -330,7 +330,7 @@ function DetallesReceta() {
                 setSaved(!saved);
             } else {
                 Swal.fire({
-                    title: `<strong>${response.data.message}</strong>`,
+                    custom_title: `<strong>${response.data.message}</strong>`,
                     icon: "error",
                     timer: 4000,
                     confirmButtonColor: "#ff0000",
@@ -357,13 +357,13 @@ function DetallesReceta() {
 
     return (
         <div className='dp-container'>
-            {is_admin && reports.length ? (<div>Este post ha sido reportado por:</div>): (<div></div>)}
-            {is_admin ? (reports.map((report) => <li key = {report.id}>{report.message} <button onClick = {() => ignore_report(report.id)}>Ignorar reporte</button></li>)): (<div></div>)}
+            {is_admin && reports.length ? (<div>Este post ha sido reportado por:</div>): (<></>)}
+            {is_admin ? (reports.map((report) => <li key = {report.id}>{report.message} <button onClick = {() => ignore_report(report.id)}>Ignorar reporte</button></li>)): (<></>)}
             <div className='dp-post'>
             {author == username || is_admin ? (
                 <button
-                    className="dp-delete-button"
-                    title="Eliminar publicación"
+                    className="dr-delete-button"
+                    custom_title="Eliminar publicación"
                     onClick={handle_delete_post}> 
                     <FaTrashCan />
                 </button>) : <div></div>}
@@ -371,7 +371,7 @@ function DetallesReceta() {
                     <button
                         className={`vote-button ${voted && lastVote === 1 ? 'voted' : ''} ${voteStatus === 1 ? 'user-voted' : ''}`}
                         onClick={() => handleVote(1)}
-                        title="Estás de acuerdo en que es información útil, relevante o correcta"
+                        custom_title="Estás de acuerdo en que es información útil, relevante o correcta"
                     >
                         <TbChefHat size={30} className={`xd ${voted && lastVote === 1 ? 'voted' : ''} ${voteStatus === 1 ? 'user-voted2' : ''}`} />
                     </button>
@@ -379,21 +379,21 @@ function DetallesReceta() {
                     <button
                         className={`vote-button ${voted && lastVote === -1 ? 'voted' : ''} ${voteStatus === -1 ? 'user-voted' : ''}`}
                         onClick={() => handleVote(-1)}
-                        title="Consideras que la información no es útil, relevante o correcta"
+                        custom_title="Consideras que la información no es útil, relevante o correcta"
                     >
                         <TbChefHatOff size={30} className={`xd ${voted && lastVote === -1 ? 'voted' : ''} ${voteStatus === -1 ? 'user-voted2' : ''}`} />
                     </button>
                     <button
                         className={`save-button ${saved ? 'saved' : ''}`} // Agrega la clase 'saved' cuando 'saved' es true
                         onClick={submitSave}
-                        title={saved ? "Eliminar de guardados" : "Guardar publicación"}
+                        custom_title={saved ? "Eliminar de guardados" : "Guardar publicación"}
                     >
                     <FaBookmark size={25} className="dp-guardar" />
                     </button>
                 </div>
                 <div className='dp-contenido'>
                     <span className='dp-userName'>{author}</span>
-                    <span className='dp-title'>{title}</span>
+                    <span className='dp-custom_title'>{custom_title}</span>
                     <div className='dp-tags'>
                     <div className='tags-container'>
                         {tags.map((tagId, index) => (
@@ -487,8 +487,8 @@ function DetallesReceta() {
             {alertVisible && (
                 <div className="dp-alert-cancel">
                     <div className="dp-alert-cancel-content">
-                        <div className="dp-alert-cancel-content-title">
-                            <span className="dp-title">¿Descartar comentario?</span>
+                        <div className="dp-alert-cancel-content-custom_title">
+                            <span className="dp-custom_title">¿Descartar comentario?</span>
                             <span className="close" onClick={ocultarAlerta}>
                             &times;
                             </span>

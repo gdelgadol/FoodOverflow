@@ -44,4 +44,7 @@ urlpatterns = [
     path('update_username/', views.update_username, name = "update_username"), # Change username
     path('settings/<uidb64>/<token>/<str:email>', views.email_confirmated, name='confirmated'), #Confirm new email
     path('user/<str:user_identifier>/<str:identifier>/', views.get_user_posts, name = "users_posts"), # Users Posts
+    path('update_avatar', views.update_avatar, name = 'update_avatar'), # Change use's avatar
+    path('update_description', views.update_description, name = 'update_description'), #Change user's description
+    path('get_avatars', views.get_avatars, name = 'get_avatars'), # get all avatars
 ]
