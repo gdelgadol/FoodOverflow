@@ -74,7 +74,7 @@ function AccountDetails() {
           })
           .then((res) => {
             if (res.data.type === "SUCCESS") {
-              cookies.remove("auth_token");
+              cookies.remove('auth_token', { path: '/' });
               Swal.fire({
                 title: `<strong>${res.data.message}</strong>`,
                 icon: "success",
