@@ -14,7 +14,7 @@ import Swal from 'sweetalert2'
 function DetallesPublicacion() {
   const { id } = useParams();
   const [author, setAuthor] = useState();
-  const [custom_title, setcustom_title] = useState();
+  const [title, setTitle] = useState();
   const [description, setDescription] = useState();
   const [numComments, setNumComments] = useState();
   const [comments, setComments] = useState([]);
@@ -55,7 +55,7 @@ function DetallesPublicacion() {
       setShowButtons(true)
     )
     : Swal.fire({
-      custom_title: "<strong>Error</strong>",
+      title: "<strong>Error</strong>",
       text: "Debes iniciar sesión para comentar.",
       icon: "error",
       timer: 4000,
@@ -109,7 +109,7 @@ function DetallesPublicacion() {
             }
         } else {
           Swal.fire({
-            custom_title: `<strong>${response.data.message}</strong>`,
+            title: `<strong>${response.data.message}</strong>`,
             icon: "error",
             timer: 4000,
             confirmButtonColor: "#ff0000",
@@ -123,7 +123,7 @@ function DetallesPublicacion() {
   const handle_delete_post = async () => {
     try {
       Swal.fire({
-        custom_title: "<strong>¿Estás seguro de eliminar la publicación?</strong>",
+        title: "<strong>¿Estás seguro de eliminar la publicación?</strong>",
         text: "Esta acción es definitiva y una vez eliminada, no se puede recuperar.",
         icon: "warning",
         showCancelButton: true,
@@ -137,7 +137,7 @@ function DetallesPublicacion() {
                   jwt: jwt
               }).then((res) => {
                   Swal.fire({
-                      custom_title: `<strong>${res.data.message}</strong>`,
+                      title: `<strong>${res.data.message}</strong>`,
                       icon: "success",
                       timer: 4000,
                       confirmButtonColor: "#27ae60",
@@ -145,7 +145,7 @@ function DetallesPublicacion() {
                   history.back();
               }).catch((error) => {
                   Swal.fire({
-                      custom_title: "<strong>Error</strong>",
+                      title: "<strong>Error</strong>",
                       text: "Hubo un error al eliminar la publicación.",
                       icon: "error",
                       timer: 4000,
@@ -172,7 +172,7 @@ function DetallesPublicacion() {
       });
       if (res.data.type === "SUCCESS") {
         setAuthor(res.data.username);
-        setcustom_title(res.data.custom_title);
+        setTitle(res.data.title);
         setDescription(res.data.description);
         setNumComments(res.data.numComments);
         setComments(res.data.publication_comments);
@@ -185,7 +185,7 @@ function DetallesPublicacion() {
         setVoted(userHasVoted);
       } else {
         Swal.fire({
-          custom_title: `<strong>${res.data.message}</strong>`,
+          title: `<strong>${res.data.message}</strong>`,
           icon: "error",
           timer: 4000,
           confirmButtonColor: "#ff0000",
@@ -234,7 +234,7 @@ function DetallesPublicacion() {
       );
       if (res.data.type === "SUCCESS") {
         Swal.fire({
-          custom_title: `<strong>${res.data.message}</strong>`,
+          title: `<strong>${res.data.message}</strong>`,
           icon: "success",
           timer: 4000,
           confirmButtonColor: "#27ae60",
@@ -245,7 +245,7 @@ function DetallesPublicacion() {
         setReload(!reload);
       } else {
         Swal.fire({
-          custom_title: `<strong>${res.data.message}</strong>`,
+          title: `<strong>${res.data.message}</strong>`,
           icon: "error",
           timer: 4000,
           confirmButtonColor: "#ff0000",
@@ -289,7 +289,7 @@ const submitReport = async () => {
         });
         if (response.data.type === "SUCCESS") {
           Swal.fire({
-            custom_title: `<strong>${response.data.message}</strong>`,
+            title: `<strong>${response.data.message}</strong>`,
             icon: "success",
             timer: 4000,
             confirmButtonColor: "#27ae60",
@@ -299,7 +299,7 @@ const submitReport = async () => {
             setReload(!reload);
         } else {
           Swal.fire({
-            custom_title: `<strong>${response.data.message}</strong>`,
+            title: `<strong>${response.data.message}</strong>`,
             icon: "error",
             timer: 4000,
             confirmButtonColor: "#ff0000",
@@ -322,7 +322,7 @@ const submitSave = async () => {
           setSaved(!saved);
       } else {
         Swal.fire({
-          custom_title: `<strong>${response.data.message}</strong>`,
+          title: `<strong>${response.data.message}</strong>`,
           icon: "error",
           timer: 4000,
           confirmButtonColor: "#ff0000",
@@ -385,7 +385,7 @@ const tagsDictionary = {
         </div>
         <div className="dp-contenido">
           <span className="dp-userName">{author}</span>
-          <span className="dp-custom_title">{custom_title}</span>
+          <span className="dp-title">{title}</span>
           <div className='dp-tags'>
             <div className='tags-container'>
               {tags.map((tagId, index) => (
@@ -467,8 +467,8 @@ const tagsDictionary = {
       {alertVisible && (
         <div className="dp-alert-cancel">
           <div className="dp-alert-cancel-content">
-            <div className="dp-alert-cancel-content-custom_title">
-              <span className="dp-custom_title">¿Descartar comentario?</span>
+            <div className="dp-alert-cancel-content-title">
+              <span className="dp-title">¿Descartar comentario?</span>
               <span className="close" onClick={ocultarAlerta}>
                 &times;
               </span>
