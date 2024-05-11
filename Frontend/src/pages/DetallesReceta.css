@@ -48,7 +48,7 @@
     color: #000000;
 }
 
-.dp-custom_title{
+.dp-title{
     font-size: 20px;
     font-weight: 600;
     color: #ff5c00;
@@ -195,7 +195,7 @@ dp-alert-cancel-close:focus {
   cursor: pointer; 
 }
 
-.dp-alert-cancel-content-custom_title {
+.dp-alert-cancel-content-title {
     display: flex;
     justify-content: space-between;
     align-items: center;

@@ -228,15 +228,15 @@ def save_recipe(request):
         else:
             return error_response("El perfíl no existe en la base de datos.")
         
-        if Recipe.objects.filter(recipe_id = data.get("post_id")).exists():
-            recipe = Recipe.objects.get(recipe_id = data.get("post_id"))
+        if Recipe.objects.filter(pk = int(data.get("post_id"))).exists():
+            recipe = Recipe.objects.get(pk = int(data.get("post_id")))
         else:
             return error_response("La receta que intentas guardar no existe.")
 
         if SavedPost.objects.filter(profile = profile , recipe = recipe).exists():
             saved_post = SavedPost.objects.get(profile = profile , recipe = recipe)
             saved_post.delete()
-            return error_response("Receta eliminada de guardados con éxito.")
+            return success_response({"message" : "Receta eliminada de guardados con éxito."})
         else:
             SavedPost.objects.save_recipe(profile, recipe)
             return success_response({"message" : "Receta guardada con éxito."})
