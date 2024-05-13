@@ -27,6 +27,7 @@ import Busqueda from "./components/Busqueda.jsx"
 import ResultsSearch from "./pages/Results_search.jsx"
 import Inicio from "./pages/Inicio.jsx"
 import UserSavedPosts from "./pages/UserSavedPosts.jsx"
+import NotFound from "./pages/NotFound.jsx";
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
           <Route path="/results_search/:tags" element={<ResultsSearch />} />
           <Route path="/user/:username" element={<UserProfile />} />
           <Route path="/saved_posts_user" element={<UserSavedPosts />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
       <Footer />
