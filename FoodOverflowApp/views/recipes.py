@@ -115,7 +115,9 @@ def get_recipe_tags(request):
         if(len(posts) == 0):
             error_response("No se encontraron recetas con esas etiquetas.")
         
-        return success_response({"posts": posts})
+        return success_response({"posts": posts, "number_posts": len(posts)})
+    except Recipe.DoesNotExist:
+        return error_response("No se encontraron recetas")
     except Exception as e:
         return error_response(str(e))
 

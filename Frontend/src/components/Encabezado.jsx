@@ -28,10 +28,10 @@ function Encabezado() {
   const [menuNotificacionOpen, setMenuNotificacionOpen] = useState(false);
   const location = useLocation(); // Usamos useLocation para obtener la ruta actual
 
-  useEffect(() => {
-    // Limpiar las etiquetas seleccionadas cuando la ruta cambie
-    setSelectedTags([]);
-  }, [location.pathname]); // Ejecutar el efecto cuando la ruta cambie
+  // useEffect(() => {
+  //   // Limpiar las etiquetas seleccionadas cuando la ruta cambie
+  //   setSelectedTags([]);
+  // }, [location.pathname]); // Ejecutar el efecto cuando la ruta cambie
 
 
   const toggleMenu = () => {
@@ -92,12 +92,20 @@ function Encabezado() {
   const submitSearch = async () => {
     try {
       const selectedValues = selectedTags.map(tag => tag.value);
+      if(selectedValues.length === 0) {
+        // Mostrar la página de resultados con cero tags y cero resultados
+        alert("Debes introducir al menos un tag para buscar")
+        //return navigate('/results_search/0');
+      } else { 
       const tagsParam = selectedValues.join(',');
       navigate(`/results_search/${tagsParam}`); // Navegamos a la ruta de búsqueda con los tags en la URL
+      //window.location.reload(); // Recargar la página para mostrar los resultados
+      }
     } catch (error) {
       console.error('Error al realizar la búsqueda:', error);
     }
   };
+
   const BorrarNotificacion = (notification_id) => {
     setNotificaciones(prevNotificaciones => prevNotificaciones.filter(notification => notification.notification_id !== notification_id));
     axios.post(`${url}/notifications/delete/`, {

@@ -182,7 +182,7 @@ def get_publications_tags(request):
         if(len(posts) == 0):
             return error_response("No se encontraron publicaciones con esas etiquetas.")
         
-        return success_response({"posts": posts, "number_posts": len(posts)})
+        return success_response({"posts": posts, "number_posts2": len(posts)})
     except Publication.DoesNotExist:
         return error_response("No se encontraron publicaciones")
     except Exception as e:
