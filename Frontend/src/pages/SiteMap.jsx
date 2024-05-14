@@ -130,32 +130,32 @@ const SiteMap = () => {
       <center>
         <div className='graph-container' style={{ maxWidth: '100%' }}>
         <ForceGraph2D
-  graphData={graphData}
-  nodeLabel="name"
-  nodeAutoColorBy="group"
-  onNodeClick={handleNodeClick}
-  width={graphWidth}
-  height={graphHeight}
-  linkColor={() => 'rgba(255, 255, 255, 1)'}
-  nodeCanvasObject={(node, ctx, globalScale) => {
-    const label = node.name;
-    const fontSize = 12 / globalScale;
-    ctx.font = `${fontSize}px Sans-Serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    const size = ctx.measureText(label);
-    const padding = 4;
-    const bkgDimensions = [size.width + padding * 2, size.actualBoundingBoxAscent + size.actualBoundingBoxDescent + padding * 2];
-    ctx.fillStyle = '#ff5c00'; // Color de fondo de los nodos
-    ctx.fillRect(node.x - bkgDimensions[0] / 2, node.y - bkgDimensions[1] / 2, ...bkgDimensions);
-    ctx.strokeStyle = 'black';
-    ctx.strokeRect(node.x - bkgDimensions[0] / 2, node.y - bkgDimensions[1] / 2, ...bkgDimensions); // Borde del nodo
-    ctx.fillStyle = 'black'; // Texto en negro
-    ctx.fillText(label, node.x, node.y);
-  }}
-  enableZoomPanInteraction={false}
-  enablePointerInteraction={true}
-  d3ForceConfig={{
+          graphData={graphData}
+          nodeLabel="name"
+          nodeAutoColorBy="group"
+          onNodeClick={handleNodeClick}
+          width={graphWidth}
+          height={graphHeight}
+          linkColor={() => 'rgba(255, 255, 255, 1)'}
+          nodeCanvasObject={(node, ctx, globalScale) => {
+            const label = node.name;
+            const fontSize = 12 / globalScale;
+            ctx.font = `${fontSize}px Sans-Serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            const size = ctx.measureText(label);
+            const padding = 4;
+            const bkgDimensions = [size.width + padding * 2, size.actualBoundingBoxAscent + size.actualBoundingBoxDescent + padding * 2];
+            ctx.fillStyle = '#ff5c00'; // Color de fondo de los nodos
+            ctx.fillRect(node.x - bkgDimensions[0] / 2, node.y - bkgDimensions[1] / 2, ...bkgDimensions);
+            ctx.strokeStyle = 'black';
+            ctx.strokeRect(node.x - bkgDimensions[0] / 2, node.y - bkgDimensions[1] / 2, ...bkgDimensions); // Borde del nodo
+            ctx.fillStyle = 'black'; // Texto en negro
+            ctx.fillText(label, node.x, node.y);
+          }}
+        enableZoomPanInteraction={false}
+        enablePointerInteraction={true}
+        d3ForceConfig={{
     link: { distance: 800, strength: 100 }, // Aumenta la distancia y ajusta la fuerza según sea necesario
     charge: { strength: -100, distanceMax: 100 } // Ajusta la fuerza de repulsión y la distancia máxima
   }}
