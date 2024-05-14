@@ -3,11 +3,11 @@
   flex-direction: column; /* Cambiar la dirección a columna */
   align-items: center;
   justify-content: center;
+  margin-bottom: 20px;
 }
 
 .titulo {
-  width: 700px;
-  max-width: 90%;
+  width: 100%;
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 10px;
@@ -17,8 +17,8 @@
 
 
 .form2 {
-  width: 700px;
-  max-width: 90%;
+  width: 100%;
+  max-width: 700px;
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 10px;
@@ -65,7 +65,7 @@ label {
 }
 
 .change-button {
-  height: 30px;
+  height: auto;
   border-radius: 10px;
   padding: 5px 10px;
   border: 2px solid #0032b4;
@@ -149,4 +149,39 @@ label {
 
 .delete-account input[type="checkbox"]:checked {
   background-color: #0032b4; 
+}
+
+.cancel-button {
+  height: 30px;
+  border-radius: 10px;
+  border: 2px solid red; 
+  padding: 0 10px; 
+  background-color: #ffffff;
+  color: red; 
+  cursor: pointer;
+  text-align: center;
+  font-size: 14px; 
+  margin-left: 10px; 
+  transition: all 0.3s ease; 
+  justify-content: space-between;
+  display:flex;
+  align-items: center;
+}
+
+.cancel-button:hover {
+  background-color: #ffc2c2; 
+}
+
+.pr-avatars {
+  width: 300px;
+}
+
+@media screen and (max-width: 900px) {
+  .titulo,
+  .form2 {
+    width: 90%;
+  }
+  .pr-avatars {
+    max-width: 45vw;
+  }
 }

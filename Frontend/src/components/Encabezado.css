@@ -60,7 +60,7 @@
   font-size: 15px; 
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1050px) {
   .search input {
     width: 60%; 
   }
@@ -95,7 +95,8 @@
 }
 
 .menu-button2 {
-  height: 35px;
+  height: auto;
+  min-height: 35px;
   border: 1px solid #ff5c00;
   border-radius: 10px;
   padding: 5px 10px;
@@ -134,7 +135,7 @@
 }
 
 /* Estilos para pantallas más pequeñas */
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1050px) {
   .search,
   .menu-info {
     display: none; 
@@ -165,7 +166,7 @@
   display: none; 
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1050px) {
   .menu-toggle {
     display: block; 
     z-index: 1200;
@@ -197,7 +198,7 @@
   display: none; 
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1050px) {
   .menu-dropdown {
     display: flex; 
     flex-direction: column;
