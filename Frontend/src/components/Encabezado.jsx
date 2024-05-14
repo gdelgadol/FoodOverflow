@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import "./Encabezado.css";
 import axios from "../api/axios.jsx";
 import { IoMdNotificationsOutline, IoMdNotifications } from "react-icons/io";
+import Swal from 'sweetalert2';
 
 function Encabezado() {
   const [userInfo, setUserInfo] = useState({
@@ -94,7 +95,13 @@ function Encabezado() {
       const selectedValues = selectedTags.map(tag => tag.value);
       if(selectedValues.length === 0) {
         // Mostrar la página de resultados con cero tags y cero resultados
-        alert("Debes introducir al menos un tag para buscar")
+        //alert("Debes introducir al menos un tag para buscar")
+        Swal.fire({
+          title: "<strong> Debes introducir al menos un tag para buscar </strong>",
+          icon: "error",
+          timer: 4000,
+          confirmButtonColor: "#ff0000",
+        });
         navigate(`/forum`)
         //return navigate('/results_search/0');
       } else { 
