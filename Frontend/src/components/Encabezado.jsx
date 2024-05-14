@@ -95,6 +95,7 @@ function Encabezado() {
       if(selectedValues.length === 0) {
         // Mostrar la página de resultados con cero tags y cero resultados
         alert("Debes introducir al menos un tag para buscar")
+        navigate(`/forum`)
         //return navigate('/results_search/0');
       } else { 
       const tagsParam = selectedValues.join(',');
