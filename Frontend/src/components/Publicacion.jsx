@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { GiShrug } from "react-icons/gi";
 
 export default function Publicacion ({id_post, userName, profile_avatar, title, description, numComments, score, type, tags}) {
-    if (type === 'publications'){
+    if (type === 'publications' || type === 'publication'){
         type = "publication"
     } else {
         type = "recipe"

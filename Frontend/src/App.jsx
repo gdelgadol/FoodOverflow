@@ -28,6 +28,7 @@ import ResultsSearch from "./pages/Results_search.jsx"
 import Inicio from "./pages/Inicio.jsx"
 import UserSavedPosts from "./pages/UserSavedPosts.jsx"
 import NotFound from "./pages/NotFound.jsx";
+import SiteMap from "./pages/SiteMap.jsx";
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
           <Route path="/user/:username" element={<UserProfile />} />
           <Route path="/saved_posts_user" element={<UserSavedPosts />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/site-map" element={<SiteMap />} />
         </Routes>
       </div>
       <Footer />
