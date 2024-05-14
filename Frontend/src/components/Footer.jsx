@@ -18,6 +18,7 @@ function Footer() {
         </div>
         <Link to={"/terms"} style={{ color: '#b7b7b7' }}>Términos y condiciones</Link>
         <Link to={"/acuerdo"} style={{ color: '#b7b7b7' }}>Acuerdo de privacidad</Link>
+        <Link to={"/site-map"} style={{ color: '#b7b7b7' }}>Mapa del sitio</Link>
         <div>foodoverflow02@gmail.com</div>
         </div>
         <div className="social-links">
