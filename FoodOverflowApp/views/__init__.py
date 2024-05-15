@@ -4,3 +4,6 @@ from .password_reset import *
 from .token import *
 from .forum import *
 from .profile_settings import *
+from .publications import *
+from .recipes import *
+from .notifications import *

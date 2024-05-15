@@ -7,7 +7,7 @@ from django.utils.html import strip_tags
 from ..models import Profile
 import json
 from decouple import config
-from django.http import JsonResponse
+from .modules import error_response, success_response
 
 # Create and send reset link to email if user exists
 
@@ -19,11 +19,14 @@ def password_reset(request):
         if Profile.objects.filter(email=user_email).exists():
             user = Profile.objects.get(email__exact = user_email)
             send_email(request, user, user.email)
-            return JsonResponse({"message": "Correo enviado", "type": "SUCCESS"})
+            return success_response({"message": "Correo enviado"})
         else:
-            return JsonResponse({"message": "El usuario no existe", "type": "ERROR"})
-    except:
+            return error_response("El usuario no existe.")
+    except Exception as e:
+        print(str(e))
         user_email=False
+        return error_response("Ha ocurrido un error, intenta nuevamente.")
+        
 
 
 # If link is valid send reset form and check if form is valid for the user
@@ -36,38 +39,47 @@ def reset(request, uidb64, token):
         user = Profile.objects.get(id=uid)
     except (TypeError, ValueError, OverflowError, Profile.DoesNotExist):
         user = None
-    if user is not None and account_activation_token.check_token(user, token):
-        user.set_password(new_password)
-        user.save()
-        return JsonResponse({"message":"Contraseña reseteada"})
-    else:
-        return JsonResponse({"message":"Link no es válido"})
+
+    try:
+        if user is not None and account_activation_token.check_token(user, token):
+            user.set_password(new_password)
+            user.save()
+            return success_response({"message":"Contraseña reseteada."})
+        else:
+            return error_response("Link no es válido")
+    except Exception as e:
+        print(str(e))
+        return error_response("Ha ocurrido un error, intenta nuevamente.")
 
 
 def send_email(request, user, to_email):
-    mail_subject = "Restablece tu contraseña de FoodOverflow"
+    try:
+        mail_subject = "Restablece tu contraseña de FoodOverflow"
 
-    message = render_to_string(
-        "email_templates/pass_reset.html",
-        {
-            "user": user.username,
-            "domain": config('FRONT_HOST'),
-            "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-            "token": account_activation_token.make_token(user),
-            "protocol": "https" if request.is_secure() else "http",
-        },
-    )
-
-    plain_message = strip_tags(message)
-
-
-    #Send email
-    email = EmailMultiAlternatives(
-        subject = mail_subject,
-        body = plain_message, 
-        from_email = None,
-        to=[to_email]
+        message = render_to_string(
+            "email_templates/pass_reset.html",
+            {
+                "user": user.username,
+                "domain": config('FRONT_HOST'),
+                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                "token": account_activation_token.make_token(user),
+                "protocol": "https" if request.is_secure() else "http",
+            },
         )
-    
-    email.attach_alternative(message, "text/html")
-    email.send()
+
+        plain_message = strip_tags(message)
+
+
+        #Send email
+        email = EmailMultiAlternatives(
+            subject = mail_subject,
+            body = plain_message, 
+            from_email = None,
+            to=[to_email]
+            )
+        
+        email.attach_alternative(message, "text/html")
+        email.send()
+    except Exception as e:
+        print(e)
+        return error_response(str(e))

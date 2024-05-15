@@ -5,6 +5,7 @@ import iconoImg from "../assets/logo.png";
 import { Link } from "react-router-dom";
 import axios from "../api/axios.jsx";
 import Cookies from 'universal-cookie';
+import Swal from 'sweetalert2';
 
 function Change_email() {
   const [formData, setFormData] = useState({
@@ -31,12 +32,25 @@ function Change_email() {
       })
       .then((res) => {
         if (res.data.type === "SUCCESS") {
-          alert(res.data.message + " Inicia sesión nuevamente");
-          //sendActivationEmail(formData.newEmail);
-          cookies.remove("auth_token");
-          window.location.href = `${urlFront}/login`;
+          cookies.remove('auth_token', { path: '/' });
+          Swal.fire({
+            title: `<strong>${res.data.message} Inicia sesión nuevamente.</strong>`,
+            icon: "success",
+            confirmButtonColor: "#27ae60",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = `${urlFront}/login`;
+            } else if (result.isDenied) {
+              window.location.href = `${urlFront}/login`;
+            }
+          });
         } else {
-          alert(res.data.message);
+          Swal.fire({
+            title: `<strong>${res.data.message}</strong>`,
+            icon: "error",
+            timer: 4000,
+            confirmButtonColor: "#ff0000",
+          });
         }
       })
       .catch((error) => {

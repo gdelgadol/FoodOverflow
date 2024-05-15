@@ -2,8 +2,8 @@ import Publicacion from "../components/Publicacion";
 import Paginacion from "../components/Paginacion";
 import { useEffect, useState } from "react";
 import axios from "../api/axios.jsx";
-import "./Home.css"
-import Cookies from 'universal-cookie';
+import "./Home.css";
+import Swal from 'sweetalert2';
 
 const Home = () => {
 
@@ -26,7 +26,12 @@ const Home = () => {
           const sortedPosts = response.data.posts.sort((a, b) => b.id - a.id );
           setPosts(sortedPosts);
         } else {
-          alert(response.data.message);
+          Swal.fire({
+            title: `<strong>${response.data.message}</strong>`,
+            icon: "error",
+            timer: 4000,
+            confirmButtonColor: "#ff0000",
+          });
         }
       } catch (error) {
         console.error("Error al obtener datos:", error);
@@ -83,10 +88,12 @@ const Home = () => {
             key={index}
             id_post={publicacion.id}
             userName={publicacion.userName}
+            profile_avatar={publicacion.profile_avatar}
             title={publicacion.title}
             description={publicacion.description}
             numComments={publicacion.numComments}
             score={publicacion.score}
+            tags={publicacion.tagsList}
             type={filtro_2}
           />
         ))

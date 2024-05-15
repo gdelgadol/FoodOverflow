@@ -1,298 +1,87 @@
 from ..models import Publication, PublicationComment, PublicationVote
 from ..models import Recipe, RecipeComment, RecipeVote
-from ..models import Profile
-from django.http import JsonResponse
+from ..models import Profile, SavedPost
+from ..models import Notification
 from ..views.token import decode_jwt
-from django.db.models import Sum
+from decouple import config
+from .publications import save_publication
+from .recipes import save_recipe
+from .modules import *
+
 import json
 
-#------------------Publication controllers--------------------------#
-
-#View details of a specific publication
-def get_publication(request):
+#Delete comments and posts  
+def delete_comment(request, identifier):
     try:
-        # get the Json Data, Email and Password
         data = json.loads(request.body)
-        publication_id = int(data.get("publication_id"))
 
-        if Publication.objects.select_related('profile').filter(publication_id = publication_id).exists():
-            publication = Publication.objects.select_related('profile').get(publication_id = publication_id)
-        else:
-            return JsonResponse({
-                "message" : "La publicación que estás intentando ver no existe.", 
-                "type" : "ERROR"
-                })
-
-        publication_comments = PublicationComment.objects.filter(publication=publication)
-	
-        vote_type = 0
-
-	    # Extracting vote type
-        if (data.get("jwt")):
+        if data.get("jwt"):
             jwt_decoded = decode_jwt(data.get("jwt"))
-
-            if not jwt_decoded:
-                return JsonResponse({"message" : "Hubo un error, intenta iniciar sesión nuevamente.", "type" : "ERROR"})
-
-            if Profile.objects.filter(id = jwt_decoded["id"]).exists():
-                profile = Profile.objects.get(id = jwt_decoded["id"])
-            
-                if PublicationVote.objects.filter(publication = publication, profile = profile).exists():
-                    vote_type = PublicationVote.objects.get(publication = publication, profile = profile).vote_type
-
-        # Extracting relevant data from the comments
-        comments_list = []
-        publication_comments = PublicationComment.objects.filter(publication=publication, comment_response_id = None)
-        num_comments = publication_comments.count()
-        for comment in publication_comments:
-            
-            comment_data = {
-                'comment_id': comment.publication_comment_id,
-                'comment_content': comment.comment_body,
-                'comment_user': comment.profile.username  # Assuming user is related to the comment
-                # Add more fields if needed
-            } 
-            publication_comments_response = PublicationComment.objects.filter(publication=publication, comment_response_id = comment.publication_comment_id)
-            response_list = []
-            for response in publication_comments_response:
-                response_data = {
-                'response_id': response.publication_comment_id,
-                'response_content': response.comment_body,
-                'response_user': response.profile.username  # Assuming user is related to the comment
-                # Add more fields if needed
-                }
-                response_list.append(response_data)
-                num_comments += 1
-            
-            comment_data["response_list"] = response_list
-
-            comments_list.append(comment_data)
-
+        else:
+            return error_response("Ha ocurrido un error, inténtalo de nuevo.")
         
+        comment_id = data.get("comment_id")
 
-        publication_score = PublicationVote.objects.filter(publication = publication.publication_id).aggregate(Sum('vote_type'))['vote_type__sum']
+        if identifier == 'publication':
+            comment = get_if_exists(PublicationComment, {'publication_comment_id' : comment_id})
+            if not comment:
+                return error_response('El comentario que estás intentando eliminar no existe.')
 
-        if not publication_score:
-            publication_score = 0
+            if jwt_decoded["username"] == comment.profile.username  or jwt_decoded["is_admin"]:
+                comment.delete()
+                return success_response({"message" : "El comentario ha sido eliminada con éxito."})
+            
+        elif identifier == 'recipe':
+            comment = get_if_exists(RecipeComment,{'recipe_comment_id' : comment_id})
+            if not comment:
+                return error_response('El comentario que estás intentando eliminar no existe.')
 
-        publication_json = {
-            "type": "SUCCESS",
-            'username' : publication.profile.username,
-            'title' : publication.publication_title,
-            'description' : publication.publication_description,
-            "numComments": num_comments,
-            "score": publication_score,
-            "publication_comments": comments_list,
-            "vote_type" : vote_type,
-            "tagsList": publication.publication_tags
-            }
-        
-        return JsonResponse(publication_json)
-    except Exception as e:
-        print(e)
-        # Catch all other exceptions
-        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
+            if jwt_decoded["username"] == comment.profile.username or jwt_decoded["is_admin"]:
+                comment.delete()
+                return success_response({"message" : "El comentario ha sido eliminada con éxito."})
+            
+        return error_response("Ha ocurrido un error, inténtalo de nuevo.")
     
-#View all publications made by a user
-def get_publications(request):
-    try:
-        publications_query = Publication.objects.order_by('publication_creation_date').select_related('profile').all()
-        posts = []
-
-        for publication in publications_query:
-            username = publication.profile.username
-            num_comments = PublicationComment.objects.filter(publication = publication.publication_id).count()
-            score = PublicationVote.objects.filter(publication = publication.publication_id).aggregate(Sum('vote_type'))['vote_type__sum']
-            if not score:
-                score = 0
-            post_data = {
-                "id": publication.publication_id,
-                "userName": username,
-                "title": publication.publication_title,
-                "description": publication.publication_description,
-                "numComments": num_comments,
-                "score": score,
-                "tagsList": publication.publication_tags
-            }
-            posts.append(post_data)
-
-        return JsonResponse({"type": "SUCCESS", "posts": posts})
-    except Publication.DoesNotExist:
-        return JsonResponse({"type": "ERROR", "message": "No se encontraron publicaciones"}, status=404)
     except Exception as e:
-        return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
+        print(str(e))
+        return error_response("Ha ocurrido un error, inténtalo de nuevo.")
 
-#Create a publication
-def create_forum_publication(request):
+#Delete posts    
+def delete_post(request, identifier):
     try:
         data = json.loads(request.body)
-        title = data.get("title")
-        description = data.get("content")
-        tags_list = data.get("tags_list")
 
-        
         if data.get("jwt"):
-            jwt_token = decode_jwt(data.get("jwt"))
-        else:
-            return JsonResponse({"message" : "Debes iniciar sesión para crear una publicación.", "type" : "ERROR"})
-
-        if not jwt_token:
-            print(jwt_token)
-            return JsonResponse({"message" : "Hubo un error, intenta iniciar sesión nuevamente.", "type" : "ERROR"})
-
-        username = jwt_token['username']
-        user = Profile.objects.get(username = username)
-        if not tags_list:
-            Publication.objects.create_publication(title, description, user)
-        else:
-            Publication.objects.create_publication_tags(title, description, user, tags_list)
-
-        return JsonResponse({"message" : "¡Publicación creada con éxito!", "type" : "SUCCESS"})
-    except Exception as e:
-        print(e)
-        # Catch all other exceptions
-        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
-
-#------------------Recipe controllers--------------------------#
-#Create a recipe
-def create_recipe(request):
-    try:
-        data = json.loads(request.body)
-        title = data.get("title")
-        ingredients = data.get("ingredients")
-        instructions = data.get("instructions")
-        tags_list = data.get("tags_list")
-        
-        if data.get("jwt"):
-            jwt_token = decode_jwt(data.get("jwt"))
-        else:
-            return JsonResponse({"message" : "Debes iniciar sesión para crear una publicación.", "type" : "ERROR"})
-
-        if not jwt_token:
-            return JsonResponse({"message" : "Hubo un error, intenta iniciar sesión nuevamente.", "type" : "ERROR"})
-
-        user = Profile.objects.get(id = jwt_token['id'])
-
-        if not tags_list:
-            Recipe.objects.create_recipe(title, ingredients, instructions, user)
-        else:
-            Recipe.objects.create_recipe_tags(title, ingredients, instructions, user, tags_list)
-
-        return JsonResponse({"message" : "¡Receta creada con éxito!", "type" : "SUCCESS"})
-    except Exception as e:
-        print(e)
-        # Catch all other exceptions
-        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
-
-#View all recipes done by a user
-def get_recipes(request):
-    try:
-        recipes_query = Recipe.objects.order_by('recipe_creation_date').select_related('profile').all()
-        posts = []
-
-        for recipe in recipes_query:
-            username = recipe.profile.username
-            num_comments = RecipeComment.objects.filter(recipe = recipe.recipe_id).count()
-            score = RecipeVote.objects.filter(recipe = recipe.recipe_id).aggregate(Sum('vote_type'))['vote_type__sum']
-            if not score:
-                score = 0
-            post_data = {
-                "id": recipe.recipe_id,
-                "userName": username,
-                "title": recipe.recipe_title,
-                "ingredients" : recipe.recipe_ingredients,
-                "description": recipe.recipe_description,
-                "numComments": num_comments,
-                "score": score,
-                "tagsList": recipe.recipe_tags
-            }
-            posts.append(post_data)
-
-        return JsonResponse({"type": "SUCCESS", "posts": posts})
-    except Recipe.DoesNotExist:
-        return JsonResponse({"type": "ERROR", "message": "No se encontraron recetas"}, status=404)
-    except Exception as e:
-        return JsonResponse({"type": "ERROR", "message": str(e)}, status=500)
-
-#View details of a specific recipe
-def get_recipe(request):
-    try:
-        # get the Json Data, Email and Password
-        data = json.loads(request.body)
-        recipe_id = int(data.get("recipe_id"))
-
-        recipe = Recipe.objects.select_related('profile').get(recipe_id = recipe_id)
-        
-        recipe_comments = RecipeComment.objects.filter(recipe=recipe, comment_response_id = None)
-        
-        vote_type = 0
-
-        # Extracting vote type
-        if (data.get("jwt")):
             jwt_decoded = decode_jwt(data.get("jwt"))
-
-            if not jwt_decoded:
-                return JsonResponse({"message" : "Hubo un error, intenta iniciar sesión nuevamente.", "type" : "ERROR"})
-
-            if Profile.objects.filter(id = jwt_decoded["id"]).exists():
-                profile = Profile.objects.get(id = jwt_decoded["id"])
-            
-                if RecipeVote.objects.filter(recipe = recipe, profile = profile).exists():
-                    vote_type = RecipeVote.objects.get(recipe = recipe, profile = profile).vote_type
-
-        # Extracting relevant data from the comments
-        num_comments = recipe_comments.count()
-        comments_list = []
-        for comment in recipe_comments:
-            
-            comment_data = {
-                'comment_id': comment.recipe_comment_id,
-                'comment_content': comment.comment_body,
-                'comment_user': comment.profile.username  # Assuming user is related to the comment
-                # Add more fields if needed
-            }
-            recipe_comments_response = RecipeComment.objects.filter(recipe=recipe, comment_response_id = comment.recipe_comment_id)
-            response_list = []
-            for response in recipe_comments_response:
-                response_data = {
-                'response_id': response.recipe_comment_id,
-                'response_content': response.comment_body,
-                'response_user': response.profile.username  # Assuming user is related to the comment
-                # Add more fields if needed
-                }
-                response_list.append(response_data)
-                num_comments += 1
-            
-            comment_data["response_list"] = response_list
-
-            comments_list.append(comment_data)
-
+        else:
+            return error_response("Ha ocurrido un error, inténtalo de nuevo.")
         
+        post_id = data.get("post_id")
 
-        recipe_score = RecipeVote.objects.filter(recipe = recipe.recipe_id).aggregate(Sum('vote_type'))['vote_type__sum']
+        if identifier == 'publication':
+            
+            publication = get_if_exists(Publication,{'publication_id' : post_id})
+            if not publication:
+                return error_response("La publicación que estás intentando eliminar no existe.")
 
-        if not recipe_score:
-            recipe_score = 0
+            if jwt_decoded["username"] == publication.profile.username or jwt_decoded["is_admin"]:
+                publication.delete()
+                return success_response({"message" : "La publicación ha sido eliminada con éxito."})
+            
+        elif identifier == 'recipe':
+            recipe = get_if_exists(Recipe, {'recipe_id' : post_id})
+            if not recipe:
+                return error_response("La receta que estás intentando eliminar no existe.")
 
-        recipe_json = {
-            "type": "SUCCESS",
-            'username' : recipe.profile.username,
-            'title' : recipe.recipe_title,
-            'ingredients' : recipe.recipe_ingredients,
-            'description' : recipe.recipe_description,
-            "numComments": num_comments,
-            "score": recipe_score,
-            "recipe_comments": comments_list,
-            "vote_type" : vote_type,
-            "tagsList": recipe.recipe_tags
-            }
-        
-        return JsonResponse(recipe_json)
+            if jwt_decoded["username"] == recipe.profile.username or jwt_decoded["is_admin"]:
+                recipe.delete()
+                return success_response({"message" : "La receta ha sido eliminada con éxito."})
+            
+        return error_response("Ha ocurrido un error, inténtalo de nuevo.")
     except Exception as e:
-        print(e)
-        # Catch all other exceptions
-        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
-
+        print(str(e))
+        return error_response("Ha ocurrido un error, inténtalo de nuevo.")
+    
 #------------------Vote and comment controllers--------------------------#
 #Cast a vote
 def make_vote(request, id_vote):
@@ -304,93 +93,57 @@ def make_vote(request, id_vote):
         if data.get("jwt"):
             jwt_decoded = decode_jwt(data.get("jwt"))
         else:
-            return JsonResponse({
-                "message": "El usuario no ha iniciado sesión.",
-                "type" : "ERROR"
-                })
+            return error_response("El usuario no ha iniciado sesión.")
 
-        if Profile.objects.filter(pk = jwt_decoded["id"]).exists():
-            profile = Profile.objects.get(pk = jwt_decoded["id"])
-        else:
-            return JsonResponse({
-                "message" : "El usuario no se encuentra registrado.", 
-                "type" : "ERROR"
-                })       
+        profile = get_if_exists(Profile, {'pk' : jwt_decoded["id"]})
+        if not profile:
+            return error_response("El usuario no se encuentra registrado.")       
 
         if id_vote == "recipe":
-            if Recipe.objects.filter(pk = post_id).exists():
-                recipe = Recipe.objects.get(pk = post_id)
-            else:
-                return JsonResponse({
-                    "message" : "La receta no se encuentra registrada.", 
-                    "type" : "ERROR"
-                    })
-            if vote_type == 0 and RecipeVote.objects.filter(recipe = recipe, profile = profile).exists():
-                vote = RecipeVote.objects.get(recipe = recipe, profile = profile)
-                vote.delete()
-                return JsonResponse({
-                    "message" : "Voto eliminado con éxito.",
-                    "type" : "SUCCESS"
-                    })
+            recipe = get_if_exists(Recipe, {'pk' : post_id})
+            if not recipe:
+                return error_response("La receta no se encuentra registrada.")
+            
+            vote = get_if_exists(RecipeVote, {'recipe' : recipe, 'profile' : profile})
+            if vote_type == 0: 
+                if vote:
+                    vote.delete()
+                    return success_response({"message" : "Voto eliminado con éxito."})
             elif vote_type != 0:
-                if RecipeVote.objects.filter(recipe = recipe, profile = profile).exists():
-                    vote = RecipeVote.objects.get(recipe = recipe, profile = profile)
+                if vote:
                     vote.vote_type = vote_type
                     vote.save()
                 else:
                     RecipeVote.objects.create_recipe_vote(recipe, profile, vote_type)
-                return JsonResponse({
-                    "message" : "Voto registrado con éxito.",
-                    "type" : "SUCCESS"
-                    })
+                return success_response({"message" : "Voto registrado con éxito."})
             else: 
-                return JsonResponse({
-                    "message" : "Hubo un error, inténtelo de nuevo", 
-                    "type" : "ERROR"
-                    })
+                return error_response("Hubo un error, inténtelo de nuevo")
         elif id_vote == "publication":
-            if Publication.objects.filter(pk = post_id).exists():
-                publication = Publication.objects.get(pk = post_id)
-            else:
-                return JsonResponse({
-                    "message" : "La publicación no se encuentra registrada.", 
-                    "type" : "ERROR"
-                    })
-            if vote_type == 0 and PublicationVote.objects.filter(publication = publication, profile = profile).exists():
-                vote = PublicationVote.objects.get(publication = publication, profile = profile)
-                vote.delete()
-                return JsonResponse({
-                    "message" : "Voto eliminado con éxito.",
-                    "type" : "SUCCESS"
-                    })
+            publication = Publication.objects.get(pk = post_id)
+            if not publication:
+                return error_response("La publicación no se encuentra registrada.")
+            
+            vote = get_if_exists(PublicationVote, {'publication' : publication, 'profile' : profile})
+            if vote_type == 0:
+                if vote:
+                    vote.delete()
+                    return success_response({"message" : "Voto eliminado con éxito."})
             elif vote_type != 0:
-                if PublicationVote.objects.filter(publication = publication, profile = profile).exists():
-                    vote = PublicationVote.objects.get(publication = publication, profile = profile)
+                if vote:
                     vote.vote_type = vote_type
                     vote.save()
                 else:
                     PublicationVote.objects.create_publication_vote(publication, profile, vote_type)
-                return JsonResponse({
-                    "message" : "Voto registrado con éxito.",
-                    "type" : "SUCCESS"
-                    })
+                return success_response({"message" : "Voto registrado con éxito."})
             else: 
-                return JsonResponse({
-                    "message" : "Hubo un error, inténtelo de nuevo", 
-                    "type" : "ERROR"
-                    })
+                return error_response("Hubo un error, inténtelo de nuevo") 
+            
         else:
-            return JsonResponse({
-                "message" : "Hubo un error, inténtelo de nuevo", 
-                "type" : "ERROR"
-                })
+            return error_response("Hubo un error, inténtelo de nuevo")
     except Exception as e:
         print(e)
         # Catch all other exceptions
-        return JsonResponse({
-            "message" : "Hubo un error, inténtelo de nuevo",
-            "type" : "ERROR"
-            })
+        return error_response("Hubo un error, inténtelo de nuevo")
 
 #Create a comment   
 def create_comment(request, id_comment):
@@ -398,42 +151,55 @@ def create_comment(request, id_comment):
         data = json.loads(request.body)
         post_id = int(data.get("post_id"))
         content = data.get("content")
-        jwt_decoded = decode_jwt(data.get("jwt"))
 
-        if Profile.objects.filter(pk = jwt_decoded["id"]).exists():
-            profile = Profile.objects.get(pk = jwt_decoded["id"])
+        if data.get("jwt"):
+            jwt_decoded = decode_jwt(data.get("jwt"))
+            if not jwt_decoded:
+                error_response('Ha ocurrido un error, inténta iniciar sesión nuevamente.')
         else:
-            return JsonResponse({
-                "message" : "El usuario no se encuentra registrado.", 
-                "type" : "ERROR"
-                })
+            return error_response('Ha ocurrido un error, inténtalo más tarde.')
+
+        url = config('FRONT_HOST')
+
+        profile = get_if_exists(Profile, {'pk' : jwt_decoded["id"]})
+        if not profile:
+            return error_response("El usuario no se encuentra registrado.")
         
         if id_comment == "recipe":
-            if Recipe.objects.filter(pk = post_id).exists():
-                recipe = Recipe.objects.get(pk = post_id)
-            else:
-                return JsonResponse({
-                    "message" : "La receta no se encuentra registrada.", 
-                    "type" : "ERROR"
-                    })
+            recipe = get_if_exists(Recipe, {'pk' : post_id})
+            if not recipe:
+                return error_response("La receta no se encuentra registrada.")            
+            
+            author = Profile.objects.get(pk = recipe.profile_id)
             RecipeComment.objects.create_recipe_comment(profile, recipe, content)
-            return JsonResponse({"message" : "¡Comentario creado con éxito!", "type" : "SUCCESS"})
+
+            url += f'/{id_comment}/{post_id}'
+            message = f'El usuario {profile.username} ha comentado en tu receta: {recipe.recipe_title}. {url}.'
+            
+            Notification.objects.notify_recipe(author, recipe, message)
+            
+            return success_response({"message" : "¡Comentario creado con éxito!"})
         
         elif id_comment == "publication":
-            if Publication.objects.filter(pk = post_id).exists():
-                publication = Publication.objects.get(pk = post_id)
-            else:
-                return JsonResponse({
-                    "message" : "La publicación no se encuentra registrada.", 
-                    "type" : "ERROR"
-                    })
+            publication = get_if_exists(Publication, {'pk' : post_id})
+            if not publication:
+                return error_response("La publicación no se encuentra registrada.")
+            
+            author = Profile.objects.get(pk = publication.profile_id)
+
             PublicationComment.objects.create_publication_comment(profile, publication, content)
-            return JsonResponse({"message" : "¡Comentario creado con éxito!", "type" : "SUCCESS"})
+
+            url += f'/{id_comment}/{post_id}'
+            message = f'El usuario {profile.username} ha comentado en tu publicación: {publication.publication_title}. {url}.'
+
+            Notification.objects.notify_publication(author, publication, message)
+            
+            return success_response({"message" : "¡Comentario creado con éxito!"})
         
     except Exception as e:
         print(e)
         # Catch all other exceptions
-        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
+        return error_response("Hubo un error, inténtelo de nuevo")
     
 #Reply to a comment
 def create_comment_response(request, id_comment):
@@ -442,137 +208,129 @@ def create_comment_response(request, id_comment):
         post_id = int(data.get("post_id"))
         comment_id = data.get("comment_id")
         content = data.get("content")
-        jwt_decoded = decode_jwt(data.get("jwt"))
 
-        if Profile.objects.filter(pk = jwt_decoded["id"]).exists():
-            profile = Profile.objects.get(pk = jwt_decoded["id"])
+        if data.get("jwt"):
+            jwt_decoded = decode_jwt(data.get("jwt"))
+            if not jwt_decoded:
+                error_response('Ha ocurrido un error, inténta iniciar sesión nuevamente.')
         else:
-            return JsonResponse({
-                "message" : "El usuario no se encuentra registrado.", 
-                "type" : "ERROR"
-                })
+            return error_response('Ha ocurrido un error, inténtalo más tarde.')
+
+        url = config('FRONT_HOST')
+
+        profile = get_if_exists(Profile, {'pk' : jwt_decoded["id"]})
+        if not profile:
+            return error_response("El usuario no se encuentra registrado.")
         
         if id_comment == "recipe":
-            if Recipe.objects.filter(pk = post_id).exists():
-                recipe = Recipe.objects.get(pk = post_id)
-            else:
-                return JsonResponse({
-                    "message" : "La receta no se encuentra registrada.", 
-                    "type" : "ERROR"
-                    })
+            recipe = get_if_exists(Recipe, {'pk' : post_id})
+            if not recipe:
+                return error_response("La receta no se encuentra registrada.")
             
-            if RecipeComment.objects.filter(pk = comment_id).exists():
-                recipe_comment = RecipeComment.objects.get(pk = comment_id)
-            else:
-                return JsonResponse({
-                    "message" : "No existe el comentario al que quiere responder.", 
-                    "type" : "ERROR"
-                    })
+            recipe_comment = get_if_exists(RecipeComment, {'pk' : comment_id})
+            if not recipe_comment:
+                return error_response("No existe el comentario al que quiere responder.")
             
             RecipeComment.objects.create_recipe_comment_response(profile, recipe, content, recipe_comment)
-            return JsonResponse({"message" : "¡Respuesta creada con éxito!", "type" : "SUCCESS"})
+
+            author = Profile.objects.get(pk = recipe_comment.profile_id)
+
+            url += f'/{id_comment}/{post_id}'
+            message = f'El usuario {profile.username} ha respondido a tu comentario en la receta: {recipe.recipe_title}. {url}.'
+
+            Notification.objects.notify_recipe(author, recipe, message)
+            
+            return success_response({"message" : "¡Respuesta creada con éxito!"})
         
         elif id_comment == "publication":
-            if Publication.objects.filter(pk = post_id).exists():
-                publication = Publication.objects.get(pk = post_id)
-            else:
-                return JsonResponse({
-                    "message" : "La publicación no se encuentra registrada.", 
-                    "type" : "ERROR"
-                    })
+            publication = get_if_exists(Publication, {'pk' : post_id})
+            if not publication:
+                return error_response("La publicación no se encuentra registrada.")
             
-            if PublicationComment.objects.filter(pk = comment_id).exists():
-                publication_comment = PublicationComment.objects.get(pk = comment_id)
-            else:
-                return JsonResponse({
-                    "message" : "No existe el comentario al que quiere responder.", 
-                    "type" : "ERROR"
-                    })
+            publication_comment = get_if_exists(PublicationComment, {'pk' : comment_id})
+            if not publication_comment:
+                return error_response("No existe el comentario al que quiere responder.")
             
             PublicationComment.objects.create_publication_comment_response(profile, publication, content, publication_comment)
-            return JsonResponse({"message" : "¡Respuesta creada con éxito!", "type" : "SUCCESS"})
+
+            author = Profile.objects.get(pk = publication_comment.profile_id)
+
+            url += f'/{id_comment}/{post_id}'
+            message = f'El usuario {profile.username} ha respondido a tu comentario en la publicación: {publication.publication_title}. {url}.'
+
+            Notification.objects.notify_publication(author, publication, message)
+
+            return success_response({"message" : "¡Respuesta creada con éxito!"})
         
     except Exception as e:
         print(e)
         # Catch all other exceptions
-        return JsonResponse({"message" : "Hubo un error, inténtelo de nuevo", "type" : "ERROR"})
+        return error_response("Hubo un error, inténtelo de nuevo")
 
 #get user's publication
-def get_user_posts(request, identifier):
+def get_user_posts(request, user_identifier, identifier):
+    try:
+        data = json.loads(request.body)
+        
+        if user_identifier == "profile":
+            if data.get("jwt"):
+                jwt_decoded = decode_jwt(data.get("jwt"))
+                if not jwt_decoded:
+                    return error_response('Ha ocurrido un error, inténta iniciar sesión nuevamente.')
+            else:
+                return error_response("El usuario no ha iniciado sesión.")
+            
+            profile = get_if_exists(Profile, {'id' : jwt_decoded["id"]})
+            if not profile:
+                return error_response("El usuario no se encuentra registrado.")
+        else:
+            profile = get_if_exists(Profile, {'username' : user_identifier})
+            if not profile:
+                return error_response("El usuario no se encuentra registrado.")        
+        if identifier == "recipes":
+            posts = get_all_posts([Recipe, RecipeComment, RecipeVote], {'profile' : profile}, identifier, f'{identifier[0:-1]}_creation_date')
+        elif identifier == "publications":
+            posts = get_all_posts([Publication, PublicationComment, PublicationVote], {'profile' : profile}, identifier, f'{identifier[0:-1]}_creation_date')
+        else:
+            return error_response("Ha ocurrido un error, inténtalo de nuveo.")
+        return success_response({"posts" : posts})
+    except Exception as e:
+        print(e)
+        return error_response(str(e))
+    
+#get user's saved posts
+def get_saved_posts(request, identifier):
     try:
         data = json.loads(request.body)
         
         if data.get("jwt"):
             jwt_decoded = decode_jwt(data.get("jwt"))
+            if not jwt_decoded:
+                return error_response('Ha ocurrido un error, inténta iniciar sesión nuevamente.')
         else:
-            return JsonResponse({
-                "type" : "ERROR",
-                "message" : "El usuario no ha iniciado sesión."
-            })
+            return error_response("El usuario no ha iniciado sesión.")
         
-        if Profile.objects.filter(id = jwt_decoded["id"]).exists():
-            profile = Profile.objects.get(id = jwt_decoded["id"])
-        else:
-            return JsonResponse({
-                "type" : "ERROR",
-                "message" : "El usuario no se encuentra registrado."
-            })
+        profile = get_if_exists(Profile, {'id' : jwt_decoded["id"]})
+        if not profile:
+            return error_response("El usuario no se encuentra registrado.")
         
         if identifier == "recipes":
-            recipes_query = Recipe.objects.filter(profile = profile).order_by("recipe_creation_date")
-            
-            posts = []
-            
-            for recipe in recipes_query:
-                username = recipe.profile.username
-                num_comments = RecipeComment.objects.filter(recipe = recipe.recipe_id).count()
-                score = RecipeVote.objects.filter(recipe = recipe.recipe_id).aggregate(Sum('vote_type'))['vote_type__sum']
-                if not score:
-                    score = 0
-                post_data = {
-                    "id": recipe.recipe_id,
-                    "userName": username,
-                    "title": recipe.recipe_title,
-                    "ingredients" : recipe.recipe_ingredients,
-                    "description": recipe.recipe_description,
-                    "numComments": num_comments,
-                    "score": score,
-                    "tagsList": recipe.recipe_tags
-                }
-                posts.append(post_data)
+            posts = get_all_posts([SavedPost, RecipeComment, RecipeVote], {'profile' : profile, 'publication' : None}, identifier, 'recipe', save = True)
         elif identifier == "publications":
-            publications_query = Publication.objects.filter(profile = profile).order_by("publication_creation_date")
-            
-            posts = []
-            
-            for publication in publications_query:
-                username = publication.profile.username
-                num_comments = PublicationComment.objects.filter(publication = publication.publication_id).count()
-                score = PublicationVote.objects.filter(publication = publication.publication_id).aggregate(Sum('vote_type'))['vote_type__sum']
-                if not score:
-                    score = 0
-                post_data = {
-                    "id": publication.publication_id,
-                    "userName": username,
-                    "title": publication.publication_title,
-                    "description": publication.publication_description,
-                    "numComments": num_comments,
-                    "score": score,
-                    "tagsList": publication.publication_tags
-                }
-                posts.append(post_data)
+            posts = get_all_posts([SavedPost, PublicationComment, PublicationVote], {'profile' : profile, 'recipe' : None}, identifier, 'publication', save = True)
         else:
-            return JsonResponse({
-                "type" : "ERROR",
-                "message" : "Ha ocurrido un error, intentalo de nuveo."
-            })
+            return error_response("Ha ocurrido un error, inténtalo de nuveo.")
             
-        return JsonResponse({
-                "type" : "SUCCESS",
-                "posts" : posts
-            })
+        return success_response({"posts" : posts})
     except Exception as e:
-        return JsonResponse({
-            "type" : "ERROR",
-            "message" : str(e)
-        })
+        print(e)
+        return error_response(str(e))
+
+#Save posts controller
+def save_posts(request, identifier):
+    if identifier == "recipe":
+        return save_recipe(request)
+    elif identifier == "publication":
+        return save_publication(request)
+    else: 
+        return error_response(f'{identifier} no es un identificador válido.')

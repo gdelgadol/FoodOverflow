@@ -1,8 +1,23 @@
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from django.utils import timezone
 from django.db import models
 from datetime import date
+
+#Avatar Model
+class AvatarManager(models.Manager):
+    def create_avatar(self, url):
+        avatar = self.model(
+            avatar_url = url
+        )
+        avatar.save(using = self.db)
+        return avatar
+
+class Avatar(models.Model):
+    avatar_id = models.BigAutoField(primary_key=True)
+    avatar_url = models.TextField(default = "", unique = True)
+
+    on_delete = models.CASCADE
+    objects = AvatarManager()
 
 # User Model
 class UserManager(BaseUserManager):
@@ -39,6 +54,8 @@ class Profile(AbstractBaseUser):
     USERNAME_FIELD = "username"
     EMAIL_FIELD = "email"
     REQUIRED_FIELDS = ["password", "email"]
+
+    avatar_id = models.ForeignKey(Avatar, default = None, null = True, on_delete = models.SET_NULL)
 
     objects = UserManager()
 
@@ -80,7 +97,7 @@ class Publication(models.Model):
     publication_id = models.BigAutoField(primary_key=True)
     publication_title = models.CharField(max_length=100)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    publication_description = models.TextField(unique=True)
+    publication_description = models.TextField()
     publication_creation_date = models.DateField(default=date.today)
 
     publication_tags = ArrayField(models.IntegerField(blank = True, default = -1), default = list)
@@ -236,3 +253,60 @@ class RecipeComment(models.Model):
 
     on_delete = models.CASCADE
     objects = RecipeCommentManager()
+
+#SavedPost Model
+class SavedPostManager(models.Manager):
+    def save_publication(self, user_id, publication):
+        saved_publication = self.model(
+            profile = user_id,
+            publication = publication
+        )
+        saved_publication.save(using=self.db)
+        return saved_publication
+
+    def save_recipe(self, user_id, recipe):
+        saved_recipe = self.model(
+            profile = user_id,
+            recipe = recipe
+        )
+        saved_recipe.save(using=self.db)
+        return saved_recipe
+
+class SavedPost(models.Model):
+    saved_post_id = models.BigAutoField(primary_key=True)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    publication = models.ForeignKey(Publication, on_delete=models.CASCADE, null = True, default = None)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, null = True, default = None)
+
+    on_delete = models.CASCADE
+    objects = SavedPostManager()
+
+#Notification Model
+class NotificationManager(models.Manager):
+    def notify_publication(self, user_id, publication, message):
+        saved_publication = self.model(
+            profile = user_id,
+            publication = publication,
+            message = message
+        )
+        saved_publication.save(using=self.db)
+        return saved_publication
+
+    def notify_recipe(self, user_id, recipe, message):
+        saved_recipe = self.model(
+            profile = user_id,
+            recipe = recipe,
+            message = message
+        )
+        saved_recipe.save(using=self.db)
+        return saved_recipe
+
+class Notification(models.Model):
+    notification_id = models.BigAutoField(primary_key = True)
+    profile = models.ForeignKey(Profile, on_delete = models.CASCADE)
+    publication = models.ForeignKey(Publication, on_delete = models.CASCADE, null = True, default = None)
+    recipe = models.ForeignKey(Recipe, on_delete = models.CASCADE, null = True, default = None)
+    message = models.TextField(null = False, blank = False)
+
+    on_delete = models.CASCADE
+    objects = NotificationManager()

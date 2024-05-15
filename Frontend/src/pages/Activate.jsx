@@ -1,7 +1,10 @@
 import React, {useEffect} from 'react';
 import { useParams } from 'react-router-dom';
 import axios from "../api/axios.jsx";
+import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
+
+
 function Activate() {
   const { uid, token } = useParams(); // Obtener los parámetros de la URL
   const navigate = useNavigate();
@@ -12,8 +15,20 @@ function Activate() {
       .post(`${url}/activate/${uid}/${token}`, {
       })
       .then((res) => {
-          navigate("/login");
-          alert(res.data.message);
+        if(res.data.type === "SUCCESS"){
+          Swal.fire({
+            title: `<strong>${res.data.message}</strong>`,
+            icon: "success",
+            confirmButtonColor: "#27ae60",
+          })
+        }else if(res.data.type === "ERROR"){
+          Swal.fire({
+            title: `<strong>${res.data.message}</strong>`,
+            icon: "error",
+            confirmButtonColor: "#ff0000",
+          })
+        };
+        navigate("/login");
       });
   };
 

@@ -5,12 +5,16 @@ import Cookies from "universal-cookie";
 import iconoImg from "../assets/logo.png";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import Quill from 'quill';
+import ImageCompress from 'quill-image-compress';
+import Swal from 'sweetalert2';
 
 
 import { Link, useNavigate } from "react-router-dom";
 
+Quill.register('modules/imageCompress', ImageCompress);
+
 function Crear_publicacion() {
-  // Initialize cookies
   const cookies = new Cookies();
   const jwt = cookies.get("auth_token");
 
@@ -19,12 +23,12 @@ function Crear_publicacion() {
   const url =  import.meta.env.VITE_API_URL;
 
   const [content, setContent] = useState("");
-
   const [state, setState] = useState({
     title: "",
     content: "",
-    postType: "", // Agregamos el estado para el tipo de publicación
-    ingredients: [], // Estado para almacenar los ingredientes de la receta
+    postType: "",
+    tags: [],
+    ingredients: [],
   });
 
   const handleCommentInput = (value) => {
@@ -60,19 +64,42 @@ function Crear_publicacion() {
 
   const handleRemoveIngredient = (index) => {
     const newIngredients = [...state.ingredients];
-    newIngredients.splice(index, 1); // Elimina el ingrediente en el índice dado
+    newIngredients.splice(index, 1);
     setState({
       ...state,
       ingredients: newIngredients,
     });
   };
 
+  const handleAddTag = (event) => {
+    const selectedTag = event.target.value;
+    if (!state.tags.includes(selectedTag)) {
+      setState({
+        ...state,
+        tags: [...state.tags, selectedTag],
+      });
+    }
+  };
+
+  const handleRemoveTag = (index) => {
+    const newTags = [...state.tags];
+    newTags.splice(index, 1);
+    setState({
+      ...state,
+      tags: newTags,
+    });
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Validaciones necesarias para las publicaciones
+    const tagsAsNumbers = state.tags.map(tag => parseInt(tag, 10));
+    setState({
+      ...state,
+      tags: tagsAsNumbers,
+    });
+    console.log(state);
     if (state.postType === "Receta") {
       crear_receta();
-      //console.log(content)
     } else {
       crear_publicacion();
     }
@@ -86,46 +113,92 @@ function Crear_publicacion() {
         .post(`${url}/crear_publicacion/`, {
           title: state.title,
           content: content,
+          tags_list: state.tags,
           jwt: jwt,
         })
         .then((res) => {
           if (res.data.type === "SUCCESS") {
-            alert(res.data.message);
-            navigate("/");
+            Swal.fire({
+              title: `<strong>${res.data.message}</strong>`,
+              icon: "success",
+              timer: 4000,
+              confirmButtonColor: "#27ae60",
+            });
+            navigate("/forum");
           } else {
-            alert(res.data.message);
+            Swal.fire({
+              title: `<strong>${response.data.message}</strong>`,
+              icon: "success",
+              timer: 4000,
+              confirmButtonColor: "#ff0000",
+            });
           }
         });
     } else {
-      alert("Usuario no ha iniciado sesión");
+      Swal.fire({
+        title: "<strong>El usuario no ha iniciado sesión.</strong>",
+        icon: "error",
+        timer: 4000,
+        confirmButtonColor: "#ff0000",
+      });
     }
   };
 
   const crear_receta = () => {
     if (jwt) {
-      //console.log(content)
       const ingredientsString = state.ingredients
-        .map((ingredient) => `${ingredient.name}: ${ingredient.quantity}`)
+        .map((ingredient) => `${ingredient.name}: ${ingredient.quantity} ${ingredient.units}`)
         .join("_");
       axios
         .post(`${url}/crear_recipe/`, {
           title: state.title,
           ingredients: ingredientsString,
           instructions: content,
+          tags_list: state.tags,
           jwt: jwt,
         })
         .then((res) => {
           if (res.data.type === "SUCCESS") {
-            alert(res.data.message);
-            navigate("/");
+            Swal.fire({
+              title: `<strong>${res.data.message}</strong>`,
+              icon: "success",
+              timer: 4000,
+              confirmButtonColor: "#27ae60",
+            });
+            navigate("/forum");
           } else {
-            alert(res.data.message);
+            Swal.fire({
+              title: `<strong>${res.data.message}</strong>`,
+              icon: "error",
+              timer: 4000,
+              confirmButtonColor: "#ff0000",
+            });
           }
         });
     } else {
-      alert("Usuario no ha iniciado sesión");
+      Swal.fire({
+        title: "<strong>El usuario no ha iniciado sesión</strong>",
+        icon: "error",
+        timer: 4000,
+        confirmButtonColor: "#ff0000",
+      });
     }
   };
+
+  const tagsDictionary = {
+    1: "Vegetariano",
+    2: "Vegano",
+    3: "Sin gluten",
+    4: "Bajo en carbohidratos",
+    5: "Alta en proteínas",
+    6: "Postre",
+    7: "Desayuno",
+    8: "Almuerzo",
+    9: "Cena",
+    10: "Aperitivo"
+  };
+
+  const availableTags = Object.keys(tagsDictionary).filter(tag => !state.tags.includes(tag));
 
   return (
     <div className="form-container">
@@ -151,7 +224,7 @@ function Crear_publicacion() {
             <option value="Publicación">Pregunta</option>
           </select>
         </div>
-        {state.postType && ( // Renderiza los formularios solo si se ha seleccionado una opción
+        {state.postType && (
           <>
             <div className="input-group">
               <label htmlFor="title">Título</label>
@@ -163,6 +236,35 @@ function Crear_publicacion() {
                 value={state.title}
                 onChange={handleInput}
               />
+            </div>
+            <div className="input-group">
+              <label htmlFor="tags">Tags</label>
+              <select
+                id="tags"
+                name="tags"
+                value=""
+                onChange={handleAddTag}
+              >
+                <option value="" disabled>Seleccionar tags</option>
+                {availableTags.map(tag => (
+                  <option key={tag} value={tag}>
+                    {tagsDictionary[tag]}
+                  </option>
+                ))}
+              </select>
+              <div className="tags-container">
+                {state.tags.map((tag, index) => (
+                  <span key={index} className="tag">
+                    {tagsDictionary[tag]}
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveTag(index)}
+                    >
+                      X
+                    </button>
+                  </span>
+                ))}
+              </div>
             </div>
             {state.postType === "Receta" && (
               <div className="input-group">
@@ -177,10 +279,17 @@ function Crear_publicacion() {
                       onChange={(e) => handleIngredientChange(index, e)}
                     />
                     <input
-                      type="text"
+                      type="number"
                       name="quantity"
                       placeholder="Cantidad del ingrediente"
                       value={ingredient.quantity}
+                      onChange={(e) => handleIngredientChange(index, e)}
+                    />
+                    <input
+                      type="text"
+                      name="units"
+                      placeholder="Unidades"
+                      value={ingredient.units}
                       onChange={(e) => handleIngredientChange(index, e)}
                     />
                     <button
@@ -222,13 +331,19 @@ function Crear_publicacion() {
                       ['link', 'image'],
                       ['clean'],
                     ],
+                    imageCompress: {
+                      quality: 0.5, // Adjust quality as needed
+                      maxWidth: 400, // Maximum width of compressed image
+                      maxHeight: 400, // Maximum height of compressed image
+                      imageType: 'image/jpeg' // Compressed image type
+                    }
                   }}
                 />
               </div>
             </div>
           </>
         )}
-        {state.postType && ( // Renderiza el botón de publicar solo si se ha seleccionado una opción
+        {state.postType && (
           <button type="submit" className="register-button center-button">
             Publicar
           </button>
@@ -239,4 +354,3 @@ function Crear_publicacion() {
 }
 
 export default Crear_publicacion;
-

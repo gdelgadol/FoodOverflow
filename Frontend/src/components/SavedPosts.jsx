@@ -1,11 +1,12 @@
-import Publicacion from "../components/Publicacion";
-import Paginacion from "../components/Paginacion";
+import Publicacion from "./Publicacion.jsx";
+import Paginacion from "./Paginacion.jsx";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import axios from "../api/axios.jsx";
-import "./Home.css"
+import "../pages/Home.css"
 import Cookies from 'universal-cookie';
 
-const UserPostsView = () => {
+const SavedPosts = () => {
 
   const [posts, setPosts] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
@@ -24,11 +25,11 @@ const UserPostsView = () => {
     const fetchData = async () => {
       try {
         //setIsLoading(true)
-        const response = await axios.post(`${url}/user/${filtro_2}/`, {
-		jwt : jwt
-	});
+        const response = await axios.post(`${url}/saved_posts/${filtro_2}`, {
+          jwt : jwt
+        });
         if (response.data.type === "SUCCESS") {
-          const sortedPosts = response.data.posts.sort((a, b) => a.id - b.id);
+          const sortedPosts = response.data.posts.sort((a, b) => b.id - a.id);
           setPosts(sortedPosts);
         } else {
           alert(response.data.message);
@@ -50,7 +51,7 @@ const UserPostsView = () => {
     if (filtro_1 === "Más votados") {
       setPosts([...posts.sort((a, b) => b.score - a.score)]);
     } else if (filtro_1 === "Recientes") {
-      setPosts([...posts.sort((a, b) => a.id - b.id)]);
+      setPosts([...posts.sort((a, b) => b.id - a.id)]);
     }else if (filtro_1 === "Más interacción") {
       setPosts([...posts.sort((a, b) => b.numComments - a.numComments)]);
     }
@@ -88,10 +89,12 @@ const UserPostsView = () => {
             key={index}
             id_post={publicacion.id}
             userName={publicacion.userName}
+            profile_avatar={publicacion.profile_avatar}
             title={publicacion.title}
             description={publicacion.description}
             numComments={publicacion.numComments}
             score={publicacion.score}
+            tags={publicacion.tagsList}
             type={filtro_2}
           />
         ))
@@ -105,4 +108,4 @@ const UserPostsView = () => {
   );
 };
 
-export default UserPostsView;
+export default SavedPosts;

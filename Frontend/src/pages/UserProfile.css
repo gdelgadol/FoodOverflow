@@ -1,0 +1,107 @@
+.up-container {
+    display: flex;
+    flex-direction: row;
+    gap: 4vw;
+    align-items: flex-start;
+}
+
+.up-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: black;
+    padding: 20px;
+    border-radius: 20px;
+    position: sticky;
+    top: 120px;
+    width: 250px;
+}
+
+.up-info-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.up-info-name {
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+}
+
+.up-info-description {
+    font-size: 15px;
+    font-weight: 400;
+    color: rgb(150, 150, 150);
+    margin-bottom: 20px;
+}
+
+.up-info-separator {
+    width: 100%;
+    height: 1px;
+    background-color: rgb(50, 50, 50)
+}
+
+.up-info-statistics {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.up-info-statistics-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.up-info-statistics-number {
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+}
+
+.up-info-statistics-text {
+    font-size: 15px;
+    font-weight: 400;
+    color: rgb(150, 150, 150);
+}
+
+@media screen and (max-width: 900px) {
+    .up-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .up-info {
+        position: inherit;
+    }
+}
+
+.savedPosts-button {
+    margin-top: 15px;
+    background-color: #ff5c00;
+    color: #ffffff; 
+    border: none; 
+    padding: 10px 20px; 
+    font-size: 16px; 
+    border-radius: 5px; 
+    cursor: pointer;
+    transition: background-color 0.3s ease; 
+    justify-content: space-between;
+    display:flex;
+    align-items: center;
+  }
+  
+  .savedPosts-button:hover {
+    background-color: #ff836d; 
+  }
+  
+  .savedPosts-button:focus {
+    outline: none; 
+  }
+
+  .book {
+    margin-right: 4px;
+  }

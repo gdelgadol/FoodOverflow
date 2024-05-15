@@ -1,18 +1,21 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import "./Register.css";
 import iconoImg from "../assets/logo.png";
-
+import Swal from 'sweetalert2';
 import { Link, useNavigate } from "react-router-dom";
 
 /* Toda esta función es generada por chat gpt, para ver como conectamos eso con el back*/
 function Register() {
   const [errMsg, setErrMsg] = useState("");
+  const [avatars, setAvatars] = useState([]);
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
   const errRef = useRef();
 
   const [state, setState] = useState({
     email: "",
     password: "",
+    description: "",
     check_password: "",
     username: "",
   });
@@ -27,6 +30,10 @@ function Register() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    // Verificar que la descripción no consista únicamente de espacios
+    const descriptionTrimmed = state.description.trim();
+    const descriptionToSend = descriptionTrimmed === '' ? null : descriptionTrimmed;
 
     // Verificar que la contraseña tenga al menos 8 caracteres, una letra y un número
     const regexLetter = /[a-zA-Z]/;
@@ -48,30 +55,66 @@ function Register() {
       return;
     }
 
+    // Verificar si el campo de correo electrónico es válido
+    const isValidEmail = /\S+@\S+\.\S+/.test(state.email);
+      if (!isValidEmail) {
+        setErrMsg("Ingrese un correo válido.");
+        return;
+        }
+
     // Si la validación pasa, puedes enviar el formulario o hacer lo que necesites aquí
     console.log("Contraseña válida");
-    register();
+    register(descriptionToSend);
   };
 
   const navigate = useNavigate();
 
-  const register = () => {
+  const register = (description) => {
     axios
       .post(`${url}/signup/`, {
         email: state.email,
         username: state.username,
+        description: description,
+        avatar_id: selectedAvatar,
         password: state.password,
         check_password: state.check_password,
       })
       .then((res) => {
         if (res.data.type === "SUCCESS") {
-          alert(res.data.message);
-          navigate("/login");
+          Swal.fire({
+            title: `<strong>${res.data.message}</strong>`,
+            icon: "success",
+            timer: 4000,
+            confirmButtonColor: "#27ae60",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              navigate("/login");
+            } else if (result.isDenied) {
+              navigate("/login");
+            }
+          });
         } else {
-          alert(res.data.message);
+          Swal.fire({
+            title: `<strong>${res.data.message}</strong>`,
+            icon: "error",
+            timer: 4000,
+            confirmButtonColor: "#ff0000",
+          });
         }
       });
   };
+
+  useEffect(() => {
+    axios.post(`${url}/get_avatars`, {
+    })
+    .then((res) => {
+      setAvatars(res.data.avatars);
+      console.log(res.data.avatars);
+    })
+    .catch((err) => {
+      console.error("Error al obtener los avatares:", err);
+    })
+  }, [])
 
   return (
     <div className="register">
@@ -100,6 +143,9 @@ function Register() {
               name="email"
               placeholder="Ingresa tu email"
               required
+              onKeyDown={(e) => {
+                if (e.key === ' ') e.preventDefault();
+              }}
               onChange={handleInput}
             />
           </div>
@@ -111,8 +157,35 @@ function Register() {
               name="username"
               placeholder="Crea tu nombre de usuario"
               required
+              onKeyDown={(e) => {
+                if (e.key === ' ') e.preventDefault();
+              }}
               onChange={handleInput}
             />
+          </div>
+          <div className="input-group">
+            <label htmlFor="description">Descripción (Opcional)</label>
+            <input
+              type="text"
+              id="description"
+              name="description"
+              placeholder="Ingresa una descripción sobre ti"
+              onChange={handleInput}
+            />
+          </div>
+          <div className="avatar-container">
+            <p>Selecciona un avatar: (Opcional)</p>
+            <div className="avatars">
+              {avatars.map(avatar => (
+                <img
+                  key={avatar.avatar_id}
+                  src={avatar.avatar_url}
+                  alt="Avatar"
+                  className={selectedAvatar === avatar.avatar_id ? "selected" : ""}
+                  onClick={() => setSelectedAvatar(avatar.avatar_id)}
+                />
+              ))}
+            </div>
           </div>
           <div className="input-group">
             <label htmlFor="password">Contraseña</label>
