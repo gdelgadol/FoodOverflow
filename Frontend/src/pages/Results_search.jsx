@@ -33,7 +33,7 @@ function ResultsSearch() {
                     setContador2(response.data.number_posts2);
                     //console.log(response.data.number_posts);
                 } else {
-                    alert(response.data.message);
+                    //alert(response.data.message);
                 }
             } catch (error) {
                 console.error('Error al obtener datos:', error);
@@ -61,7 +61,7 @@ function ResultsSearch() {
                     setContador(response.data.number_posts);
                     //console.log(response.data.number_posts);
                 } else {
-                    alert(response.data.message);
+                    //alert(response.data.message);
                 }
             } catch (error) {
                 console.error('Error al obtener datos:', error);

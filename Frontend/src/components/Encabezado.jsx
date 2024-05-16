@@ -8,6 +8,7 @@ import "./Encabezado.css";
 import axios from "../api/axios.jsx";
 import { IoMdNotificationsOutline, IoMdNotifications } from "react-icons/io";
 import Swal from 'sweetalert2';
+import tagsDictionaryLoaded from "../../labels.json";
 
 function Encabezado() {
   const [userInfo, setUserInfo] = useState({
@@ -61,18 +62,10 @@ function Encabezado() {
     }, 500);
   };
 
-  const tagsDictionary = [
-    { label: 'Vegetariano', value: 1 },
-    { label: 'Vegano', value: 2 },
-    { label: 'Sin gluten', value: 3 },
-    { label: 'Bajo en carbohidratos', value: 4 },
-    { label: 'Alta en proteínas', value: 5 },
-    { label: 'Postre', value: 6 },
-    { label: 'Desayuno', value: 7 },
-    { label: 'Almuerzo', value: 8 },
-    { label: 'Cena', value: 9 },
-    { label: 'Aperitivo', value: 10 }
-  ];
+  const tagsDictionary = [];
+  for(let key in tagsDictionaryLoaded){
+    tagsDictionary.push({label : tagsDictionaryLoaded[key], value: parseInt(key)})
+  }
 
   const customStyles = {
     control: (provided, state) => ({
@@ -177,7 +170,7 @@ function Encabezado() {
         <div></div>
         <div></div>
       </button>
-      <Link to={"/"}>
+      <Link to={"/forum"}>
       <div className="icon-header">
         <img
           src={iconoImg}
@@ -310,7 +303,7 @@ function Encabezado() {
               </center>
             </button>
           </Link>
-          <Link to={'/Apoyanos'}>
+          <Link to={'/support'}>
             <button className="menu-button">
               <center>
                 <strong>Apóyanos</strong>

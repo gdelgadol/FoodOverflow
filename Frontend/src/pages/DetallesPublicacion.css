@@ -48,6 +48,10 @@
     color: #000000;
 }
 
+.dp-userName:hover{
+    color: #0032B4;;
+}
+
 .dp-title{
     font-size: 20px;
     font-weight: 600;
@@ -578,4 +582,23 @@ dp-alert-cancel-close:focus {
 .dp-delete-button:hover::after,
 .dp-delete-button:hover::before {
     opacity: 1;
+}
+
+.dp-userAvatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.dp-userAvatar:hover {
+    transform: scale(1.1);
+}
+
+.dp-profile-info{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: #000000;
+    text-decoration: none;
+    gap: 4px;
 }

@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import axios from "axios";
 import "./crear_publicacion.css";
 import Cookies from "universal-cookie";
@@ -8,9 +8,8 @@ import 'react-quill/dist/quill.snow.css';
 import Quill from 'quill';
 import ImageCompress from 'quill-image-compress';
 import Swal from 'sweetalert2';
-
-
 import { Link, useNavigate } from "react-router-dom";
+import tagsDictionary from "../../labels.json";
 
 Quill.register('modules/imageCompress', ImageCompress);
 
@@ -35,7 +34,7 @@ function Crear_publicacion() {
     setContent(value);
     setState({
       ...state,
-      [content]: content,
+      content: value,
     });
   };
 
@@ -47,8 +46,24 @@ function Crear_publicacion() {
   };
 
   const handleIngredientChange = (index, event) => {
+    const { name, value } = event.target;
+    
+    // Validación solo para el campo de cantidad
+    if (name === "quantity") {
+      // Validación para permitir números, decimales y fracciones
+      if (!/^(\d*\.?\d*|\d*\/\d*)$/.test(value)) {
+        setErrMsg("Solo puedes ingresar valores numéricos en la cantidad");
+        errRef.current.focus();
+        // Establecer un temporizador para limpiar el mensaje de error después de 3 segundos (3000 milisegundos)
+        setTimeout(() => {
+          setErrMsg("");
+        }, 3000);
+        return;
+      }
+    }
+  
     const newIngredients = [...state.ingredients];
-    newIngredients[index][event.target.name] = event.target.value;
+    newIngredients[index][name] = value;
     setState({
       ...state,
       ingredients: newIngredients,
@@ -58,7 +73,7 @@ function Crear_publicacion() {
   const handleAddIngredient = () => {
     setState({
       ...state,
-      ingredients: [...state.ingredients, { name: "", quantity: "" }],
+      ingredients: [...state.ingredients, { name: "", quantity: "", units: "" }],
     });
   };
 
@@ -100,7 +115,7 @@ function Crear_publicacion() {
 
     if (state.postType === "Receta") {
       if (state.ingredients.length  < 1){
-        setErrMsg("Debe agregar al menos un ingrediente");
+        setErrMsg("Debes agregar al menos un ingrediente");
         errRef.current.focus();
         return;
       }
@@ -200,20 +215,26 @@ function Crear_publicacion() {
     }
   };
 
-  const tagsDictionary = {
-    1: "Vegetariano",
-    2: "Vegano",
-    3: "Sin gluten",
-    4: "Bajo en carbohidratos",
-    5: "Alta en proteínas",
-    6: "Postre",
-    7: "Desayuno",
-    8: "Almuerzo",
-    9: "Cena",
-    10: "Aperitivo"
-  };
-
   const availableTags = Object.keys(tagsDictionary).filter(tag => !state.tags.includes(tag));
+
+  const unitOptions = [
+    "gramos",
+    "mililitros",
+    "litros",
+    "onzas",
+    "libras",
+    "tazas",
+    "cucharadas",
+    "cucharaditas",
+    "piezas",
+    "rebanadas",
+    "hojas",
+    "ramitas",
+    "dientes",
+    "tiras",
+    "pizcas",
+    "Al gusto"
+  ];
 
   return (
     <div className="form-container">
@@ -227,14 +248,14 @@ function Crear_publicacion() {
       </h1>
       <form onSubmit={handleSubmit}>
         <div className="input-group">
-          <label htmlFor="postType">¿Qué quieres publicar?</label>
+          <label htmlFor="postType">¿Qué quieres publicar hoy?</label>
           <select
             id="postType"
             name="postType"
             value={state.postType}
             onChange={handleInput}
           >
-            <option value="">Seleccionar opción</option>
+            <option value="">Selecciona una opción</option>
             <option value="Receta">Receta</option>
             <option value="Publicación">Pregunta</option>
           </select>
@@ -247,7 +268,8 @@ function Crear_publicacion() {
                 type="text"
                 id="title"
                 name="title"
-                placeholder="Ingresa el título de tu publicación"
+                placeholder={state.postType === "Receta"
+                ? "Ingresa un título para tu receta." : "Ingresa un título para tu publicación."}
                 value={state.title}
                 onChange={handleInput}
                 required
@@ -261,7 +283,7 @@ function Crear_publicacion() {
                 value=""
                 onChange={handleAddTag}
               >
-                <option value="" disabled>Seleccionar tags</option>
+                <option value="" disabled>Selecciona las etiquetas que mejor vayan con tu post</option>
                 {availableTags.map(tag => (
                   <option key={tag} value={tag}>
                     {tagsDictionary[tag]}
@@ -275,8 +297,9 @@ function Crear_publicacion() {
                     <button
                       type="button"
                       onClick={() => handleRemoveTag(index)}
+                      color = "red"
                     >
-                      X
+                      x
                     </button>
                   </span>
                 ))}
@@ -296,21 +319,25 @@ function Crear_publicacion() {
                       required
                     />
                     <input
-                      type="number"
+                      type="text"
                       name="quantity"
                       placeholder="Cantidad del ingrediente"
                       value={ingredient.quantity}
                       onChange={(e) => handleIngredientChange(index, e)}
                       required
                     />
-                    <input
-                      type="text"
+                    <select
                       name="units"
-                      placeholder="Unidades"
                       value={ingredient.units}
+                      className="select-unit"
                       onChange={(e) => handleIngredientChange(index, e)}
                       required
-                    />
+                    >
+                      <option value="" disabled>Seleccionar unidad</option>
+                      {unitOptions.map(unit => (
+                        <option key={unit} value={unit}>{unit}</option>
+                      ))}
+                    </select>
                     <button
                       className="chao"
                       type="button"
@@ -326,7 +353,7 @@ function Crear_publicacion() {
                   type="button"
                   onClick={handleAddIngredient}
                 >
-                  Agregar otro ingrediente
+                  Agregar un ingrediente
                 </button>
               </div>
             )}
@@ -342,7 +369,7 @@ function Crear_publicacion() {
                   value={content}
                   onChange={handleCommentInput}
                   className='dp-inputComment'
-                  placeholder="Escribe el contenido de la receta"
+                  placeholder="Cuéntanos más sobre tu post..."
                   modules={{
                     toolbar: [
                       [{ 'header': '1'}, {'header': '2'}],

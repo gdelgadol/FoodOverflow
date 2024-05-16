@@ -5,6 +5,7 @@ import { GiCook, GiDespair, GiCookingGlove } from "react-icons/gi";
 import { BiComment } from "react-icons/bi";
 import { Link } from 'react-router-dom';
 import { GiShrug } from "react-icons/gi";
+import tagsDictionary from "../../labels.json";
 
 export default function Publicacion ({id_post, userName, profile_avatar, title, description, numComments, score, type, tags}) {
     if (type === 'publications' || type === 'publication'){
@@ -12,19 +13,6 @@ export default function Publicacion ({id_post, userName, profile_avatar, title, 
     } else {
         type = "recipe"
     }
-
-    const tagsDictionary = {
-        1: "Vegetariano",
-        2: "Vegano",
-        3: "Sin gluten",
-        4: "Bajo en carbohidratos",
-        5: "Alta en proteínas",
-        6: "Postre",
-        7: "Desayuno",
-        8: "Almuerzo",
-        9: "Cena",
-        10: "Aperitivo"
-    };
 
     return (
         <div>
