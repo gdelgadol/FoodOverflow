@@ -177,7 +177,7 @@ function Encabezado() {
         <div></div>
         <div></div>
       </button>
-      <Link to={"/forum"}>
+      <Link to={"/"}>
       <div className="icon-header">
         <img
           src={iconoImg}
@@ -203,9 +203,14 @@ function Encabezado() {
       </div>
       <div className="menu">
         <div className="menu-info">
-        <Link to={"/forum"}>
+        <Link to={"/"}>
         <button className="menu-button">
           <span className="spanHeader">Inicio</span>
+        </button>
+        </Link>
+        <Link to={"/forum"}>
+        <button className="menu-button">
+          <span className="spanHeader">Foro</span>
         </button>
         </Link>
         <Link to={"/about"}>
@@ -291,6 +296,13 @@ function Encabezado() {
               </center>
             </button>
           </Link>
+          <Link to={'forum'}>
+            <button className="menu-button">
+              <center>
+                <strong>Foro</strong>
+              </center>
+            </button>
+          </Link>
           <Link to={'/About'}>
             <button className="menu-button">
               <center>
@@ -305,6 +317,22 @@ function Encabezado() {
               </center>
             </button>
           </Link>
+          <center>
+          <div className="search-drop-menu">
+          <Creatable
+          className="search-select"
+          placeholder="Buscar"
+          options={tagsDictionary}
+          isMulti
+          value={selectedTags}
+          onChange={selectedOptions => setSelectedTags(selectedOptions)}
+          styles={customStyles}
+          />
+          <button className="search-button" onClick={submitSearch}>
+            <strong>Buscar</strong>
+          </button>
+        </div>
+        </center>
         </div>
       )}
       {/* Menú de notificaciones */}

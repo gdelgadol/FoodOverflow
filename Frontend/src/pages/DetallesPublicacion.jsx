@@ -386,13 +386,15 @@ const tagsDictionary = {
         <div className="dp-contenido">
           <span className="dp-userName">{author}</span>
           <span className="dp-title">{title}</span>
-          <div className='dp-tags'>
-            <div className='tags-container'>
-              {tags.map((tagId, index) => (
-                <div key={index} className='tag'>{tagsDictionary[tagId]}</div>
-              ))}
+          {tags && tags.length > 0 && (
+            <div className='dp-tags'>
+              <div className='tags-container'>
+                {tags.map((tagId, index) => (
+                  <div key={index} className='tag2'>{tagsDictionary[tagId]}</div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
           <div className="dp-description" dangerouslySetInnerHTML={{ __html: description }}></div>
           <div className='dp-contain'>
                     <div className='dp-numComments'>

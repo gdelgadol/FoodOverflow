@@ -81,4 +81,14 @@
      .in-text {
          text-align: center;
      }
+
+     .in-container{
+        padding: 70px 0;
+        margin: 0;
+        margin-bottom: 20px;
+     }
+
+     .in-unete{
+        padding: 0;
+     }
 }

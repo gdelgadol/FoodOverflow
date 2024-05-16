@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import "./crear_publicacion.css";
 import Cookies from "universal-cookie";
@@ -97,10 +97,25 @@ function Crear_publicacion() {
       ...state,
       tags: tagsAsNumbers,
     });
-    console.log(state);
+
     if (state.postType === "Receta") {
+      if (state.ingredients.length  < 1){
+        setErrMsg("Debe agregar al menos un ingrediente");
+        errRef.current.focus();
+        return;
+      }
+      if (content.replace(/<[^>]*>/g, '').trim().length < 1){
+        setErrMsg("Debes agregar una descripción");
+        errRef.current.focus();
+        return;
+      }
       crear_receta();
     } else {
+      if (content.replace(/<[^>]*>/g, '').trim().length < 1){
+        setErrMsg("Debes agregar una descripción");
+        errRef.current.focus();
+        return;
+      }
       crear_publicacion();
     }
   };
@@ -112,7 +127,7 @@ function Crear_publicacion() {
       axios
         .post(`${url}/crear_publicacion/`, {
           title: state.title,
-          content: content,
+          content: content.replace(/<p>\s*<\/p>|<p><br\s*\/?>\s*<\/p>/g, ''),
           tags_list: state.tags,
           jwt: jwt,
         })
@@ -127,7 +142,7 @@ function Crear_publicacion() {
             navigate("/forum");
           } else {
             Swal.fire({
-              title: `<strong>${response.data.message}</strong>`,
+              title: `<strong>${res.data.message}</strong>`,
               icon: "success",
               timer: 4000,
               confirmButtonColor: "#ff0000",
@@ -235,6 +250,7 @@ function Crear_publicacion() {
                 placeholder="Ingresa el título de tu publicación"
                 value={state.title}
                 onChange={handleInput}
+                required
               />
             </div>
             <div className="input-group">
@@ -277,6 +293,7 @@ function Crear_publicacion() {
                       placeholder="Nombre del ingrediente"
                       value={ingredient.name}
                       onChange={(e) => handleIngredientChange(index, e)}
+                      required
                     />
                     <input
                       type="number"
@@ -284,6 +301,7 @@ function Crear_publicacion() {
                       placeholder="Cantidad del ingrediente"
                       value={ingredient.quantity}
                       onChange={(e) => handleIngredientChange(index, e)}
+                      required
                     />
                     <input
                       type="text"
@@ -291,6 +309,7 @@ function Crear_publicacion() {
                       placeholder="Unidades"
                       value={ingredient.units}
                       onChange={(e) => handleIngredientChange(index, e)}
+                      required
                     />
                     <button
                       className="chao"
