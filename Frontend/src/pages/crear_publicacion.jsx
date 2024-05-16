@@ -9,6 +9,7 @@ import Quill from 'quill';
 import ImageCompress from 'quill-image-compress';
 import Swal from 'sweetalert2';
 import { Link, useNavigate } from "react-router-dom";
+import tagsDictionary from "../../labels.json";
 
 Quill.register('modules/imageCompress', ImageCompress);
 
@@ -114,7 +115,7 @@ function Crear_publicacion() {
 
     if (state.postType === "Receta") {
       if (state.ingredients.length  < 1){
-        setErrMsg("Debe agregar al menos un ingrediente");
+        setErrMsg("Debes agregar al menos un ingrediente");
         errRef.current.focus();
         return;
       }
@@ -214,19 +215,6 @@ function Crear_publicacion() {
     }
   };
 
-  const tagsDictionary = {
-    1: "Vegetariano",
-    2: "Vegano",
-    3: "Sin gluten",
-    4: "Bajo en carbohidratos",
-    5: "Alta en proteínas",
-    6: "Postre",
-    7: "Desayuno",
-    8: "Almuerzo",
-    9: "Cena",
-    10: "Aperitivo"
-  };
-
   const availableTags = Object.keys(tagsDictionary).filter(tag => !state.tags.includes(tag));
 
   const unitOptions = [
@@ -260,14 +248,14 @@ function Crear_publicacion() {
       </h1>
       <form onSubmit={handleSubmit}>
         <div className="input-group">
-          <label htmlFor="postType">¿Qué quieres publicar?</label>
+          <label htmlFor="postType">¿Qué quieres publicar hoy?</label>
           <select
             id="postType"
             name="postType"
             value={state.postType}
             onChange={handleInput}
           >
-            <option value="">Seleccionar opción</option>
+            <option value="">Selecciona una opción</option>
             <option value="Receta">Receta</option>
             <option value="Publicación">Pregunta</option>
           </select>
@@ -280,7 +268,8 @@ function Crear_publicacion() {
                 type="text"
                 id="title"
                 name="title"
-                placeholder="Ingresa el título de tu publicación"
+                placeholder={state.postType === "Receta"
+                ? "Ingresa un título para tu receta." : "Ingresa un título para tu publicación."}
                 value={state.title}
                 onChange={handleInput}
                 required
@@ -294,7 +283,7 @@ function Crear_publicacion() {
                 value=""
                 onChange={handleAddTag}
               >
-                <option value="" disabled>Seleccionar tags</option>
+                <option value="" disabled>Selecciona las etiquetas que mejor vayan con tu post</option>
                 {availableTags.map(tag => (
                   <option key={tag} value={tag}>
                     {tagsDictionary[tag]}
@@ -308,8 +297,9 @@ function Crear_publicacion() {
                     <button
                       type="button"
                       onClick={() => handleRemoveTag(index)}
+                      color = "red"
                     >
-                      X
+                      x
                     </button>
                   </span>
                 ))}
@@ -363,7 +353,7 @@ function Crear_publicacion() {
                   type="button"
                   onClick={handleAddIngredient}
                 >
-                  Agregar otro ingrediente
+                  Agregar un ingrediente
                 </button>
               </div>
             )}
@@ -379,7 +369,7 @@ function Crear_publicacion() {
                   value={content}
                   onChange={handleCommentInput}
                   className='dp-inputComment'
-                  placeholder="Escribe el contenido de la receta"
+                  placeholder="Cuéntanos más sobre tu post..."
                   modules={{
                     toolbar: [
                       [{ 'header': '1'}, {'header': '2'}],
