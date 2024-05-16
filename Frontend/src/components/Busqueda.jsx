@@ -33,7 +33,7 @@ const Busqueda = () => {
           setPosts(sortedPosts);
           setContador(response.data.number_posts);
         } else {
-          alert(response.data.message);
+          //alert(response.data.message);
         }
       } catch (error) {
         console.error('Error al obtener datos:', error);

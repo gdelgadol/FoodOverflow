@@ -201,3 +201,17 @@
 .tag button:hover {
   color: #333;
 }
+
+.select-unit {
+  font-size: 14px;
+  padding: 10.5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+/* Estilo al hover */
+.select-unit:hover {
+  border-color: #999;
+}

@@ -17,11 +17,12 @@
 
 .icon-header {
   display: flex;
-  align-items: center
+  align-items: center;
+  transition: transform 0.3s ease;
 }
 
 .icon-header:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .logo {
@@ -286,16 +287,17 @@
   color: initial;
   border: initial;
   cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.menu-button-userAvatar:hover {
+  transform: scale(1.1);
 }
 
 .menu-userAvatar {
   width: 35px;
   height: 35px;
-  border-radius: 50%
-}
-
-.menu-userAvatar:hover {
-  transform: scale(1.1);
+  border-radius: 50%;
 }
 
 .menu-button-publicar {
@@ -307,10 +309,11 @@
   background-color: #ff5c00;
   color: #ffffff;
   cursor: pointer;
+  transition: transform 0.3s ease;
 }
 
 .menu-button-publicar:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .menu-username-avatar {
