@@ -3,6 +3,7 @@
     flex-direction: row;
     background-color: #f4f4f4;
     border-radius: 10px;
+    max-width: 60vw;
     width: 100%;
     padding-bottom: 5px;
 }

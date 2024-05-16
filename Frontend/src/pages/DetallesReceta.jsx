@@ -395,13 +395,15 @@ function DetallesReceta() {
                 <div className='dp-contenido'>
                     <span className='dp-userName'>{author}</span>
                     <span className='dp-title'>{title}</span>
-                    <div className='dp-tags'>
-                    <div className='tags-container'>
-                        {tags.map((tagId, index) => (
-                            <div key={index} className='tag'>{tagsDictionary[tagId]}</div>
-                        ))}
-                    </div>
-                    </div>
+                    {tags && tags.length > 0 && (
+                        <div className='dp-tags'>
+                            <div className='tags-container'>
+                                {tags.map((tagId, index) => (
+                                    <div key={index} className='tag2'>{tagsDictionary[tagId]}</div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                     {ingredients.length > 0 && (
                         <div className='dp-ingredients'>
                             <h4>Ingredientes:</h4>
