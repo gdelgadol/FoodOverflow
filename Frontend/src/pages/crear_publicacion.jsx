@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import axios from "axios";
 import "./crear_publicacion.css";
 import Cookies from "universal-cookie";
@@ -8,8 +8,6 @@ import 'react-quill/dist/quill.snow.css';
 import Quill from 'quill';
 import ImageCompress from 'quill-image-compress';
 import Swal from 'sweetalert2';
-
-
 import { Link, useNavigate } from "react-router-dom";
 
 Quill.register('modules/imageCompress', ImageCompress);
@@ -35,7 +33,7 @@ function Crear_publicacion() {
     setContent(value);
     setState({
       ...state,
-      [content]: content,
+      content: value,
     });
   };
 
@@ -47,8 +45,24 @@ function Crear_publicacion() {
   };
 
   const handleIngredientChange = (index, event) => {
+    const { name, value } = event.target;
+    
+    // Validación solo para el campo de cantidad
+    if (name === "quantity") {
+      // Validación para permitir números, decimales y fracciones
+      if (!/^(\d*\.?\d*|\d*\/\d*)$/.test(value)) {
+        setErrMsg("Solo puedes ingresar valores numéricos en la cantidad");
+        errRef.current.focus();
+        // Establecer un temporizador para limpiar el mensaje de error después de 3 segundos (3000 milisegundos)
+        setTimeout(() => {
+          setErrMsg("");
+        }, 3000);
+        return;
+      }
+    }
+  
     const newIngredients = [...state.ingredients];
-    newIngredients[index][event.target.name] = event.target.value;
+    newIngredients[index][name] = value;
     setState({
       ...state,
       ingredients: newIngredients,
@@ -58,7 +72,7 @@ function Crear_publicacion() {
   const handleAddIngredient = () => {
     setState({
       ...state,
-      ingredients: [...state.ingredients, { name: "", quantity: "" }],
+      ingredients: [...state.ingredients, { name: "", quantity: "", units: "" }],
     });
   };
 
@@ -215,6 +229,25 @@ function Crear_publicacion() {
 
   const availableTags = Object.keys(tagsDictionary).filter(tag => !state.tags.includes(tag));
 
+  const unitOptions = [
+    "gramos",
+    "mililitros",
+    "litros",
+    "onzas",
+    "libras",
+    "tazas",
+    "cucharadas",
+    "cucharaditas",
+    "piezas",
+    "rebanadas",
+    "hojas",
+    "ramitas",
+    "dientes",
+    "tiras",
+    "pizcas",
+    "Al gusto"
+  ];
+
   return (
     <div className="form-container">
       <h1>Crear publicación</h1>
@@ -296,21 +329,25 @@ function Crear_publicacion() {
                       required
                     />
                     <input
-                      type="number"
+                      type="text"
                       name="quantity"
                       placeholder="Cantidad del ingrediente"
                       value={ingredient.quantity}
                       onChange={(e) => handleIngredientChange(index, e)}
                       required
                     />
-                    <input
-                      type="text"
+                    <select
                       name="units"
-                      placeholder="Unidades"
                       value={ingredient.units}
+                      className="select-unit"
                       onChange={(e) => handleIngredientChange(index, e)}
                       required
-                    />
+                    >
+                      <option value="" disabled>Seleccionar unidad</option>
+                      {unitOptions.map(unit => (
+                        <option key={unit} value={unit}>{unit}</option>
+                      ))}
+                    </select>
                     <button
                       className="chao"
                       type="button"
