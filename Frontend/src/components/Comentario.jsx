@@ -2,7 +2,8 @@ import { useState } from "react";
 import axios from "../api/axios.jsx";
 import Cookies from "universal-cookie";
 import "./Comentario.css";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import { Link } from "react-router-dom";
 
 export default function Comentario({ jwt, reload, setReload, post_id, comment_id, comment_content, comment_user, comment_user_avatar, response_list, type, is_publication, username, is_admin }) {
     const [showResponses, setShowResponses] = useState(false);
@@ -200,11 +201,18 @@ export default function Comentario({ jwt, reload, setReload, post_id, comment_id
 
     return (
         <div className='comentario'>
+            <Link to = {`/user/${comment_user}`} relative = "/">
             <div className='comentario-avatar'>
                 <img src={comment_user_avatar} className="comentario-content-avatar" alt="avatar" />
             </div>
+            </Link>
             <div className='comentario-content'>
-                <span className="comentario-content-user">{comment_user}</span>
+                <Link to = {`/user/${comment_user}`} relative = "/">
+                    <span className="comentario-content-user">
+                    {comment_user}
+                    {response.response_user == username || is_admin ? ' - id '+comment_id : <></> }
+                    </span>
+                </Link>
                 <span className='comentario-content-text' dangerouslySetInnerHTML={{ __html: renderContent(comment_content) }} />
                 <div>
                     <button className="commentario-reply-button" onClick={jwt ? toggleReply : () => alert("Debes iniciar sesión para responder al comentario")}>
@@ -294,7 +302,7 @@ export default function Comentario({ jwt, reload, setReload, post_id, comment_id
                                 { response.response_user == username || is_admin ?(
                                 <button className="commentario-delete-button" onClick={() => handle_delete_comment(response.response_id,'la respuesta')}>
                                     Eliminar
-                                </button>) : <div></div> }
+                                </button>) : <></> }
                             </div>
                             {reportMenuResponseVisible[index] && (
                                 <div className='dp-aclaracion'>
