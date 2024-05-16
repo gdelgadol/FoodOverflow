@@ -20,6 +20,10 @@
     margin: 10px;
 }
 
+.comentario-avatar:hover{
+    transform: scale(1.1);
+}
+
 .comentario-content-avatar{
     width: 30px;
     height: 30px;
@@ -30,6 +34,12 @@
 .comentario-content-user {
     font-size: 12px;
     font-weight: 400;
+    cursor: pointer;
+    color: #000000;
+}
+
+.comentario-content-user:hover {
+    color: #0032B4;
 }
 
 .comentario-content-text {

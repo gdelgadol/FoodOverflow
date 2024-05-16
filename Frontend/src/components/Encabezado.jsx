@@ -177,7 +177,7 @@ function Encabezado() {
         <div></div>
         <div></div>
       </button>
-      <Link to={"/"}>
+      <Link to={"/forum"}>
       <div className="icon-header">
         <img
           src={iconoImg}
@@ -310,7 +310,7 @@ function Encabezado() {
               </center>
             </button>
           </Link>
-          <Link to={'/Apoyanos'}>
+          <Link to={'/support'}>
             <button className="menu-button">
               <center>
                 <strong>Apóyanos</strong>

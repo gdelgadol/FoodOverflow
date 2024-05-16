@@ -9,11 +9,13 @@ import Cookies from "universal-cookie";
 import Comentario from "../components/Comentario";
 import { IoMdAlert } from "react-icons/io";
 import { FaBookmark } from "react-icons/fa";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import { Link } from "react-router-dom";
 
 function DetallesPublicacion() {
   const { id } = useParams();
   const [author, setAuthor] = useState();
+  const [avatar, setAvatar] = useState();
   const [title, setTitle] = useState();
   const [description, setDescription] = useState();
   const [numComments, setNumComments] = useState();
@@ -181,6 +183,7 @@ function DetallesPublicacion() {
         setVoteStatus(res.data.vote_type);
         setTags(res.data.tagsList);
         setSaved(res.data.is_saved); 
+        setAvatar(res.data.profile_avatar);
         const userHasVoted = res.data.vote_type !== 0;
         setVoted(userHasVoted);
       } else {
@@ -384,7 +387,12 @@ const tagsDictionary = {
           </button>
         </div>
         <div className="dp-contenido">
-          <span className="dp-userName">{author}</span>
+          <Link to = {`/user/${author}`} relative = "/">
+            <div className="dp-profile-info">
+              <img src={avatar} className='dp-userAvatar' alt='profile_avatar' />
+              <span className="dp-userName">{author}</span>
+            </div>
+          </Link>
           <span className="dp-title">{title}</span>
           {tags && tags.length > 0 && (
             <div className='dp-tags'>

@@ -20,6 +20,10 @@
   align-items: center
 }
 
+.icon-header:hover {
+  transform: scale(1.1);
+}
+
 .logo {
   font-size: 20px;
   font-weight: 600;
@@ -290,6 +294,10 @@
   border-radius: 50%
 }
 
+.menu-userAvatar:hover {
+  transform: scale(1.1);
+}
+
 .menu-button-publicar {
   height: 35px;
   border: none;
@@ -299,6 +307,10 @@
   background-color: #ff5c00;
   color: #ffffff;
   cursor: pointer;
+}
+
+.menu-button-publicar:hover {
+  transform: scale(1.1);
 }
 
 .menu-username-avatar {
