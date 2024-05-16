@@ -50,13 +50,15 @@ export default function Publicacion ({id_post, userName, profile_avatar, title, 
                         </div>
                     </Link>
                     <span className='title'>{title}</span>
-                    <div className='dp-tags'>
-                    <div className='tags-container'>
-                        {tags.map((tagId, index) => (
-                            <div key={index} className='tag2'>{tagsDictionary[tagId]}</div>
-                        ))}
-                    </div>
-                    </div>
+                    {tags && tags.length > 0 && (
+                        <div className='dp-tags'>
+                            <div className='tags-container'>
+                                {tags.map((tagId, index) => (
+                                    <div key={index} className='tag2'>{tagsDictionary[tagId]}</div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                     <div className="description" dangerouslySetInnerHTML={{ __html: description }}></div>
                     <div className='comments'>
                         <BiComment />
