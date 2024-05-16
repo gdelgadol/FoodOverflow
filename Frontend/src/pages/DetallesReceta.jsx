@@ -10,11 +10,13 @@ import Comentario from "../components/Comentario";
 import { FaTrashCan } from "react-icons/fa6";
 import { IoMdAlert } from "react-icons/io";
 import { FaBookmark } from "react-icons/fa";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
+import { Link } from "react-router-dom";
 
 function DetallesReceta() {
     const { id } = useParams();
     const [author, setAuthor] = useState();
+    const [avatar, setAvatar] = useState();
     const [title, settitle] = useState();
     const [description, setDescription] = useState();
     const [numComments, setNumComments] = useState();
@@ -177,6 +179,7 @@ function DetallesReceta() {
           });
           if (res.data.type === "SUCCESS") {
             setAuthor(res.data.username);
+            setAvatar(res.data.profile_avatar);
             settitle(res.data.title);
             setDescription(res.data.description);
             setNumComments(res.data.numComments);
@@ -393,7 +396,12 @@ function DetallesReceta() {
                     </button>
                 </div>
                 <div className='dp-contenido'>
-                    <span className='dp-userName'>{author}</span>
+                <Link to = {`/user/${author}`} relative = "/">
+                    <div className="dp-profile-info">
+                    <img src={avatar} className='dp-userAvatar' alt='profile_avatar' />
+                    <span className="dp-userName">{author}</span>
+                    </div>
+                </Link>
                     <span className='dp-title'>{title}</span>
                     {tags && tags.length > 0 && (
                         <div className='dp-tags'>
