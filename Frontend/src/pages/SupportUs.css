@@ -145,7 +145,8 @@
   
   .product-description {
     margin-bottom: 8px;
-    color:#fefefe
+    color:#fefefe;
+    text-align: justify;
   }
   
   .product-price {
