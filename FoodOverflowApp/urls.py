@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 
+
 urlpatterns = [
     # Authentication
     path('signup/', views.signup, name = "signup"), #Sign Up path
@@ -47,4 +48,7 @@ urlpatterns = [
     path('update_avatar', views.update_avatar, name = 'update_avatar'), # Change use's avatar
     path('update_description', views.update_description, name = 'update_description'), #Change user's description
     path('get_avatars', views.get_avatars, name = 'get_avatars'), # get all avatars
+
+    # MercadoPago
+    path('create_preference/', views.create_preference, name='create_preference'),
 ]

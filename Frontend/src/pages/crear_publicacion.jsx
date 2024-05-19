@@ -19,7 +19,7 @@ function Crear_publicacion() {
 
   const [errMsg, setErrMsg] = useState("");
   const errRef = useRef();
-  const url =  import.meta.env.VITE_API_URL;
+  const url = import.meta.env.VITE_API_URL;
 
   const [content, setContent] = useState("");
   const [state, setState] = useState({
@@ -47,23 +47,37 @@ function Crear_publicacion() {
 
   const handleIngredientChange = (index, event) => {
     const { name, value } = event.target;
-    
+
+    // Validación para el nombre del ingrediente
+    if (name === "name" && value.includes("_")) {
+      setErrMsg("El nombre del ingrediente no puede contener el carácter '_'");
+      errRef.current.focus();
+      setTimeout(() => {
+        setErrMsg("");
+      }, 3000);
+      return;
+    }
+
     // Validación solo para el campo de cantidad
-    if (name === "quantity") {
-      // Validación para permitir números, decimales y fracciones
+    if (name === "quantity" && state.ingredients[index].units !== "Al gusto") {
       if (!/^(\d*\.?\d*|\d*\/\d*)$/.test(value)) {
         setErrMsg("Solo puedes ingresar valores numéricos en la cantidad");
         errRef.current.focus();
-        // Establecer un temporizador para limpiar el mensaje de error después de 3 segundos (3000 milisegundos)
         setTimeout(() => {
           setErrMsg("");
         }, 3000);
         return;
       }
     }
-  
+
     const newIngredients = [...state.ingredients];
     newIngredients[index][name] = value;
+
+    // Limpiar el campo de cantidad al seleccionar "Al gusto"
+    if (name === "units" && value === "Al gusto") {
+      newIngredients[index].quantity = "";
+    }
+
     setState({
       ...state,
       ingredients: newIngredients,
@@ -114,19 +128,20 @@ function Crear_publicacion() {
     });
 
     if (state.postType === "Receta") {
+
       if (state.ingredients.length  < 1){
         setErrMsg("Debes agregar al menos un ingrediente");
         errRef.current.focus();
         return;
       }
-      if (content.replace(/<[^>]*>/g, '').trim().length < 1){
+      if (content.replace(/<[^>]*>/g, '').trim().length < 1) {
         setErrMsg("Debes agregar una descripción");
         errRef.current.focus();
         return;
       }
       crear_receta();
     } else {
-      if (content.replace(/<[^>]*>/g, '').trim().length < 1){
+      if (content.replace(/<[^>]*>/g, '').trim().length < 1) {
         setErrMsg("Debes agregar una descripción");
         errRef.current.focus();
         return;
@@ -218,18 +233,20 @@ function Crear_publicacion() {
   const availableTags = Object.keys(tagsDictionary).filter(tag => !state.tags.includes(tag));
 
   const unitOptions = [
+    "unidades",
     "gramos",
-    "mililitros",
+    "miligramos",
     "litros",
+    "mililitros",
+    "cucharadas soperas",
+    "cucharaditas",
     "onzas",
     "libras",
     "tazas",
-    "cucharadas",
-    "cucharaditas",
     "piezas",
     "rebanadas",
     "hojas",
-    "ramitas",
+    "ramas",
     "dientes",
     "tiras",
     "pizcas",
@@ -318,14 +335,16 @@ function Crear_publicacion() {
                       onChange={(e) => handleIngredientChange(index, e)}
                       required
                     />
-                    <input
-                      type="text"
-                      name="quantity"
-                      placeholder="Cantidad del ingrediente"
-                      value={ingredient.quantity}
-                      onChange={(e) => handleIngredientChange(index, e)}
-                      required
-                    />
+                    {ingredient.units !== "Al gusto" && (
+                      <input
+                        type="text"
+                        name="quantity"
+                        placeholder="Cantidad del ingrediente"
+                        value={ingredient.quantity}
+                        onChange={(e) => handleIngredientChange(index, e)}
+                        required
+                      />
+                    )}
                     <select
                       name="units"
                       value={ingredient.units}
