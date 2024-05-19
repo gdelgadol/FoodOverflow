@@ -12,6 +12,7 @@ import { IoMdAlert } from "react-icons/io";
 import { FaBookmark } from "react-icons/fa";
 import Swal from 'sweetalert2';
 import { Link } from "react-router-dom";
+import tagsDictionary from "../../labels.json";
 
 function DetallesReceta() {
     const { id } = useParams();
@@ -345,20 +346,6 @@ function DetallesReceta() {
         }
     };
     
-    const tagsDictionary = {
-        1: "Vegetariano",
-        2: "Vegano",
-        3: "Sin gluten",
-        4: "Bajo en carbohidratos",
-        5: "Alta en proteínas",
-        6: "Postre",
-        7: "Desayuno",
-        8: "Almuerzo",
-        9: "Cena",
-        10: "Aperitivo"
-    };
-
-
     return (
         <div className='dp-container'>
             {is_admin && reports.length ? (<div>Este post ha sido reportado por:</div>): (<></>)}
@@ -404,7 +391,7 @@ function DetallesReceta() {
                 </Link>
                     <span className='dp-title'>{title}</span>
                     {tags && tags.length > 0 && (
-                        <div className='dp-tags'>
+                        <div className='dp-tags' background-color = "FFFFFF">
                             <div className='tags-container'>
                                 {tags.map((tagId, index) => (
                                     <div key={index} className='tag2'>{tagsDictionary[tagId]}</div>

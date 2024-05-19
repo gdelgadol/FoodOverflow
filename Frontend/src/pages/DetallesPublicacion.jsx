@@ -11,6 +11,7 @@ import { IoMdAlert } from "react-icons/io";
 import { FaBookmark } from "react-icons/fa";
 import Swal from 'sweetalert2';
 import { Link } from "react-router-dom";
+import tagsDictionary from "../../labels.json";
 
 function DetallesPublicacion() {
   const { id } = useParams();
@@ -336,18 +337,7 @@ const submitSave = async () => {
   }
 };
 
-const tagsDictionary = {
-  1: "Vegetariano",
-  2: "Vegano",
-  3: "Sin gluten",
-  4: "Bajo en carbohidratos",
-  5: "Alta en proteínas",
-  6: "Postre",
-  7: "Desayuno",
-  8: "Almuerzo",
-  9: "Cena",
-  10: "Aperitivo"
-};
+
 
   return (
     <div className="dp-container">
