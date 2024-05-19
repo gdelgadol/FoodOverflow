@@ -5,6 +5,7 @@ from ..models import Profile, Avatar
 from ..models import Publication, Recipe, PublicationComment, RecipeComment, PublicationVote, RecipeVote, SavedPost
 from .modules import error_response, success_response, get_if_exists
 from django.forms.models import model_to_dict
+from django.db.models import Q
 
 
 # Decode the JWT token
@@ -109,6 +110,36 @@ def get_avatars(request):
             avatars.append(model_to_dict(avatar))
 
         return success_response({'avatars' : avatars})
+    except Exception as e:
+        print(e)
+        return error_response("Ha ocurrido un error, intentalo de nuevo.")
+    
+# search for users
+def search_profiles(request):
+    try:
+        data = json.loads(request.body)
+        search = data.get('search')
+
+        profiles_query = Profile.objects.filter(Q(username__icontains = search) | Q(description__icontains = search)).distinct()
+
+        profiles = []
+
+        for profile in profiles_query:
+            recipes = Recipe.objects.filter(profile = profile).count()
+            publications = Publication.objects.filter(profile = profile).count()
+            avatar = Avatar.objects.get(pk = profile.avatar_id.pk).avatar_url
+            profile_data = {
+                'username' : profile.username,
+                'description' : profile.description,
+                'avatar' : avatar,
+                'publications' : recipes,
+                'recipes' : publications
+            }
+
+            profiles.append(profile_data)
+
+        return success_response({'profiles' : profiles})
+
     except Exception as e:
         print(e)
         return error_response("Ha ocurrido un error, intentalo de nuevo.")

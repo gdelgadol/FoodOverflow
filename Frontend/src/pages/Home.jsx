@@ -21,7 +21,7 @@ const Home = () => {
     const fetchData = async () => {
       try {
         //setIsLoading(true)
-        const response = await axios.get(`${url}/${filtro_2}/`);
+        const response = await axios.post(`${url}/${filtro_2}/`,{});
         if (response.data.type === "SUCCESS") {
           const sortedPosts = response.data.posts.sort((a, b) => b.id - a.id );
           setPosts(sortedPosts);
