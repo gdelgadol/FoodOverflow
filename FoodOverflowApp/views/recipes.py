@@ -53,7 +53,7 @@ def get_recipes(request):
         
         posts = format_recipes(recipes_query)
 
-        return success_response({"posts": posts})
+        return success_response({"posts": posts, 'number_posts': len(posts)})
     except Exception as e:
         print(e)
         return error_response(str(e))

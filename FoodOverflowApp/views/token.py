@@ -138,7 +138,7 @@ def search_profiles(request):
 
             profiles.append(profile_data)
 
-        return success_response({'profiles' : profiles})
+        return success_response({'profiles' : profiles, 'num_results' : len(profiles)})
 
     except Exception as e:
         print(e)
