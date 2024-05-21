@@ -77,10 +77,23 @@ function Encabezado() {
     tagsDictionary.push({label : tagsDictionaryLoaded[key], value: parseInt(key)})
   }
 
-  const customStyles = {
-    control: (provided, state) => ({
+  const customStyles = [{
+      control: (provided, state) => ({
+        ...provided,
+        width: '17vw',
+        borderColor: '#ccc',
+        '&:focus': {
+          borderColor: '#ff5c00',
+        },
+      }),
+
+      placeholder: (provided, state) => ({
+        ...provided,
+        marginLeft: '10px',
+      }),
+    }, {control: (provided, state) => ({
       ...provided,
-      width: '17vw',
+      width: '30vw',
       borderColor: '#ccc',
       '&:focus': {
         borderColor: '#ff5c00',
@@ -91,7 +104,8 @@ function Encabezado() {
       ...provided,
       marginLeft: '10px',
     }),
-  };
+  }
+  ]
 
   const customStylesItem = [{
       control: (provided, state) => ({
@@ -111,6 +125,20 @@ function Encabezado() {
       control: (provided, state) => ({
         ...provided,
         width: '10vw',
+        borderColor: '#ccc',
+        '&:focus': {
+          borderColor: '#ff5c00',
+        },
+      }),
+
+      placeholder: (provided, state) => ({
+        ...provided,
+        marginLeft: '10px',
+      }),
+    }, {
+      control: (provided, state) => ({
+        ...provided,
+        width: '17vw',
         borderColor: '#ccc',
         '&:focus': {
           borderColor: '#ff5c00',
@@ -145,9 +173,27 @@ function Encabezado() {
         //window.location.reload(); // Recargar la página para mostrar los resultados
         }
       }else if(selectedItem.value === 2){
-        navigate(`/results_search/buscar_perfiles=${searchText}`);
+        if(searchText.length){
+          navigate(`/results_search/buscar_perfiles=${searchText}`);
+        }else{
+          Swal.fire({
+            title: "<strong> Debes introducir alguna palabra para realizar la busqueda </strong>",
+            icon: "error",
+            timer: 4000,
+            confirmButtonColor: "#ff0000",
+          });
+        }
       }else if(selectedItem.value === 3){
-        navigate(`/results_search/buscar_posts=${searchText}`);
+        if(searchText.length){
+          navigate(`/results_search/buscar_posts=${searchText}`);
+        }else{
+          Swal.fire({
+            title: "<strong> Debes introducir alguna palabra para realizar la busqueda </strong>",
+            icon: "error",
+            timer: 4000,
+            confirmButtonColor: "#ff0000",
+          });
+        }
       }
     } catch (error) {
       console.error('Error al realizar la búsqueda:', error);
@@ -233,10 +279,11 @@ function Encabezado() {
           isMulti
           value={selectedTags}
           onChange={selectedOptions => setSelectedTags(selectedOptions)}
-          styles={customStyles}
+          styles={customStyles[0]}
         /> : <input 
               type='text'
               className = 'searcher'
+              value = {searchText}
               onChange={text => setSearchText(text.target.value)}
               placeholder= {"Buscar " + selectedItem.label}
              />}
@@ -373,14 +420,31 @@ function Encabezado() {
           </Link>
           <center>
           <div className="search-drop-menu">
-          <Creatable
-          className="search-select"
-          placeholder="Buscar"
-          options={tagsDictionary}
-          isMulti
-          value={selectedTags}
-          onChange={selectedOptions => setSelectedTags(selectedOptions)}
-          styles={customStyles}
+            {selectedItem.value === 1 ? <Creatable
+                className="search-select"
+                placeholder="Buscar"
+                options={tagsDictionary}
+                isMulti
+                value={selectedTags}
+                onChange={selectedOptions => setSelectedTags(selectedOptions)}
+                styles={customStyles[1]}
+              /> : <input 
+                type='text'
+                className = 'searcher'
+                value = {searchText}
+                onChange={text => setSearchText(text.target.value)}
+                placeholder= {"Buscar " + selectedItem.label}
+              />}
+          </div>
+          <div className="search-drop-menu">     
+          <Select
+            className="search-select"
+            default = {searchItems[0]}
+            isSearchable = {false}
+            options={searchItems}
+            value={selectedItem}
+            onChange={selectedOptions => setSelectedItem(selectedOptions)}
+            styles={customStylesItem[2]}
           />
           <button className="search-button" onClick={submitSearch}>
             <strong>Buscar</strong>
