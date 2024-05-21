@@ -119,7 +119,7 @@ def get_publications(request):
             publications_query = Publication.objects.order_by('publication_creation_date').select_related('profile').all()
         posts = format_publications(publications_query)
 
-        return success_response({'posts' : posts})
+        return success_response({'posts' : posts, 'number_posts2' : len(posts)})
     except Exception as e:
         print(e)
         return error_response(str(e))

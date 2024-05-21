@@ -224,7 +224,7 @@ export default function Comentario({ jwt, reload, setReload, post_id, comment_id
                     { comment_user == username || is_admin ?(
                     <button className="commentario-delete-button" onClick = {() => handle_delete_comment(comment_id, 'el comentario')}>
                         Eliminar
-                    </button>) : <div></div> }
+                    </button>) : <></> }
                 </div>
                 {inputReply && (
                     <div className="comentario-reply">

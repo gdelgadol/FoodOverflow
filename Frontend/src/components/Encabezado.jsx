@@ -3,6 +3,7 @@ import iconoImg from '../assets/logo.png';
 import { Link, useNavigate, useLocation } from 'react-router-dom'; // Importamos useNavigate
 import Cookies from 'universal-cookie';
 import Creatable from 'react-select/creatable';
+import Select from 'react-select';
 import React, { useState, useEffect } from 'react';
 import "./Encabezado.css";
 import axios from "../api/axios.jsx";
@@ -15,6 +16,13 @@ function Encabezado() {
     username: '',
     avatar: ''
   })
+
+  const searchItems = [
+    {label: "Tags", value : 1},
+    {label: "Perfiles", value : 2},
+    {label: "Posts", value : 3}
+  ]
+
   const [notificaciones, setNotificaciones] = useState([])
   const [notificationClicked, setNotificationClicked] = useState(false);
   
@@ -25,6 +33,8 @@ function Encabezado() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuUsuarioOpen, setMenuUsuarioOpen] = useState(false);
   const [selectedTags, setSelectedTags] = useState([]);
+  const [searchText, setSearchText] = useState('');
+  const [selectedItem, setSelectedItem] = useState(searchItems[0]);
   const urlFront = import.meta.env.VITE_FRONT_URL;
   const url = import.meta.env.VITE_API_URL;
   const [menuNotificacionOpen, setMenuNotificacionOpen] = useState(false);
@@ -67,10 +77,23 @@ function Encabezado() {
     tagsDictionary.push({label : tagsDictionaryLoaded[key], value: parseInt(key)})
   }
 
-  const customStyles = {
-    control: (provided, state) => ({
+  const customStyles = [{
+      control: (provided, state) => ({
+        ...provided,
+        width: '17vw',
+        borderColor: '#ccc',
+        '&:focus': {
+          borderColor: '#ff5c00',
+        },
+      }),
+
+      placeholder: (provided, state) => ({
+        ...provided,
+        marginLeft: '10px',
+      }),
+    }, {control: (provided, state) => ({
       ...provided,
-      width: '25vw',
+      width: '30vw',
       borderColor: '#ccc',
       '&:focus': {
         borderColor: '#ff5c00',
@@ -81,26 +104,96 @@ function Encabezado() {
       ...provided,
       marginLeft: '10px',
     }),
-  };
+  }
+  ]
+
+  const customStylesItem = [{
+      control: (provided, state) => ({
+        ...provided,
+        width: '8vw',
+        borderColor: '#ccc',
+        '&:focus': {
+          borderColor: '#ff5c00',
+        },
+      }),
+
+      placeholder: (provided, state) => ({
+        ...provided,
+        marginLeft: '10px',
+      }),
+    }, {
+      control: (provided, state) => ({
+        ...provided,
+        width: '10vw',
+        borderColor: '#ccc',
+        '&:focus': {
+          borderColor: '#ff5c00',
+        },
+      }),
+
+      placeholder: (provided, state) => ({
+        ...provided,
+        marginLeft: '10px',
+      }),
+    }, {
+      control: (provided, state) => ({
+        ...provided,
+        width: '17vw',
+        borderColor: '#ccc',
+        '&:focus': {
+          borderColor: '#ff5c00',
+        },
+      }),
+
+      placeholder: (provided, state) => ({
+        ...provided,
+        marginLeft: '10px',
+      }),
+    }
+  ];
 
   const submitSearch = async () => {
     try {
-      const selectedValues = selectedTags.map(tag => tag.value);
-      if(selectedValues.length === 0) {
-        // Mostrar la página de resultados con cero tags y cero resultados
-        //alert("Debes introducir al menos un tag para buscar")
-        Swal.fire({
-          title: "<strong> Debes introducir al menos un tag para buscar </strong>",
-          icon: "error",
-          timer: 4000,
-          confirmButtonColor: "#ff0000",
-        });
-        navigate(`/forum`)
-        //return navigate('/results_search/0');
-      } else { 
-      const tagsParam = selectedValues.join(',');
-      navigate(`/results_search/${tagsParam}`); // Navegamos a la ruta de búsqueda con los tags en la URL
-      //window.location.reload(); // Recargar la página para mostrar los resultados
+      if(selectedItem.value === 1){
+        const selectedValues = selectedTags.map(tag => tag.value);
+        if(selectedValues.length === 0) {
+          // Mostrar la página de resultados con cero tags y cero resultados
+          //alert("Debes introducir al menos un tag para buscar")
+          Swal.fire({
+            title: "<strong> Debes introducir al menos un tag para buscar </strong>",
+            icon: "error",
+            timer: 4000,
+            confirmButtonColor: "#ff0000",
+          });
+          navigate(`/forum`)
+          //return navigate('/results_search/0');
+        } else { 
+        const tagsParam = selectedValues.join(',');
+        navigate(`/results_search/buscar_tags=${tagsParam}`); // Navegamos a la ruta de búsqueda con los tags en la URL
+        //window.location.reload(); // Recargar la página para mostrar los resultados
+        }
+      }else if(selectedItem.value === 2){
+        if(searchText.length){
+          navigate(`/results_search/buscar_perfiles=${searchText}`);
+        }else{
+          Swal.fire({
+            title: "<strong> Debes introducir alguna palabra para realizar la busqueda </strong>",
+            icon: "error",
+            timer: 4000,
+            confirmButtonColor: "#ff0000",
+          });
+        }
+      }else if(selectedItem.value === 3){
+        if(searchText.length){
+          navigate(`/results_search/buscar_posts=${searchText}`);
+        }else{
+          Swal.fire({
+            title: "<strong> Debes introducir alguna palabra para realizar la busqueda </strong>",
+            icon: "error",
+            timer: 4000,
+            confirmButtonColor: "#ff0000",
+          });
+        }
       }
     } catch (error) {
       console.error('Error al realizar la búsqueda:', error);
@@ -114,7 +207,6 @@ function Encabezado() {
       notification_id: notification_id,
     })
    .then((res) => {
-      console.log(res.data.message);
    })
    .catch((error) => {
       console.error("Error al borrar notificación:", error);
@@ -146,7 +238,6 @@ function Encabezado() {
         })
         .then((res) => {
           setNotificaciones(res.data.notifications);
-          //console.log(res.data.notifications);
         })
         .catch((error) => {
           console.error("Error al obtener datos del usuario:", error);
@@ -181,15 +272,32 @@ function Encabezado() {
       </div>
       </Link>
       <div className="search">
-        <Creatable
+        {selectedItem.value === 1 ? <Creatable
           className="search-select"
           placeholder="Buscar"
           options={tagsDictionary}
           isMulti
           value={selectedTags}
           onChange={selectedOptions => setSelectedTags(selectedOptions)}
-          styles={customStyles}
+          styles={customStyles[0]}
+        /> : <input 
+              type='text'
+              className = 'searcher'
+              value = {searchText}
+              onChange={text => setSearchText(text.target.value)}
+              placeholder= {"Buscar " + selectedItem.label}
+             />}
+        
+        <Select
+          className="search-select"
+          default = {searchItems[0]}
+          isSearchable = {false}
+          options={searchItems}
+          value={selectedItem}
+          onChange={selectedOptions => setSelectedItem(selectedOptions)}
+          styles={ selectedItem.value ===2 ? customStylesItem[1] : customStylesItem[0]}
         />
+
         <button className="search-button" onClick={submitSearch}>
           <strong>Buscar</strong>
         </button>
@@ -312,14 +420,31 @@ function Encabezado() {
           </Link>
           <center>
           <div className="search-drop-menu">
-          <Creatable
-          className="search-select"
-          placeholder="Buscar"
-          options={tagsDictionary}
-          isMulti
-          value={selectedTags}
-          onChange={selectedOptions => setSelectedTags(selectedOptions)}
-          styles={customStyles}
+            {selectedItem.value === 1 ? <Creatable
+                className="search-select"
+                placeholder="Buscar"
+                options={tagsDictionary}
+                isMulti
+                value={selectedTags}
+                onChange={selectedOptions => setSelectedTags(selectedOptions)}
+                styles={customStyles[1]}
+              /> : <input 
+                type='text'
+                className = 'searcher'
+                value = {searchText}
+                onChange={text => setSearchText(text.target.value)}
+                placeholder= {"Buscar " + selectedItem.label}
+              />}
+          </div>
+          <div className="search-drop-menu">     
+          <Select
+            className="search-select"
+            default = {searchItems[0]}
+            isSearchable = {false}
+            options={searchItems}
+            value={selectedItem}
+            onChange={selectedOptions => setSelectedItem(selectedOptions)}
+            styles={customStylesItem[2]}
           />
           <button className="search-button" onClick={submitSearch}>
             <strong>Buscar</strong>
