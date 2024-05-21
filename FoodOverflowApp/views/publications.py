@@ -5,6 +5,7 @@ from django.db.models import Sum
 from django.db.models import Q
 from functools import reduce
 from .modules import error_response, success_response, get_if_exists
+from .modules import format_publications
 
 import json
 
@@ -109,34 +110,16 @@ def get_publication(request):
 #View all publications made by a user
 def get_publications(request):
     try:
-        publications_query = Publication.objects.order_by('publication_creation_date').select_related('profile').all()
-        posts = []
+        data = json.loads(request.body)
+        if data.get('search'):
+            publications_query = Publication.objects.filter(
+                Q(publication_title__icontains = data.get('search'))
+                ).distinct()
+        else:
+            publications_query = Publication.objects.order_by('publication_creation_date').select_related('profile').all()
+        posts = format_publications(publications_query)
 
-        for publication in publications_query:
-            username = publication.profile.username
-            num_comments = PublicationComment.objects.filter(publication = publication.publication_id).count()
-            score = PublicationVote.objects.filter(publication = publication.publication_id).aggregate(Sum('vote_type'))['vote_type__sum']
-            if not score:
-                score = 0
-
-            if publication.profile.avatar_id:
-                profile_avatar = Avatar.objects.get(avatar_id = publication.profile.avatar_id.avatar_id).avatar_url
-            else:
-                profile_avatar = ""
-
-            post_data = {
-                "id": publication.publication_id,
-                "userName": username,
-                "profile_avatar" : profile_avatar,
-                "title": publication.publication_title,
-                "description": publication.publication_description,
-                "numComments": num_comments,
-                "score": score,
-                "tagsList": publication.publication_tags
-            }
-            posts.append(post_data)
-
-        return success_response({'posts' : posts})
+        return success_response({'posts' : posts, 'number_posts2' : len(posts)})
     except Exception as e:
         print(e)
         return error_response(str(e))
@@ -152,32 +135,7 @@ def get_publications_tags(request):
             reduce(lambda x, y: x | y, [Q(publication_tags__contains=[tag]) for tag in tags_list])
         ).order_by('publication_creation_date').select_related('profile').all()
 
-        posts = []
-
-        for publication in publications_query:
-            username = publication.profile.username
-            num_comments = PublicationComment.objects.filter(publication=publication.publication_id).count()
-            score = PublicationVote.objects.filter(publication=publication.publication_id).aggregate(
-                Sum('vote_type'))['vote_type__sum']
-            if not score:
-                score = 0
-                
-            if publication.profile.avatar_id:
-                profile_avatar = Avatar.objects.get(avatar_id = publication.profile.avatar_id.avatar_id).avatar_url
-            else:
-                profile_avatar = ""
-
-            post_data = {
-                "id": publication.publication_id,
-                "userName": username,
-                "profile_avatar" : profile_avatar,
-                "title": publication.publication_title,
-                "description": publication.publication_description,
-                "numComments": num_comments,
-                "score": score,
-                "tagsList": publication.publication_tags
-            }
-            posts.append(post_data)
+        posts = format_publications(publications_query)
 
         if(len(posts) == 0):
             return error_response("No se encontraron publicaciones con esas etiquetas.")

@@ -5,6 +5,7 @@ from django.db.models import Sum
 from django.db.models import Q
 from functools import reduce
 from .modules import error_response, success_response, get_if_exists
+from .modules import format_recipes
 
 import json
 
@@ -42,35 +43,17 @@ def create_recipe(request):
 #View all recipes done by a user
 def get_recipes(request):
     try:
-        recipes_query = Recipe.objects.order_by('recipe_creation_date').select_related('profile').all()
-        posts = []
+        data = json.loads(request.body)
+        if data.get('search'):
+            recipes_query = Recipe.objects.filter(
+                Q(recipe_title__icontains = data.get('search'))
+                ).distinct()
+        else:
+            recipes_query = Recipe.objects.order_by('recipe_creation_date').select_related('profile').all()
+        
+        posts = format_recipes(recipes_query)
 
-        for recipe in recipes_query:
-            username = recipe.profile.username
-            num_comments = RecipeComment.objects.filter(recipe = recipe.recipe_id).count()
-            score = RecipeVote.objects.filter(recipe = recipe.recipe_id).aggregate(Sum('vote_type'))['vote_type__sum']
-            if not score:
-                score = 0
-
-            if recipe.profile.avatar_id:
-                profile_avatar = Avatar.objects.get(avatar_id = recipe.profile.avatar_id.avatar_id).avatar_url
-            else:
-                profile_avatar = ""
-
-            post_data = {
-                "id": recipe.recipe_id,
-                "userName": username,
-                "profile_avatar" : profile_avatar,
-                "title": recipe.recipe_title,
-                "ingredients" : recipe.recipe_ingredients,
-                "description": recipe.recipe_description,
-                "numComments": num_comments,
-                "score": score,
-                "tagsList": recipe.recipe_tags
-            }
-            posts.append(post_data)
-
-        return success_response({"posts": posts})
+        return success_response({"posts": posts, 'number_posts': len(posts)})
     except Exception as e:
         print(e)
         return error_response(str(e))
@@ -84,34 +67,7 @@ def get_recipe_tags(request):
             reduce(lambda x, y: x | y, [Q(recipe_tags__contains=[tag]) for tag in tags_list])
         ).order_by('recipe_creation_date').select_related('profile').all()
 
-        posts = []
-
-        for recipe in recipe_query:
-            username = recipe.profile.username
-            num_comments = RecipeComment.objects.filter(recipe=recipe.recipe_id).count()
-            score = RecipeVote.objects.filter(recipe=recipe.recipe_id).aggregate(
-                Sum('vote_type'))['vote_type__sum']
-            if not score:
-                score = 0
-
-            if recipe.profile.avatar_id:
-                profile_avatar = Avatar.objects.get(avatar_id = recipe.profile.avatar_id.avatar_id).avatar_url
-            else:
-                profile_avatar = ""
-
-            post_data = {
-                "id": recipe.recipe_id,
-                "userName": username,
-                "profile_avatar" : profile_avatar,
-                "title": recipe.recipe_title,
-                "ingredients" : recipe.recipe_ingredients,
-                "description": recipe.recipe_description,
-                "numComments": num_comments,
-                "score": score,
-                "tagsList": recipe.recipe_tags
-            }
-            posts.append(post_data)
-
+        posts = format_recipes(recipe_query)
         if(len(posts) == 0):
             error_response("No se encontraron recetas con esas etiquetas.")
         

@@ -24,10 +24,23 @@ const Busqueda = () => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.post(`${url}/${filtro_2}/filter/`, {
-          tagsList: tags.split(',').map(tag => parseInt(tag)), // Convertimos los tags de string a array de números enteros
-        });
-        console.log(tags.split(',').map(tag => parseInt(tag)));
+        const search = tags.split("=")[0];
+        const content = tags.slice(search.length+1);
+        var response = {};
+        if(search === "buscar_tags"){
+          response = await axios.post(`${url}/${filtro_2}/filter/`, {
+            tagsList: content.split(',').map(tag => parseInt(tag)), 
+            // Convertimos los tags de string a array de números enteros
+          });
+        }else if(search === "buscar_posts"){
+          response = await axios.post(`${url}/${filtro_2}s/`, {
+            search : content
+            // Convertimos los tags de string a array de números enteros
+          });
+        }else{
+          response = {data:{message:null}};
+        }
+
         if (response.data.type === 'SUCCESS') {
           const sortedPosts = response.data.posts.sort((a, b) => b.id - a.id);
           setPosts(sortedPosts);

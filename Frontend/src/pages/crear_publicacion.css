@@ -199,7 +199,8 @@
 }
 
 .tag button:hover {
-  color: #333;
+  color: #ff0000;
+  background-color: #ff9494;
 }
 
 .select-unit {
