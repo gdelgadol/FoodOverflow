@@ -4,7 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'; // Importamos
 import Cookies from 'universal-cookie';
 import Creatable from 'react-select/creatable';
 import Select from 'react-select';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import "./Encabezado.css";
 import axios from "../api/axios.jsx";
 import { IoMdNotificationsOutline, IoMdNotifications } from "react-icons/io";
@@ -15,15 +15,15 @@ function Encabezado() {
   const [userInfo, setUserInfo] = useState({
     username: '',
     avatar: ''
-  })
+  });
 
   const searchItems = [
     {label: "Tags", value : 1},
     {label: "Perfiles", value : 2},
     {label: "Posts", value : 3}
-  ]
+  ];
 
-  const [notificaciones, setNotificaciones] = useState([])
+  const [notificaciones, setNotificaciones] = useState([]);
   const [notificationClicked, setNotificationClicked] = useState(false);
   
   const cookies = new Cookies();
@@ -87,9 +87,24 @@ function Encabezado() {
         },
       }),
 
+      valueContainer: (provided) => ({
+        ...provided,
+        display: 'flex',
+        overflowX: 'auto',
+        flexWrap: 'nowrap',
+        maxWidth: '100%',
+        scrollbarWidth: 'thin', 
+      }),
+
+      multiValue: (provided) => ({
+        ...provided,
+        flexShrink: 0, // Evita que los tags se reduzcan de tamaño
+      }),
+
       placeholder: (provided, state) => ({
         ...provided,
         marginLeft: '10px',
+        maxHeight: '40px',
       }),
     }, {control: (provided, state) => ({
       ...provided,
@@ -272,22 +287,30 @@ function Encabezado() {
       </div>
       </Link>
       <div className="search">
-        {selectedItem.value === 1 ? <Creatable
-          className="search-select"
-          placeholder="Buscar"
-          options={tagsDictionary}
+        {selectedItem.value === 1 ? (
+    <React.Fragment>
+      <div className='space'>
+        <Select
+          className='seach-select'
           isMulti
           value={selectedTags}
-          onChange={selectedOptions => setSelectedTags(selectedOptions)}
-          styles={customStyles[0]}
-        /> : <input 
-              type='text'
-              className = 'searcher'
-              value = {searchText}
-              onChange={text => setSearchText(text.target.value)}
-              placeholder= {"Buscar " + selectedItem.label}
-             />}
-        
+          onChange={setSelectedTags}
+          options={tagsDictionary}
+          styles={customStyles[0]} 
+          placeholder="Buscar por tags"
+        />
+      </div>
+    </React.Fragment>
+  ) : (
+    <input 
+      type='text'
+      className='searcher'
+      value={searchText}
+      onChange={text => setSearchText(text.target.value)}
+      placeholder={"Buscar " + selectedItem.label}
+    />
+  )}
+      <div className='space2'>
         <Select
           className="search-select"
           default = {searchItems[0]}
@@ -297,6 +320,7 @@ function Encabezado() {
           onChange={selectedOptions => setSelectedItem(selectedOptions)}
           styles={ selectedItem.value ===2 ? customStylesItem[1] : customStylesItem[0]}
         />
+      </div>
 
         <button className="search-button" onClick={submitSearch}>
           <strong>Buscar</strong>
