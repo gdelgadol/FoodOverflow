@@ -38,8 +38,9 @@ def create_preference(request):
         print(preference_response['response'])
 
         preference_id = preference_response['response']['id']
+        link_pago = preference_response['response']['init_point']
 
-        return JsonResponse({'id': preference_id})
+        return JsonResponse({'id': preference_id, 'link_pago': link_pago})
     else:
         return JsonResponse({'error': 'Invalid HTTP method'}, status=405)
 
