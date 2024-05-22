@@ -30,7 +30,8 @@ import UserSavedPosts from "./pages/UserSavedPosts.jsx"
 import NotFound from "./pages/NotFound.jsx";
 import SiteMap from "./pages/SiteMap.jsx";
 import Diploma from "./pages/Diploma.jsx";
-import { useNavigate } from 'react-router-dom';
+import PendingPayment from "./pages/PagoPendiente.jsx"
+
 
 function App() {
 
@@ -69,6 +70,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
           <Route path="/site-map" element={<SiteMap />} />
           <Route path="/diploma" element={<Diploma />} />
+          <Route path="/pending_payment" element={<PendingPayment />} />
         </Routes>
       </div>
       <Footer />

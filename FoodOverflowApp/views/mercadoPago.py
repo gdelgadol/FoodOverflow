@@ -23,7 +23,7 @@ def create_preference(request):
             "back_urls": {
                 "success": "http://localhost:5173/diploma",
                 "failure": "https://foodoverflow.onrender.com/support",
-                "pending": "https://www.youtube.com/watch?v=hgfNaXGW2Bw&t=1s"
+                "pending": "http://localhost:5173/pending_payment"
             },
             "auto_return": "approved",
             "payment_methods": {
