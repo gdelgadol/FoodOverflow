@@ -29,8 +29,11 @@ import Inicio from "./pages/Inicio.jsx"
 import UserSavedPosts from "./pages/UserSavedPosts.jsx"
 import NotFound from "./pages/NotFound.jsx";
 import SiteMap from "./pages/SiteMap.jsx";
+import Diploma from "./pages/Diploma.jsx";
+import { useNavigate } from 'react-router-dom';
 
 function App() {
+
   return (
     <div className="app-body">
       <Encabezado />
@@ -65,6 +68,7 @@ function App() {
           <Route path="/saved_posts_user" element={<UserSavedPosts />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/site-map" element={<SiteMap />} />
+          <Route path="/diploma" element={<Diploma />} />
         </Routes>
       </div>
       <Footer />

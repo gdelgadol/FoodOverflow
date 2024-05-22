@@ -4,7 +4,7 @@ import json
 
 # Inicializa MercadoPago SDK
 #mercado_pago_sdk = SDK("TEST-4421427497096873-051617-3a02b3af353fadc2e2f6870bd7788e24-1547220359")
-sdk = mercadopago.SDK("APP_USR-4421427497096873-051617-3ff5d58d8fca35c9d8c7c45caf633715-1547220359")
+sdk = mercadopago.SDK("TEST-4421427497096873-051617-3a02b3af353fadc2e2f6870bd7788e24-1547220359")
 
 def create_preference(request):
     if request.method == 'POST':
@@ -21,8 +21,8 @@ def create_preference(request):
                 }
             ],
             "back_urls": {
-                "success": "https://www.youtube.com/watch?v=7wtfhZwyrcc",
-                "failure": "http://localhost:5173/support",
+                "success": "http://localhost:5173/diploma",
+                "failure": "https://foodoverflow.onrender.com/support",
                 "pending": "https://www.youtube.com/watch?v=hgfNaXGW2Bw&t=1s"
             },
             "auto_return": "approved",

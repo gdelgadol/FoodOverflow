@@ -17,7 +17,7 @@ function SupportUs() {
     const cookies = new Cookies();
     const jwt = cookies.get("auth_token");
 
-    initMercadoPago('APP_USR-6221fd0d-567a-473a-87ea-59d65a82ef03', {
+    initMercadoPago('TEST-2e3ed73c-8a0a-4230-8f62-fc6bd8d9f767', {
         locale: 'es-CO',
     });
 
@@ -69,8 +69,9 @@ function SupportUs() {
             }
         } catch (error) {
             console.error('Error al crear la preferencia:', error);
-        } finally {
             setIsLoading(false); 
+        } finally {
+            
         }
     };
 
@@ -79,17 +80,28 @@ function SupportUs() {
             <div className="product-card">
                 <div className="product-info">
                     <h1 className="product-name">Donación Food Overflow</h1>
-                    <p className="product-description">
-                    En Food Overflow, nos enorgullece ofrecer un espacio dinámico y colaborativo donde los amantes de la cocina pueden compartir su pasión, explorar nuevas recetas y aprender unos de otros. Nuestra comunidad, compuesta por diferentes tipos de personas, es sin duda, nuestra mayor motivación para seguir avanzando con este proyecto.
-                    </p>
-                    <p className="product-description">
-                    Sin embargo, mantener esta plataforma en funcionamiento no es tarea fácil. Aunque nos esforzamos por ofrecer nuestros servicios de forma gratuita para todos, también dependemos de ingresos para cubrir los costos de mantenimiento del sitio, el desarrollo de nuevas características y la expansión de nuestra comunidad. Es por eso que las donaciones de nuestros usuarios son vitales para nuestro éxito continuo.
-                    </p>
-                    <p className="product-description">
-                    Cada contribución que recibimos nos ayuda a seguir mejorando y creciendo, asegurando que podamos continuar ofreciendo un espacio enriquecedor y acogedor para todos los amantes de la cocina. Apreciamos profundamente el apoyo de nuestra comunidad y estamos comprometidos a seguir sirviéndoles con excelencia en los años venideros. Si deseas apoyarnos, ¡te lo agradecemos de todo corazón!
-                    </p>
-                    <p className="product-description">
-                    El monto minimo es de $5000 pesos Colombianos, tenemos disponibles todos los medios de pago (Tarjetas de crédito, débito, Nequi, Daviplata, PSE y efectivo) y puedes hacerlo a continuación:
+                    <div className="reasons-container"> {/* Nuevo contenedor para los primeros párrafos */}
+                    <div className="reason-card">
+                        <h2 className="card-title">Comunidad culinaria</h2>
+                        <p className="product-description">
+                            En Food Overflow, nos enorgullece ofrecer un espacio dinámico y colaborativo donde los amantes de la cocina pueden compartir su pasión, explorar nuevas recetas y aprender unos de otros. Nuestra comunidad, compuesta por diferentes tipos de personas, es sin duda, nuestra mayor motivación para seguir avanzando con este proyecto.
+                        </p>
+                    </div>
+                    <div className="reason-card">
+                        <h2 className="card-title3">Apoyo Económico</h2>
+                        <p className="product-description">
+                            Sin embargo, mantener esta plataforma en funcionamiento no es tarea fácil. Aunque nos esforzamos por ofrecer nuestros servicios de forma gratuita para todos, también dependemos de ingresos para cubrir los costos de mantenimiento del sitio, el desarrollo de nuevas características y la expansión de nuestra comunidad. Es por eso que las donaciones de nuestros usuarios son vitales para nuestro éxito continuo.
+                        </p>
+                    </div>
+                    <div className="reason-card">
+                        <h2 className="card-title2">Crecimiento y Gratitud</h2>
+                        <p className="product-description">
+                            Cada contribución que recibimos nos ayuda a seguir mejorando y creciendo, asegurando que podamos continuar ofreciendo un espacio enriquecedor y acogedor para todos los amantes de la cocina. Apreciamos profundamente el apoyo de nuestra comunidad y estamos comprometidos a seguir sirviéndoles con excelencia en los años venideros. Si deseas apoyarnos, ¡te lo agradecemos de todo corazón!
+                        </p>
+                    </div>
+                    </div>
+                    <p className="product-description2">
+                        El monto minimo es de $5000 pesos Colombianos, tenemos disponibles todos los medios de pago (Tarjetas de crédito, débito, Nequi, Daviplata, PSE y efectivo) y puedes hacerlo a continuación:
                     </p>
                     <div className='content-pago'>
                         <center>
@@ -103,7 +115,6 @@ function SupportUs() {
                                 min="5000"
                                 placeholder="El monto mínimo es $5000 COP"
                             />
-                            <p className='valor2'>COP</p>
                             </div>
                         </center>
                         <center>
