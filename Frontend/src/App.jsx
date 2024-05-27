@@ -29,8 +29,12 @@ import Inicio from "./pages/Inicio.jsx"
 import UserSavedPosts from "./pages/UserSavedPosts.jsx"
 import NotFound from "./pages/NotFound.jsx";
 import SiteMap from "./pages/SiteMap.jsx";
+import Diploma from "./pages/Diploma.jsx";
+import PendingPayment from "./pages/PagoPendiente.jsx"
+
 
 function App() {
+
   return (
     <div className="app-body">
       <Encabezado />
@@ -65,6 +69,8 @@ function App() {
           <Route path="/saved_posts_user" element={<UserSavedPosts />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/site-map" element={<SiteMap />} />
+          <Route path="/diploma" element={<Diploma />} />
+          <Route path="/pending_payment" element={<PendingPayment />} />
         </Routes>
       </div>
       <Footer />

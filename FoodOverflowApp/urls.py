@@ -37,6 +37,7 @@ urlpatterns = [
     path('notifications/delete/', views.delete_user_notification, name="delete_user_notification"), #Delete a user notification
     path('notifications/deleteall/', views.delete_all_notifications, name="delete_all_notifications"), #Delete all user notifications
     # User settings
+    path('search_users/', views.search_profiles, name = "search_users"),
     path('get_jwt_info', views.get_jwt, name = "user_token_info"), # user's info in JWT Token
     path('get_user/<str:identifier>', views.get_user_data, name = "user_token"), # user's info in JWT Token
     path('delete_user/',views.delete_user, name = 'delete_user'), # delete_user path

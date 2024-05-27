@@ -1,5 +1,7 @@
 from django.http import JsonResponse
 from ..models import Avatar
+from ..models import RecipeComment, RecipeVote
+from ..models import PublicationComment, PublicationVote
 from django.db.models import Sum
 
 #return error
@@ -64,4 +66,63 @@ def get_all_posts(models, data, identifier, order_by, save = False):
             post_data["description"] = searcher.publication_description
             post_data["tagsList"] = searcher.publication_tags
         posts.append(post_data)
+    return posts
+
+def format_recipes(recipes_query):
+    posts = []
+
+    for recipe in recipes_query:
+        username = recipe.profile.username
+        num_comments = RecipeComment.objects.filter(recipe = recipe.recipe_id).count()
+        score = RecipeVote.objects.filter(recipe = recipe.recipe_id).aggregate(Sum('vote_type'))['vote_type__sum']
+        if not score:
+            score = 0
+
+        if recipe.profile.avatar_id:
+            profile_avatar = Avatar.objects.get(avatar_id = recipe.profile.avatar_id.avatar_id).avatar_url
+        else:
+            profile_avatar = ""
+
+        post_data = {
+            "id": recipe.recipe_id,
+            "userName": username,
+            "profile_avatar" : profile_avatar,
+            "title": recipe.recipe_title,
+            "ingredients" : recipe.recipe_ingredients,
+            "description": recipe.recipe_description,
+            "numComments": num_comments,
+            "score": score,
+            "tagsList": recipe.recipe_tags
+        }
+        posts.append(post_data)
+    
+    return posts
+
+def format_publications(publications_query):
+    posts = []
+
+    for publication in publications_query:
+        username = publication.profile.username
+        num_comments = PublicationComment.objects.filter(publication = publication.publication_id).count()
+        score = PublicationVote.objects.filter(publication = publication.publication_id).aggregate(Sum('vote_type'))['vote_type__sum']
+        if not score:
+            score = 0
+
+        if publication.profile.avatar_id:
+            profile_avatar = Avatar.objects.get(avatar_id = publication.profile.avatar_id.avatar_id).avatar_url
+        else:
+            profile_avatar = ""
+
+        post_data = {
+            "id": publication.publication_id,
+            "userName": username,
+            "profile_avatar" : profile_avatar,
+            "title": publication.publication_title,
+            "description": publication.publication_description,
+            "numComments": num_comments,
+            "score": score,
+            "tagsList": publication.publication_tags
+        }
+        posts.append(post_data)
+    
     return posts

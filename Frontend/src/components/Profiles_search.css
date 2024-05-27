@@ -1,0 +1,54 @@
+.profile_content{
+    display: flex;
+    flex-direction: row;
+    background-color: black;
+    border-radius: 20px;
+    width: 60vw;
+    margin: 5px;
+    padding: 10px;
+    gap: 10px;
+}
+
+.profile_content:hover{
+    transform: scale(1.03);
+}
+
+.profile_avatar {
+    width: 20%;
+    height: 20%;
+    border-radius: 50%;
+}
+
+.profile_data_container{
+    width:100%
+}
+
+.profile_username{
+    margin-left: 2vw;
+    font-size: 2.2vw;
+    font-weight: 600;
+    color: white;
+    width: 100vw
+}
+
+.profile_description{
+    margin-left: 2vw;
+    font-size: 1.5vw;
+    font-weight: normal;
+    color: #8f8f8f;
+    width: 100vw
+}
+
+.profile-info-statistics-number {
+    font-size: 2vw;
+    font-weight: 600;
+    color: white;
+    margin-left: 2vw;
+}
+
+.profile-info-statistics-text {
+    font-size: 2vw;
+    font-weight: 400;
+    color: rgb(150, 150, 150);
+    margin-left: 2vw;
+}
