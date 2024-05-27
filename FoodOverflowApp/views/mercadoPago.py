@@ -21,9 +21,9 @@ def create_preference(request):
                 }
             ],
             "back_urls": {
-                "success": "http://localhost:5173/diploma",
+                "success": "https://foodoverflow.onrender.com/diploma",
                 "failure": "https://foodoverflow.onrender.com/support",
-                "pending": "http://localhost:5173/pending_payment"
+                "pending": "https://foodoverflow.onrender.com/pending_payment"
             },
             "auto_return": "approved",
             "payment_methods": {
