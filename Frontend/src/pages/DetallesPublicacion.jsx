@@ -388,7 +388,9 @@ const submitSave = async () => {
             <div className='dp-tags'>
               <div className='tags-container'>
                 {tags.map((tagId, index) => (
-                  <div key={index} className='tag2'>{tagsDictionary[tagId]}</div>
+                  <Link to ={`/results_search/buscar_tags=${tagId}`}>
+                    <div key={index} className='tag2' custom-color={tagsDictionary[tagId][1]} clickeable = 'true'>{tagsDictionary[tagId][0]}</div>
+                  </Link>
                 ))}
               </div>
             </div>
