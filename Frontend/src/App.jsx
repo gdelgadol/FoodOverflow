@@ -61,7 +61,7 @@ function App() {
             <Route path="/register" element={<Register />} />
           </Route>
           <Route path="/about" element={<AboutUs />} />
-          <Route path="/usermanual" element={<UserManual />} />
+          <Route path="/user-manual" element={<UserManual />} />
           <Route path="/support" element={<SupportUs />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/acuerdo" element={<Acuerdo />} />
