@@ -1,0 +1,36 @@
+.container-um {
+    display: flex;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    max-width: 1200px;
+}
+
+.menu-um {
+    width: 200px;
+    background-color: #f4f4f4;
+    padding: 15px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.menu-um ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.menu-um li {
+    margin: 10px 0;
+    cursor: pointer;
+    padding: 10px;
+    background-color: #e4e4e4;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.menu-um li:hover {
+    background-color: #d4d4d4;
+}
+
+.content-um {
+    flex: 1;
+    padding: 15px;
+}
