@@ -114,4 +114,30 @@
     margin: 5px;
     border-radius: 5px;
     font-size: 12px;
+    color : #000000;
+    font-weight: 650;
+}
+
+.tag2[clickeable = true]:hover {
+    background-color: #000000;
+    color : #ffffff;
+}
+
+.tag2[custom-color=healthy] {
+    color:rgb(1, 114, 16) !important;
+}
+.tag2[custom-color=cake] {
+    color:rgb(197, 56, 176) !important;
+}
+.tag2[custom-color=drink] {
+    color:rgb(32, 134, 250) !important;
+}
+.tag2[custom-color=meat] {
+    color:rgb(221, 22, 0) !important;
+}
+.tag2[custom-color=ocean] {
+    color:rgb(51, 48, 224) !important;
+}
+.tag2[custom-color=coffe] {
+    color:rgb(117, 59, 59) !important;
 }

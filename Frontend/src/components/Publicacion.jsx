@@ -42,7 +42,7 @@ export default function Publicacion ({id_post, userName, profile_avatar, title, 
                         <div className='dp-tags'>
                             <div className='tags-container'>
                                 {tags.map((tagId, index) => (
-                                    <div key={index} className='tag2'>{tagsDictionary[tagId]}</div>
+                                    <div key={index} className='tag2'custom-color={tagsDictionary[tagId][1]}>{tagsDictionary[tagId][0]}</div>
                                 ))}
                             </div>
                         </div>

@@ -74,7 +74,7 @@ function Encabezado() {
 
   const tagsDictionary = [];
   for(let key in tagsDictionaryLoaded){
-    tagsDictionary.push({label : tagsDictionaryLoaded[key], value: parseInt(key)})
+    tagsDictionary.push({label : tagsDictionaryLoaded[key][0], value: parseInt(key)})
   }
 
   const customStyles = [{
