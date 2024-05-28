@@ -34,3 +34,10 @@
     flex: 1;
     padding: 15px;
 }
+
+.manual-image-um {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 20px 0;
+}

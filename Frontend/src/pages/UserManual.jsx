@@ -8,7 +8,7 @@ function UserManual() {
             content: [
                 { type: "text", value: "Para registrarte en Food Overflow, debes dirigirte a la esquina superior derecha, donde verás un botón de “Registrarse”. Dale clic para ir al formulario de registro de usuario." },
                 { type: "text", value: "Una vez en el formulario, ingresas el correo electrónico que deseas registrar, tu nombre de usuario, una descripción opcional sobre tí, eliges un avatar e ingresas la contraseña que quieras utilizar. Una vez los campos obligatorios han sido completados, puedes dar clic en “Registrarse” para que se envíe el correo de activación de tu cuenta. No olvides revisar tu bandeja de entrada y la de spam para ver el correo electrónico." },
-                { type: "image", value: "url-de-imagen-registro.png" },
+                { type: "image", value: "https://github.com/JOvalleG/FoodOverflow/blob/foro/Frontend/src/assets/userManual/Manual%20de%20Usuario%20-%201.png?raw=true" },
                 { type: "text", value: "El correo electrónico que te llega va a tener un botón que dice “Activar Cuenta”. Haz clic en él para activar tu cuenta y terminar el proceso de tu registro." },
                 { type: "text", value: "Si ves este mensaje, es porque el registro ha sido exitoso y serás redireccionado a la vista para iniciar sesión. De lo contrario, tendrás que repetir el proceso de registro. ¡Bienvenido a Food Overflow!" }
             ]
