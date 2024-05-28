@@ -309,7 +309,7 @@ function Crear_publicacion() {
               </select>
               <div className="tags-container">
                 {state.tags.map((tag, index) => (
-                  <span key={index} className="tag">
+                  <span key={index} className="tag" custom-color={tagsDictionary[tag][1]}>
                     {tagsDictionary[tag][0]}
                     <button
                       type="button"
