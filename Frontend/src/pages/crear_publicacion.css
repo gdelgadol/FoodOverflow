@@ -187,6 +187,8 @@
   margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
 }
 
 .tag button {
