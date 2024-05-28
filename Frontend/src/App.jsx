@@ -31,6 +31,7 @@ import NotFound from "./pages/NotFound.jsx";
 import SiteMap from "./pages/SiteMap.jsx";
 import Diploma from "./pages/Diploma.jsx";
 import PendingPayment from "./pages/PagoPendiente.jsx"
+import UserManual from "./pages/UserManual.jsx"
 
 
 function App() {
@@ -60,6 +61,7 @@ function App() {
             <Route path="/register" element={<Register />} />
           </Route>
           <Route path="/about" element={<AboutUs />} />
+          <Route path="/user-manual" element={<UserManual />} />
           <Route path="/support" element={<SupportUs />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/acuerdo" element={<Acuerdo />} />
