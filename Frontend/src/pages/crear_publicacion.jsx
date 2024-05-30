@@ -303,14 +303,14 @@ function Crear_publicacion() {
                 <option value="" disabled>Selecciona las etiquetas que mejor vayan con tu post</option>
                 {availableTags.map(tag => (
                   <option key={tag} value={tag}>
-                    {tagsDictionary[tag]}
+                    {tagsDictionary[tag][0]}
                   </option>
                 ))}
               </select>
               <div className="tags-container">
                 {state.tags.map((tag, index) => (
-                  <span key={index} className="tag">
-                    {tagsDictionary[tag]}
+                  <span key={index} className="tag" custom-color={tagsDictionary[tag][1]}>
+                    {tagsDictionary[tag][0]}
                     <button
                       type="button"
                       onClick={() => handleRemoveTag(index)}

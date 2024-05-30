@@ -111,7 +111,36 @@
 .tag2 {
     background-color: #d6d6d6;
     padding: 5px 5px;
-    margin: 5px;
+    margin: 2px;
     border-radius: 5px;
     font-size: 12px;
+    color : #000000;
+    font-weight: 650;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+}
+
+.tag2[clickeable = true]:hover {
+    background-color: #ff5c00;
+    border-bottom-width: 0px;
+    color : #ffffff !important;
+}
+
+.tag2[custom-color=healthy], .tag[custom-color=healthy] {
+    border-color:rgb(1, 114, 16);
+}
+.tag2[custom-color=cake] , .tag[custom-color=cake] {
+    border-color:rgb(197, 56, 176);
+}
+.tag2[custom-color=drink], .tag[custom-color=drink] {
+    border-color:rgb(32, 134, 250);
+}
+.tag2[custom-color=meat] , .tag[custom-color=meat] {
+    border-color:rgb(221, 22, 0);
+}
+.tag2[custom-color=ocean], .tag[custom-color=ocean] {
+    border-color:rgb(51, 48, 224);
+}
+.tag2[custom-color=coffe], .tag[custom-color=coffe] {
+    border-color:rgb(63, 22, 22);
 }
