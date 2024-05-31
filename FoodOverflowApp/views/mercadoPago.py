@@ -38,7 +38,7 @@ def create_preference(request):
         print(preference_response['response'])
 
         preference_id = preference_response['response']['id']
-        link_pago = preference_response['response']['init_point']
+        link_pago = preference_response['response']['sandbox_init_point']
 
         return JsonResponse({'id': preference_id, 'link_pago': link_pago})
     else:
