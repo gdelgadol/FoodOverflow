@@ -17,7 +17,7 @@ function SupportUs() {
     const cookies = new Cookies();
     const jwt = cookies.get("auth_token");
 
-    initMercadoPago('TEST-2e3ed73c-8a0a-4230-8f62-fc6bd8d9f767', {
+    initMercadoPago('TEST-6ae9e341-b949-4554-b58f-50b5a2ad538f', {
         locale: 'es-CO',
     });
 

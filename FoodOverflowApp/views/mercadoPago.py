@@ -4,7 +4,7 @@ import json
 
 # Inicializa MercadoPago SDK
 #mercado_pago_sdk = SDK("TEST-4421427497096873-051617-3a02b3af353fadc2e2f6870bd7788e24-1547220359")
-sdk = mercadopago.SDK("TEST-4421427497096873-051617-3a02b3af353fadc2e2f6870bd7788e24-1547220359")
+sdk = mercadopago.SDK("TEST-2262180838343969-052817-f1ce30df8a58d3eae9303a8531ab1fa2-1547220359")
 
 def create_preference(request):
     if request.method == 'POST':
@@ -38,7 +38,7 @@ def create_preference(request):
         print(preference_response['response'])
 
         preference_id = preference_response['response']['id']
-        link_pago = preference_response['response']['init_point']
+        link_pago = preference_response['response']['sandbox_init_point']
 
         return JsonResponse({'id': preference_id, 'link_pago': link_pago})
     else:
