@@ -52,4 +52,7 @@ urlpatterns = [
 
     # MercadoPago
     path('create_preference/', views.create_preference, name='create_preference'),
+
+    #PQRS
+    path('send_pqrs', views.send_pqrs, name='send_pqrs')
 ]

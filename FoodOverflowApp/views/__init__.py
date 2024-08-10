@@ -8,3 +8,4 @@ from .publications import *
 from .recipes import *
 from .notifications import *
 from .mercadoPago import *
+from .pqrs import *
