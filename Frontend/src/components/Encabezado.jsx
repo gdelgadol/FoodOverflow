@@ -228,6 +228,19 @@ function Encabezado() {
     })
   }
 
+  const BorrarNotificaciones = () => {
+    axios.post(`${url}/notifications/deleteall/`, {
+      jwt: jwt
+    })
+    .then((res) => {
+      console.log("Se borraron todas las notificaciones.");
+      setNotificaciones([]);
+    })
+    .catch((error)=> {
+      console.error("Error al borrar notificaciones:", error);
+    })
+  }
+
   useEffect(() => {
     if (jwt) {
       axios.post(`${url}/get_user/profile`, {
@@ -495,6 +508,7 @@ function Encabezado() {
                   <span className="spanHeader">No tienes notificaciones</span>
                 </div>
               )}
+              <button className="menu-button4" onClick={BorrarNotificaciones}>Borrar todo</button>
             </div>
           )}
         </>
