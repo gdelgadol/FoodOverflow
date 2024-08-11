@@ -124,7 +124,6 @@
   flex-direction: row;
   justify-content: center;
   margin-bottom: 20px; 
-  align-items: stretch;
   flex-wrap: wrap;
 }
 
@@ -141,13 +140,11 @@
   flex: 1;
   background-color: rgb(246, 246, 246);
   border-radius: 8px;
-  padding: 20px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
   transition: transform 0.3s ease, background-color 0.3s ease;
-  cursor: default; /* Makes the card look clickable */
+  cursor: default;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
 .reason-card:hover {
