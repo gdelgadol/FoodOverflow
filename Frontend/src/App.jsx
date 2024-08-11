@@ -32,7 +32,8 @@ import SiteMap from "./pages/SiteMap.jsx";
 import Diploma from "./pages/Diploma.jsx";
 import PendingPayment from "./pages/PagoPendiente.jsx"
 import UserManual from "./pages/UserManual.jsx"
-
+import PQRS from "./pages/PQRS.jsx"
+import Questions from "./pages/Questions.jsx"
 
 function App() {
 
@@ -73,6 +74,8 @@ function App() {
           <Route path="/site-map" element={<SiteMap />} />
           <Route path="/diploma" element={<Diploma />} />
           <Route path="/pending_payment" element={<PendingPayment />} />
+          <Route path="/pqrs" element={<PQRS />} />
+          <Route path="/questions" element={<Questions />} />
         </Routes>
       </div>
       <Footer />

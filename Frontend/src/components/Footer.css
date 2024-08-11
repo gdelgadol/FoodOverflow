@@ -41,7 +41,7 @@
   }
 
   /* Estilos para pantallas más pequeñas */
-  @media screen and (max-width: 900px) {
+  @media screen and (max-width: 980px) {
     .footer-content {
       flex-direction: column;
       align-items: center;

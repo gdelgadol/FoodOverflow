@@ -20,7 +20,8 @@ function Footer() {
         <Link to={"/acuerdo"} style={{ color: '#b7b7b7' }}>Acuerdo de privacidad</Link>
         <Link to={"/site-map"} style={{ color: '#b7b7b7' }}>Mapa del sitio</Link>
         <Link to={"/user-manual"} style={{ color: '#b7b7b7' }}>Manual de usuario</Link>
-        <div>foodoverflow02@gmail.com</div>
+        <Link to={"/questions"} style={{ color: '#b7b7b7' }}>Preguntas frecuentes</Link>
+        <Link to={"/pqrs"} style={{ color: '#b7b7b7'}}>Contáctanos (PQRS)</Link>
         </div>
         <div className="social-links">
           {/* Redes FoodOverflow */}
