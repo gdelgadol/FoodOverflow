@@ -1,0 +1,374 @@
+.su-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  max-width: 1200px;
+  margin-bottom: 30px;
+}
+
+.su-logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.su-logo-food {
+  width: 146px;
+  height: 146px;
+}
+
+.su-logo-text {
+  font-size: 48px;
+  font-weight: 500;
+  color: #000000;
+  text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+.su-sub-text {
+  font-size: 32px;
+  font-weight: 250;
+  color: #000000;
+  text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+.su-logo {
+  width: 200px;
+  height: 200px;
+}
+
+/* Estilos para el modal */
+.modal {
+  display: block; 
+  position: fixed; 
+  z-index: 1; 
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+  overflow: auto; 
+}
+
+.modal-content {
+  display: flex; 
+  flex-direction: column; 
+  align-items: center;
+  justify-content: center; 
+  background-color: #fefefe; 
+  margin: 15% auto; 
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; 
+  max-width: 300px;
+  border-radius: 20px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black; 
+  text-decoration: none; 
+  cursor: pointer; 
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 8px;
+  padding: 30px;
+  width: 60%;
+  background-color: #282828;
+  margin: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+}
+
+.product-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.product-name {
+  font-size: 1.8rem;
+  margin-bottom: 30px;
+  color:#ff5c00
+}
+
+.product-description {
+  margin-bottom: 8px;
+  color:#000000;
+  text-align: center;
+}
+
+.product-description2 {
+  margin-bottom: 8px;
+  margin-top: 0px;
+  color:#ffffff;
+  text-align: justify;
+}
+
+.reasons-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 20px; 
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.reasons-container > div {
+  flex: 1;
+  min-width: 200px;
+  max-width: 700px;
+  box-sizing: border-box;
+  margin: 10px;
+  display: flex;
+}
+
+.reason-card {
+  flex: 1;
+  background-color: rgb(246, 246, 246);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  cursor: default; /* Makes the card look clickable */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.reason-card:hover {
+  transform: translateY(-8px); 
+}
+
+.reason-card:last-child {
+  margin-right: 10; 
+}
+
+@media screen and (max-width: 768px) {
+  .reasons-container {
+    flex-direction: column; 
+    align-items: stretch; 
+  }
+
+  .reasons-container > div {
+    flex-basis: 100%; /* Full width on smaller screens */
+  }
+}
+
+.card-title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #ff5c00; 
+  padding: 10px 20px; 
+  background-color: white; 
+  border: 2px solid #ff5c00; 
+  border-radius: 20px; 
+  display: inline-block; 
+  cursor: pointer; 
+  transition: background-color 0.2s, color 0.3s;
+}
+
+.card-title:hover, .reason-card.selected .card-title {
+  background-color: #ff5c00;
+  color: white; 
+}
+
+.card-title2 {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #7a0000; 
+  padding: 10px 20px; 
+  background-color: white; 
+  border: 2px solid #7a0000; 
+  border-radius: 20px; 
+  display: inline-block; 
+  cursor: pointer; 
+  transition: background-color 0.2s, color 0.3s;
+}
+
+.card-title2:hover, .reason-card.selected .card-title2 {
+  background-color: #7a0000;
+  color: white; 
+}
+
+.card-title3 {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #041963; 
+  padding: 10px 20px; 
+  background-color: white; 
+  border: 2px solid #041963; 
+  border-radius: 20px; 
+  display: inline-block; 
+  cursor: pointer; 
+  transition: background-color 0.2s, color 0.3s;
+}
+
+.card-title3:hover, .reason-card.selected .card-title3 {
+  background-color: #041963;
+  color: white; 
+}
+
+.card-title4 {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #005807; 
+  padding: 10px 20px; 
+  background-color: white; 
+  border: 2px solid #005807; 
+  border-radius: 20px; 
+  display: inline-block; 
+  cursor: pointer; 
+  transition: background-color 0.2s, color 0.3s;
+}
+
+.card-title4:hover, .reason-card.selected .card-title4 {
+  background-color: #005807;
+  color: white; 
+}
+
+.register {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form {
+  width: 500px;
+  max-width: 90%;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  align-items: center;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.icon img {
+  width: 50px;
+  height: 50px;
+}
+
+.rt-h1 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+label {
+  font-size: 16px;
+  font-weight: normal;
+  color: #333333;
+  margin-bottom: 5px;
+}
+
+input {
+  height: 30px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  padding: 5px 10px;
+  outline: none;
+  flex: auto;
+}
+
+.note {
+  font-size: 14px;
+  font-style: italic;
+  color: #999999;
+  margin-bottom: 10px;
+  font-weight: 400;
+}
+
+.register-button {
+  height: 40px;
+  width: 80%;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  background-color: #ff5c00;
+  color: #ffffff;
+  cursor: pointer;
+  text-align: center; 
+}
+
+.register-button:hover {
+  background-color: #ff5c00;
+}
+
+.terms {
+  font-size: 14px;
+  font-weight: normal;
+  color: #333333;
+  margin-bottom: 10px;
+}
+
+.terms a {
+  color: #ff5c00;
+  text-decoration: none;
+}
+
+.terms a:hover {
+  text-decoration: underline;
+}
+
+.loginRegister {
+  font-size: 14px;
+  color: #333333;
+  font-weight: 400;
+}
+
+.loginRegister a {
+  color: #ff5c00;
+  text-decoration: none;
+}
+
+.loginRegister a:hover {
+  text-decoration: underline;
+}
+
+.center-button {
+  margin: 0 auto;
+  display: block;
+}
+
+.rt-h1 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  color: #c11515;
+  margin-bottom: 20px;
+}

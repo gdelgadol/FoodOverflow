@@ -7,7 +7,7 @@ from .modules import error_response, success_response
 def send_pqrs(request):
     try:
         data = json.load(request)
-        mail_subject = "Se ha realizado una PQRS"
+        mail_subject = data.get("nombre") + " ha realizado una PQRS"
         message = render_to_string(
             "email_templates/pqrs.html",
             context = {
@@ -28,7 +28,7 @@ def send_pqrs(request):
             )
         email.attach_alternative(message, "text/html")
         email.send()
-        return success_response({"message": "El usuario ha sido activado con éxito"})
+        return success_response({"message": "¡Su PQRS ha sido enviada con éxito!"})
     except Exception as e:
         print(str(e))
         return error_response("Hubo un error. Por favor, inténtelo de nuevo.")
