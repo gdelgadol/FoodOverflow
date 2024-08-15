@@ -128,7 +128,7 @@ const SiteMap = () => {
     </div>
     </center>
       <center>
-        <div className='graph-container' style={{ maxWidth: '100%' }}>
+        <div className='graph-container' style={{ maxWidth: '100%', overflow: 'hidden' }}>
         <ForceGraph2D
           graphData={graphData}
           nodeLabel="name"

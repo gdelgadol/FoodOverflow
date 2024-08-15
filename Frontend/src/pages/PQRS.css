@@ -270,14 +270,6 @@
   height: 50px;
 }
 
-.rt-h1 {
-  text-align: center;
-  font-size: 24px;
-  font-weight: 600;
-  color: #333333;
-  margin-bottom: 20px;
-}
-
 .input-group {
   display: flex;
   flex-direction: column;
@@ -301,14 +293,6 @@ input {
   flex: auto;
 }
 
-.note {
-  font-size: 14px;
-  font-style: italic;
-  color: #999999;
-  margin-bottom: 10px;
-  font-weight: 400;
-}
-
 .register-button {
   height: 40px;
   width: 80%;
@@ -324,48 +308,4 @@ input {
 
 .register-button:hover {
   background-color: #ff5c00;
-}
-
-.terms {
-  font-size: 14px;
-  font-weight: normal;
-  color: #333333;
-  margin-bottom: 10px;
-}
-
-.terms a {
-  color: #ff5c00;
-  text-decoration: none;
-}
-
-.terms a:hover {
-  text-decoration: underline;
-}
-
-.loginRegister {
-  font-size: 14px;
-  color: #333333;
-  font-weight: 400;
-}
-
-.loginRegister a {
-  color: #ff5c00;
-  text-decoration: none;
-}
-
-.loginRegister a:hover {
-  text-decoration: underline;
-}
-
-.center-button {
-  margin: 0 auto;
-  display: block;
-}
-
-.rt-h1 {
-  text-align: center;
-  font-size: 24px;
-  font-weight: 600;
-  color: #c11515;
-  margin-bottom: 20px;
 }
