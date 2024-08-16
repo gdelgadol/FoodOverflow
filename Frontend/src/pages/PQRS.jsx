@@ -133,7 +133,7 @@ function PQRS() {
                                 onInput={(e) => {
                                     const value = e.target.value;
                                     // Allow only letters and spaces
-                                    const regex = /^[A-Za-z\s]*$/;
+                                    const regex = /^[A-Za-zÀ-ÿ\u00f1\u00d1\s]*$/;
                                     if (regex.test(value)) {
                                         handleInput(e);
                                     } else {
@@ -188,7 +188,7 @@ function PQRS() {
                                 onInput={(e) => {
                                     const value = e.target.value;
                                     // Allow only letters and spaces
-                                    const regex = /^[A-Za-z\s]*$/;
+                                    const regex = /^[A-Za-zÀ-ÿ\u00f1\u00d1\s0-9.,;:!?¿¡'"()\-—_«»\[\]\{\}\/\\&%$#@]*$/;
                                     if (regex.test(value)) {
                                         handleInput(e);
                                     } else {
