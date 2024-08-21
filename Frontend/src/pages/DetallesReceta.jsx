@@ -435,6 +435,8 @@ function DetallesReceta() {
                                         <option value="Derechos de autor">Derechos de autor</option>
                                         <option value="Ofensivo">Contenido ofensivo</option>
                                         <option value="Suplantación">Suplantación</option>
+                                        <option value="Terrorismo">Terrorismo</option>
+                                        <option value="Estafa">Estafa piramidal</option>
                                         <option value="Odio">Contenido con odio</option>
                                         <option value="Contenido Peligroso">Contenido peligroso</option>
                                         <option value="Contenido erróneo">Contenido erróneo</option>

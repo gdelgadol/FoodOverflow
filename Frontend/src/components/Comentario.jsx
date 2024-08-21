@@ -259,6 +259,8 @@ export default function Comentario({ jwt, reload, setReload, post_id, comment_id
                                 <option value="Derechos de autor">Derechos de autor</option>
                                 <option value="Ofensivo">Contenido ofensivo</option>
                                 <option value="Suplantación">Suplantación</option>
+                                <option value="Terrorismo">Terrorismo</option>
+                                <option value="Estafa">Estafa piramidal</option>
                                 <option value="Odio">Contenido con odio</option>
                                 <option value="Contenido Peligroso">Contenido peligroso</option>
                                 <option value="contenido erróneo">Contenido erróneo</option>
