@@ -23,7 +23,7 @@ function AboutUs() {
                 </div>
                 <div className='au-vision-mision-container'>
                     <span className='au-vision-mision-title'>Misión</span>
-                    <h1 className='au-vision-mision-text'>Unificar recetas y conocimiento gastronómico en un foro en línea, comisariado por la comunidad mediante sus votos y comentarios. El foro es un espacio donde todos los interesados, desde cocineros expertos hasta cocineros casuales, puedan compartir ideas, resolver dudas y adentrarse en el mundo de la comida.</h1>
+                    <h1 className='au-vision-mision-text'>Unificamos recetas y conocimiento gastronómico en un foro en línea, comisariado por la comunidad mediante sus votos y comentarios. El foro es un espacio donde todos los interesados, desde cocineros expertos hasta cocineros casuales, puedan compartir ideas, resolver dudas y adentrarse en el mundo de la comida.</h1>
                 </div>
             </div>
             <div className='au-team-container'>
